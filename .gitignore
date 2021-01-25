@@ -1,0 +1,8 @@
+*.so
+build/
+dist/
+doc/
+libhfst_wrap.cpp
+hfst.egg-info/
+__pycache__/
+tmp/

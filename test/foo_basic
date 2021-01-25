@@ -1,0 +1,4 @@
+0	1	foo	bar	0.5
+0	0	baz	baz	0
+0	0	baz	BAZ	0.1
+1	0.3
