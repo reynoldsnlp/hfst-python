@@ -21,7 +21,7 @@ jobs:
       - name: Install/compile dependencies (Linux)
         if: runner.os == 'Linux'
         run: |
-          apt install swig
+          apt-get install -y swig
 
       - name: Install/compile dependencies (macOS)
         if: runner.os == 'macOS'
@@ -31,7 +31,7 @@ jobs:
       - name: Install/compile dependencies (Windows)
         if: runner.os == 'Windows'
         run: |
-          choco install swig
+          choco install -y swig
 
       - name: Install cibuildwheel
         run: |
