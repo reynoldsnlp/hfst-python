@@ -18,16 +18,20 @@ jobs:
         with:
           python-version: '3.7'
 
-      - name: Install swig
+      - name: Install/compile dependencies (Linux)
         if: runner.os == 'Linux'
-          run: |
-               apt install swig
+        run: |
+          apt install swig
+
+      - name: Install/compile dependencies (macOS)
         if: runner.os == 'macOS'
-          run: |
-               brew install swig
+        run: |
+          brew install swig
+
+      - name: Install/compile dependencies (Windows)
         if: runner.os == 'Windows'
-          run: |
-               choco install swig
+        run: |
+          choco install swig
 
       - name: Install cibuildwheel
         run: |
