@@ -3,6 +3,7 @@ build/
 dist/
 doc/
 libhfst_wrap.cpp
+libhfst.py
 hfst.egg-info/
 __pycache__/
 tmp/
