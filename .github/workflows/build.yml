@@ -4,6 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build_wheels:
+    environment: Build
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
