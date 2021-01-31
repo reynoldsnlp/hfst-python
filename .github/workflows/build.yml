@@ -31,7 +31,7 @@ jobs:
         run: |
           python -m cibuildwheel --output-dir wheelhouse
         env:
-          CIBW_BEFORE_ALL: {package}/cibw_before_all.sh
+          CIBW_BEFORE_ALL: "{package}/cibw_before_all.sh"
           CIBW_BUILD_VERBOSITY: 3
           CIBW_SKIP: cp27-* cp35-* cp*-win*
 
