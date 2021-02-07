@@ -50,16 +50,16 @@ namespace hfst { typedef std::vector<hfst::xeroxRules::Rule> HfstRuleVector; }
 namespace hfst { typedef std::pair<hfst::HfstTransducer*,unsigned int> HfstTransducerUIntPair; }
 
 // Most of C++ extension code is located in separate files.
-#include "extensions/hfst_regex_extensions.cpp"
-#include "extensions/hfst_extensions.cpp"
-#include "extensions/hfst_lexc_extensions.cpp"
-#include "extensions/hfst_xfst_extensions.cpp"
-#include "extensions/hfst_pmatch_extensions.cpp"
-#include "extensions/hfst_pmatch_tokenize_extensions.cpp"
-#include "extensions/hfst_sfst_extensions.cpp"
-#include "extensions/hfst_lookup_extensions.cpp"
-#include "extensions/hfst_rules_extensions.cpp"
-#include "extensions/hfst_prolog_extensions.cpp"
+#include "hfst_regex_extensions.cpp"
+#include "hfst_extensions.cpp"
+#include "hfst_lexc_extensions.cpp"
+#include "hfst_xfst_extensions.cpp"
+#include "hfst_pmatch_extensions.cpp"
+#include "hfst_pmatch_tokenize_extensions.cpp"
+#include "hfst_sfst_extensions.cpp"
+#include "hfst_lookup_extensions.cpp"
+#include "hfst_rules_extensions.cpp"
+#include "hfst_prolog_extensions.cpp"
 %}
 
 #ifdef _MSC_VER

@@ -8,8 +8,7 @@ for py in "$@"; do
 	${py} -c "import sys; print(sys.executable)"
 	${py} -m pip install --user --no-index -f ../dist/ --force-reinstall hfst
 	${py} -c "import hfst"
-	abs_py=$(which "${p}")
-	./test.sh --python "${abs_py}" --verbose
-	${py} -m pip uninstall -y hfst
+	./test.sh --python "${py}" --verbose
+	# ${py} -m pip uninstall -y hfst
 done
 cd ..

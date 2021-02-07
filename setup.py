@@ -25,6 +25,7 @@ and msvc 14.0 (with python 3.5 and 3.6).
 import argparse
 from glob import glob
 import os
+from pprint import pprint
 from setuptools import Extension
 from setuptools import setup
 import sys
@@ -98,9 +99,9 @@ ext_swig_opts = ['-c++', '-I' + abs_libhfst_src_dir, '-Wall']
 
 # By default, we have a pre-swig-generated wrapper
 if args.generate_wrapper:
-    ext_source = ['libhfst.i']
+    ext_source = ['hfst/libhfst.i']
 else:
-    ext_source = ['libhfst_wrap.cpp']
+    ext_source = ['hfst/libhfst_wrap.cpp']
 
 
 # ----- LINKER ARGUMENTS -----
@@ -128,7 +129,8 @@ if args.local:
 # ----- INCLUDE DIRECTORIES -----
 
 # HFST headers needed when compiling the actual c++ extension
-ext_include_dirs = [os.path.abspath('.'),
+ext_include_dirs = [os.path.abspath('hfst'),
+                    os.path.abspath('hfst/lib'),  # TODO delete this line?
                     os.path.abspath('hfst_src/back-ends/foma'),
                     os.path.abspath('hfst_src/back-ends'),
                     os.path.abspath('hfst_src/libhfst/src/'),
@@ -370,7 +372,7 @@ if (platform == 'win32'):
 
 # ----- The HFST C++ EXTENSION -----
 
-libhfst_module = Extension('_libhfst',
+libhfst_module = Extension('hfst._libhfst',
                            language='c++',
                            sources=ext_source + libhfst_source_files,
                            swig_opts=ext_swig_opts,
@@ -382,7 +384,8 @@ libhfst_module = Extension('_libhfst',
                            extra_link_args=ext_extra_link_args,
                            )
 
-print(type(libhfst_module), libhfst_module.__dict__, file=sys.stderr)
+print('Extension arguments:', file=sys.stderr)
+pprint(libhfst_module.__dict__, stream=sys.stderr)
 
 setup(name='hfst',
       version='3.15.2.0',

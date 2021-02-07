@@ -2,8 +2,10 @@
 build/
 dist/
 doc/
-libhfst_wrap.cpp
-libhfst.py
+hfst/libhfst_wrap.cpp
+hfst/libhfst.py
 hfst.egg-info/
 __pycache__/
+test/*.hfst
+test/tmp
 tmp/

@@ -1,6 +1,7 @@
 include LICENSE
 include README.rst
-include extensions/*.cpp
+include hfst/*.cpp
+include hfst/lib/*.dylib
 include hfst_src/back-ends/foma/*.h
 include hfst_src/back-ends/openfst/src/include/fst/*.h
 include hfst_src/config.h
