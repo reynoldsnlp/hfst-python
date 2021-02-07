@@ -4,6 +4,7 @@ dist/
 doc/
 hfst/libhfst_wrap.cpp
 hfst/libhfst.py
+hfst/lib/*.dylib
 hfst.egg-info/
 __pycache__/
 test/*.hfst

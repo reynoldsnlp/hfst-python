@@ -6,41 +6,41 @@ PYTHON_EXECUTABLES="python3.6"
 # PYTHON_EXECUTABLES="python3.6 python3.7 python3.8 python3.9"
 
 # for p in ${PYTHON_EXECUTABLES}; do
-# 	${p} -m pip install --user --upgrade setuptools twine wheel
-# 	# ${p} -m pip uninstall hfst
+#     ${p} -m pip install --user --upgrade setuptools twine wheel
+#     # ${p} -m pip uninstall hfst
 # done
 
 echo "STEP Cleaning old files..."
 ./clean.sh
 
-echo "STEP Configuring..."
+echo "STEP Building HFST C++..."
 # cd hfst_src/
 # autoreconf -i  # Is this necessary?
 # ./configure --enable-all-tools --with-readline --enable-fsmbook-tests
 # # make clean
 # make
 
+echo "STEP Copying dylib..."
+cp hfst_src/libhfst/src/.libs/libhfst.dylib hfst/lib/
+
 # echo "STEP Making flex/yacc files..."
 # cd libhfst/src/parsers/
 # make  # this is unnecessary if `make` is already called in the root dir, but it doesn't hurt
 # cd ../../../../
 
-echo "STEP Copying cpp and other files..."
-# ./copy-files.sh
-# TODO renaming *.cc to *.cpp might be necessary on Windows.
-
 echo "STEP Building binary distribution wheels..."
 for p in ${PYTHON_EXECUTABLES}; do
-	${p} setup.py build_ext  --with-libc++ --local-hfst --inplace  \
-                | ${p} get_so_name.py  \
-                > so_filenames.tmp
-            DYLIB=$(basename hfst/lib/libhfst*.dylib)
-            for so_file in $(cat so_filenames.tmp); do
-                install_name_tool -change "/usr/local/lib/${DYLIB}" "@loader_path/lib/libhfst.dylib" ${so_file}
-                install_name_tool -change "/usr/local/lib/${DYLIB}" "@loader_path/lib/libhfst.dylib" "hfst/$(basename ${so_file})"
-            done
-            rm so_filenames.tmp
-	${p} setup.py bdist_wheel --with-libc++
+    ${p} setup.py build_ext  --with-libc++ --local-hfst --inplace  \
+            | tee build_ext_output.tmp
+    SO_FILE=$(grep "^copying build/lib\..*/_libhfst\..*\.so" build_ext_output.tmp  \
+              | cut -d " " -f 2)
+    OLD_DYLIB=$(otool -L ${SO_FILE}  \
+                | egrep "^\s+.*libhfst"  \
+		| sed -r "s/^\t(.*dylib).*/\1/g")
+    install_name_tool -change ${OLD_DYLIB} "@loader_path/lib/libhfst.dylib" ${SO_FILE}
+    install_name_tool -change ${OLD_DYLIB} "@loader_path/lib/libhfst.dylib" "hfst/$(basename ${SO_FILE})"
+    rm build_ext_output.tmp
+    ${p} setup.py bdist_wheel --with-libc++
 done
 
 echo "STEP Building source distribution..."
