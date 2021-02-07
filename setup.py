@@ -115,6 +115,7 @@ if platform == 'linux' or platform == 'linux2' or platform == 'darwin':
     include_getline = True
 if args.no_readline:
     include_readline = False
+
 # ext_extra_link_args = [f'-L{os.getcwd()}/hfst/lib']
 ext_extra_link_args = []
 if include_readline:
