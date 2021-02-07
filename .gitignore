@@ -1,3 +1,4 @@
+*.dylib
 *.so
 build/
 dist/
@@ -7,3 +8,6 @@ libhfst.py
 hfst.egg-info/
 __pycache__/
 tmp/
+nohup.out
+test/*.hfst
+test/tmp

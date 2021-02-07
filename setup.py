@@ -25,6 +25,7 @@ and msvc 14.0 (with python 3.5 and 3.6).
 import argparse
 from glob import glob
 import os
+from pprint import pprint
 from setuptools import Extension
 from setuptools import setup
 import sys
@@ -98,9 +99,9 @@ ext_swig_opts = ['-c++', '-I' + abs_libhfst_src_dir, '-Wall']
 
 # By default, we have a pre-swig-generated wrapper
 if args.generate_wrapper:
-    ext_source = ['libhfst.i']
+    ext_source = ['hfst/libhfst.i']
 else:
-    ext_source = ['libhfst_wrap.cpp']
+    ext_source = ['hfst/libhfst_wrap.cpp']
 
 
 # ----- LINKER ARGUMENTS -----
@@ -114,12 +115,13 @@ if platform == 'linux' or platform == 'linux2' or platform == 'darwin':
     include_getline = True
 if args.no_readline:
     include_readline = False
+# ext_extra_link_args = [f'-L{os.getcwd()}/hfst/lib']
 ext_extra_link_args = []
 if include_readline:
-    ext_extra_link_args = ['-lreadline']
+    ext_extra_link_args.append('-lreadline')
 # Experimental...
 if platform == 'darwin' and args.libcpp:
-    ext_extra_link_args.extend([f'-mmacosx-version-min={MACOSX_VERSION_MIN}'])
+    ext_extra_link_args.append(f'-mmacosx-version-min={MACOSX_VERSION_MIN}')
 if args.local:
     ext_extra_link_args.extend([f'-Wl,-rpath,{abs_libhfst_src_dir}/.libs'])
 
@@ -350,10 +352,11 @@ libhfst_source_files += openfst_source_files
 if include_foma_backend:
     libhfst_source_files += foma_source_files
 
-ext_package_data = {}
+package_data = {'hfst': glob('hfst/lib/libhfst*.dylib')}
+# package_data = {'hfst': []}
 if (platform == 'win32'):
     if (version_info[0] == 3 and version_info[1] > 4):
-        package_data = {'hfst': ['MSVCP140.DLL', 'VCRUNTIME140.DLL']}
+        package_data['hfst'].extend(['MSVCP140.DLL', 'VCRUNTIME140.DLL'])
     else:
         pass
 
@@ -370,19 +373,20 @@ if (platform == 'win32'):
 
 # ----- The HFST C++ EXTENSION -----
 
-libhfst_module = Extension('_libhfst',
+libhfst_module = Extension('hfst._libhfst',
                            language='c++',
                            sources=ext_source + libhfst_source_files,
                            swig_opts=ext_swig_opts,
                            include_dirs=ext_include_dirs,
-                           library_dirs=[abs_libhfst_src_dir + '/.libs'],
-                           libraries=['hfst'],
+                           # libraries=['hfst'],
+                           # library_dirs=['hfst/lib'],
                            define_macros=ext_define_macros,
                            extra_compile_args=ext_extra_compile_args,
                            extra_link_args=ext_extra_link_args,
                            )
 
-print(type(libhfst_module), libhfst_module.__dict__, file=sys.stderr)
+print('Extension arguments:', file=sys.stderr)
+pprint(libhfst_module.__dict__, stream=sys.stderr)
 
 setup(name='hfst',
       version='3.15.2.0',
@@ -394,9 +398,8 @@ setup(name='hfst',
       long_description_content_type='text/x-rst',
       license='GNU GPL3',
       ext_modules=[libhfst_module],
-      py_modules=['libhfst'],
+      # py_modules=['libhfst'],
       packages=['hfst', 'hfst.exceptions', 'hfst.sfst_rules',
                 'hfst.xerox_rules'],
-      package_data=ext_package_data,
-      data_files=[]
+      package_data=package_data,
       )

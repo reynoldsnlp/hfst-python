@@ -96,7 +96,7 @@ Compiling from scratch
 This repository has a submodule with the underlying C++ code. The first time
 you clone this repository, run ``$ git submodule init`` to initialize the
 submodule. Thereafter, every time that you want to pull in the latest changes
-from the C++ hfst repository, run ``$ git submodule update --remote`` or
+from the C++ hfst repository, run ``$ git submodule update --remote --merge`` or
 ``$ git pull --recurse-submodules``. TODO
 
 Documentation
