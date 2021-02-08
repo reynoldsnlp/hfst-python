@@ -2,7 +2,6 @@
 
 set -e -x
 
-brew install autoconf automake python3-setuptools swig bison flex libicu-dev  \
-	libreadline-dev libtool
+brew install autoconf automake swig bison flex readline libtool
 
 source ./build_hfst.sh
