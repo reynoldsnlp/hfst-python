@@ -2,7 +2,6 @@
 
 set -e -x
 
-brew install automake glib swig
-uconv -V
+brew install automake swig
 
 source ./build_hfst.sh
