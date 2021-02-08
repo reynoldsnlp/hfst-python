@@ -2,6 +2,6 @@
 
 set -e -x
 
-brew install autoconf automake bison flex icu4c libtool readline swig
+brew install automake swig
 
 source ./build_hfst.sh
