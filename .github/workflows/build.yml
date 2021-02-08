@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-python@v2
         name: Install Python
         with:
-          python-version: '3.7'
+          python-version: '3.9'
 
       - name: Install cibuildwheel
         run: |
@@ -36,8 +36,7 @@ jobs:
         run: |
           python -m cibuildwheel --output-dir wheelhouse
         env:
-          CIBW_BEFORE_ALL: cd hfst_src/ && autoreconf -i && ./configure --enable-all-tools --with-readline --enable-fsmbook-tests && make
-          # CIBW_BEFORE_ALL: {package}/cibw_before_all.sh
+          CIBW_BEFORE_ALL: source {package}/cibw_before_all.sh
           CIBW_BUILD_VERBOSITY: 3
           CIBW_SKIP: cp27-* cp35-* cp*-win*
 
