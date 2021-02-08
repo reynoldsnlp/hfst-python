@@ -2,15 +2,9 @@
 
 set -e -x
 
-apt-get -qy update
-apt-get -qfy install --no-install-recommends build-essential automake  \
-	autotools-dev pkg-config python3-dev python3-setuptools swig bison  \
-	flex libicu-dev libreadline-dev libtool zlib1g-dev
+brew update
+brew install build-essential automake autotools-dev pkg-config python3-dev  \
+        python3-setuptools swig bison flex libicu-dev libreadline-dev  \
+	libtool zlib1g-dev
 
-cd hfst_src/
-autoreconf -fvi
-./configure --disable-static --enable-all-tools --with-readline --with-unicode-handler=icu
-make
-make check V=1 VERBOSE=1
-make install
-cd ..
+source ./build_hfst.sh
