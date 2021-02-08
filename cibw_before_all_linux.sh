@@ -9,7 +9,7 @@ set -e -x
 # manually install swig 4 since yum has 3 :(
 # manually install ICU 5+, since yum has 4.2 :(
 glib-gettextize --version
-yum update -d1 && yum install -y flex glib* libicu-devel pcre-devel
+yum update -d1 && yum install -y flex libicu-devel pcre-devel
 curl https://managedway.dl.sourceforge.net/project/swig/swig/swig-4.0.2/swig-4.0.2.tar.gz \
         -o /tmp/swig-4.0.2.tar.gz
 pushd /tmp
