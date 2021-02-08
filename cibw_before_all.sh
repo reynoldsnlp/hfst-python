@@ -2,19 +2,15 @@
 
 set -e -x
 
-# echo "STEP Cleaning old files..."
-# yes | rm -fr _libhfst*.so build/ dist/ wheelhouse/
+apt-get -qy update
+apt-get -qfy install --no-install-recommends build-essential automake  \
+	autotools-dev pkg-config python3-dev python3-setuptools swig bison  \
+	flex libicu-dev libreadline-dev libtool zlib1g-dev
 
-echo "STEP Configuring..."
 cd hfst_src/
-autoreconf -i  # Is this necessary?
-./configure --enable-all-tools --with-readline --enable-fsmbook-tests
-# make clean
+autoreconf -fvi
+./configure --disable-static --enable-all-tools --with-readline --with-unicode-handler=icu
 make
-
-echo "STEP Making flex/yacc files..."
-cd libhfst/src/parsers/
-make  # this is unnecessary if `make` is already called in the root dir, but it doesn't hurt
-cd ../../../../
-
-# TODO renaming *.cc to *.cpp in backends/ and libhfst/ might be necessary on Windows.
+make check V=1 VERBOSE=1
+make install
+cd ..
