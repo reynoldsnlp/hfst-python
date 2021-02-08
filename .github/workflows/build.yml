@@ -34,6 +34,7 @@ jobs:
           python -m cibuildwheel --output-dir wheelhouse
         env:
           CIBW_BEFORE_ALL_MACOS: "{package}/cibw_before_all_macos.sh"
+          CIBW_BEFORE_ALL_LINUX: "{package}/cibw_before_all_linux.sh"
           CIBW_BUILD_VERBOSITY: 3
           CIBW_SKIP: cp27-* cp35-* cp*-win*
 
