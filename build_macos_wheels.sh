@@ -2,31 +2,25 @@
 
 set -e -x
 
-PYTHON_EXECUTABLES="python3.6"
-# PYTHON_EXECUTABLES="python3.6 python3.7 python3.8 python3.9"
+PYTHON_EXECUTABLES="python3.6 python3.7 python3.8 python3.9"
 
-# for p in ${PYTHON_EXECUTABLES}; do
-#     ${p} -m pip install --user --upgrade setuptools twine wheel
-#     # ${p} -m pip uninstall hfst
-# done
+for p in ${PYTHON_EXECUTABLES}; do
+    ${p} -m pip install --user --upgrade setuptools twine wheel
+done
 
 echo "STEP Cleaning old files..."
 ./clean.sh
 
 echo "STEP Building HFST C++..."
-# cd hfst_src/
-# autoreconf -i  # Is this necessary?
-# ./configure --enable-all-tools --with-readline --enable-fsmbook-tests
-# # make clean
-# make
+cd hfst_src/
+autoreconf -i  # Is this necessary?
+./configure --enable-all-tools --with-readline --enable-fsmbook-tests
+# make clean
+make  # TODO only libhfst/src/parsers/ and a few other things?
+cd ..
 
 echo "STEP Copying dylib..."
 cp hfst_src/libhfst/src/.libs/libhfst.dylib hfst/lib/
-
-# echo "STEP Making flex/yacc files..."
-# cd libhfst/src/parsers/
-# make  # this is unnecessary if `make` is already called in the root dir, but it doesn't hurt
-# cd ../../../../
 
 echo "STEP Building binary distribution wheels..."
 for p in ${PYTHON_EXECUTABLES}; do

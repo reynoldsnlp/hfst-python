@@ -352,10 +352,10 @@ libhfst_source_files += openfst_source_files
 if include_foma_backend:
     libhfst_source_files += foma_source_files
 
-ext_package_data = {}
+package_data = {'hfst': ['hfst/lib/*']}
 if (platform == 'win32'):
     if (version_info[0] == 3 and version_info[1] > 4):
-        package_data = {'hfst': ['MSVCP140.DLL', 'VCRUNTIME140.DLL']}
+        package_data['hfst'].extend(['MSVCP140.DLL', 'VCRUNTIME140.DLL'])
     else:
         pass
 
@@ -400,6 +400,7 @@ setup(name='hfst',
       py_modules=['libhfst'],
       packages=['hfst', 'hfst.exceptions', 'hfst.sfst_rules',
                 'hfst.xerox_rules'],
-      package_data=ext_package_data,
+      package_data=package_data,
+      include_package_data=True,
       data_files=[]
       )
