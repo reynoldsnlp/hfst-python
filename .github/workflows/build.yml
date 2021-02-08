@@ -16,9 +16,6 @@ jobs:
         with:
           submodules: recursive
 
-      # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v3
-
       - uses: actions/setup-python@v2
         name: Install Python
         with:
