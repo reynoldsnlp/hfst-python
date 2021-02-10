@@ -11,6 +11,6 @@ curl https://apertium.projectjj.com/osx/nightly/hfst-latest.tar.bz2 > hfst-lates
 tar -xzf hfst-latest.tar.bz2
 cd ..
 
-cp tmp/hfst/lib/libhfst.dylib lib/
+cp tmp/hfst/lib/libhfst.dylib hfst/lib/
 echo ${LDFLAGS}
 export LDFLAGS="-L$(realpath tmp/hfst/lib)"
