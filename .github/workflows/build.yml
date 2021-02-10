@@ -30,6 +30,9 @@ jobs:
         run: |
           python -m pip install --upgrade setuptools twine wheel
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+
       - name: Build wheels
         run: |
           python -m cibuildwheel --output-dir wheelhouse
