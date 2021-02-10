@@ -2,6 +2,6 @@
 
 set -e -x
 
-brew install automake swig
+brew install automake bison flex swig
 
 source ./build_hfst.sh

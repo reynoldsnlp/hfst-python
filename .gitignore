@@ -1,3 +1,4 @@
+__pycache__/
 *.so
 build/
 dist/
@@ -6,7 +7,7 @@ hfst/libhfst_wrap.cpp
 hfst/libhfst.py
 hfst/lib/*.dylib
 hfst.egg-info/
-__pycache__/
+nohup.out
 test/*.hfst
 test/tmp
 tmp/
