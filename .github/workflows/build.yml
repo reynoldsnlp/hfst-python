@@ -42,7 +42,7 @@ jobs:
           CIBW_MANYLINUX_S390X_IMAGE: manylinux2014
           CIBW_BEFORE_ALL_LINUX: "{package}/cibw_before_all_linux.sh"
           CIBW_BEFORE_ALL_MACOS: "{package}/cibw_before_all_macos.sh"
-          CIBW_BEFORE_ALL_WINDOWS: "{package}/cibw_before_all_windows.sh"
+          CIBW_BEFORE_ALL_WINDOWS: "bash {package}/cibw_before_all_windows.sh"
           CIBW_BUILD_VERBOSITY: 3
           CIBW_SKIP: cp27-* cp35-* pp27-*
           CIBW_TEST_COMMAND: sh test_builds.sh python
@@ -51,6 +51,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@master
         with:
           password: ${{ secrets.TEST_PYPI_TOKEN }}
+          packages_dir: ./wheelhouse/
           repository_url: https://test.pypi.org/legacy/
 
       - name: Publish distribution 📦 to PyPI
@@ -58,6 +59,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@master
         with:
           password: ${{ secrets.PYPI_TOKEN }}
+          packages_dir: ./wheelhouse/
 
       - uses: actions/upload-artifact@v2
         with:
