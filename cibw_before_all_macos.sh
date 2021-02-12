@@ -13,4 +13,4 @@ cd ..
 
 cp tmp/hfst/lib/libhfst.dylib hfst/lib/
 echo ${LDFLAGS}
-export LDFLAGS="-L$(realpath tmp/hfst/lib)"
+export LDFLAGS="-L$(pwd)/tmp/hfst/lib"
