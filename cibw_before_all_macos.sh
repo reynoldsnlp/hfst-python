@@ -2,7 +2,7 @@
 
 set -e -x
 
-brew install bison flex  # to build from source
+brew install automake bison flex  # to build from source
 export PATH="/usr/local/opt/bison/bin:/usr/local/opt/flex/bin:$PATH"
 export CPPFLAGS="-I/usr/local/opt/flex/include"
 export LDFLAGS="-L/usr/local/opt/bison/lib -L/usr/local/opt/flex/lib"
