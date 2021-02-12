@@ -5,10 +5,12 @@
 
 cd test
 for py in "$@"; do
-	${py} -c "import sys; print(sys.executable)"
-	${py} -m pip install --user --no-index -f ../dist/ --force-reinstall hfst
-	${py} -c "import hfst"
-	./test.sh --python "${py}"
-	${py} -m pip uninstall -y hfst
+    FULL_PY=$(${py} -c "import sys; print(sys.executable)")
+    echo ${FULL_PY}
+    ${FULL_PY} --version
+    ${FULL_PY} -m pip install --user --no-index -f ../dist/ --force-reinstall hfst
+    ${FULL_PY} -c "import hfst"
+    ./test.sh --python "${FULL_PY}"
+    ${FULL_PY} -m pip uninstall -y hfst
 done
 cd ..
