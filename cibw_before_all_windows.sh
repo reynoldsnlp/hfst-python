@@ -2,6 +2,6 @@
 
 set -e -x
 
-choco install -y bison flex swig  # libicu-devel readline-devel
+choco install -y --no-progress winflexbison3 swig  # libicu-devel readline-devel
 
 ./build_hfst.sh
