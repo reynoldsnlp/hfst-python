@@ -117,7 +117,6 @@ if platform == 'darwin':
 #     ext_extra_link_args.extend([f'-Wl,-rpath,{abs_libhfst_src_dir}/.libs'])
 
 
-
 # ----- INCLUDE DIRECTORIES -----
 
 # HFST headers needed when compiling the actual c++ extension
@@ -334,9 +333,7 @@ openfst_source_files = glob('hfst_src/back-ends/' + openfstdir + '/src/lib/compa
 #                         'hfst_src/back-ends/' + openfstdir + '/src/lib/util' + cpp]
 
 libhfst_source_files += openfst_source_files
-
-if include_foma_backend:
-    libhfst_source_files += foma_source_files
+libhfst_source_files += foma_source_files
 
 package_data = {'hfst': ['hfst/lib/*']}
 if (platform == 'win32'):
