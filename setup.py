@@ -36,23 +36,15 @@ MACOSX_VERSION_MIN = '10.9'
 
 parser = argparse.ArgumentParser(description='Build hfst python module')
 
-cpp11_group = parser.add_mutually_exclusive_group()
-cpp11_group.add_argument('--with-libc++', action='store_const',
-                         dest='libcpp', const=True, default=False,
-                         help='Use libc++, usually on MacOS')
-cpp11_group.add_argument('--with-libstdc++', action='store_const',
-                         dest='libcpp', const=False,
-                         help='Use libstdc++, usually on Linux (default)')
-
-# By default, use the C++ version of foma backend. C++11 requires option
-# -std=c++0x to be set for C/C++ compiler (this cannot de defined for each file
-# separately) and some compilers refuse to compile C with that option.
-foma_group = parser.add_mutually_exclusive_group()
-foma_group.add_argument('--with-c++-foma', action='store_const',
-                        dest='cpp_foma', const=True, default=True,
-                        help='Use C++ version of foma backend (default)')
-foma_group.add_argument('--with-c-foma', action='store_const', dest='cpp_foma',
-                        const=False, help='Use C version of foma backend')
+# # By default, use the C++ version of foma backend. C++11 requires option
+# # -std=c++0x to be set for C/C++ compiler (this cannot de defined for each file
+# # separately) and some compilers refuse to compile C with that option.
+# foma_group = parser.add_mutually_exclusive_group()
+# foma_group.add_argument('--with-c++-foma', action='store_const',
+#                         dest='cpp_foma', const=True, default=True,
+#                         help='Use C++ version of foma backend (default)')
+# foma_group.add_argument('--with-c-foma', action='store_const', dest='cpp_foma',
+#                         const=False, help='Use C version of foma backend')
 
 wrapper_group = parser.add_mutually_exclusive_group()
 wrapper_group.add_argument('--generate-wrapper', action='store_const',
@@ -62,16 +54,16 @@ wrapper_group.add_argument('--no-generate-wrapper', action='store_const',
                            dest='generate_wrapper', const=False,
                            help='Do not generate SWIG wrapper.')
 
-local_group = parser.add_mutually_exclusive_group()
-local_group.add_argument('--local-hfst', action='store_const', dest='local',
-                         const=True, default=True,
-                         help='Link to local HFST library (default)')
-local_group.add_argument('--system-hfst', action='store_const', dest='local',
-                         const=False, help='Link to system HFST library.')
+# local_group = parser.add_mutually_exclusive_group()
+# local_group.add_argument('--local-hfst', action='store_const', dest='local',
+#                          const=True, default=True,
+#                          help='Link to local HFST library (default)')
+# local_group.add_argument('--system-hfst', action='store_const', dest='local',
+#                          const=False, help='Link to system HFST library.')
 
 
-parser.add_argument('--no-readline', action='store_true',
-                    help='Do not include readline')
+# parser.add_argument('--no-readline', action='store_true',
+#                     help='Do not include readline')
 
 args, unknown = parser.parse_known_args()
 print(args, file=sys.stderr)
@@ -85,7 +77,7 @@ def readme():
 
 
 # Experimental...
-if platform == 'darwin' and args.libcpp:
+if platform == 'darwin':
     os.environ['_PYTHON_HOST_PLATFORM'] = f'macosx-{MACOSX_VERSION_MIN}-x86_64'
 
 
@@ -97,7 +89,7 @@ abs_libhfst_src_dir = os.path.abspath('hfst_src/libhfst/src/')
 # Generate wrapper for C++
 ext_swig_opts = ['-c++', '-I' + abs_libhfst_src_dir, '-Wall']
 
-# By default, we have a pre-swig-generated wrapper
+# By default, we build the wrapper
 if args.generate_wrapper:
     ext_source = ['hfst/libhfst.i']
 else:
@@ -113,16 +105,16 @@ include_getline = False
 if platform == 'linux' or platform == 'linux2' or platform == 'darwin':
     include_readline = True
     include_getline = True
-if args.no_readline:
-    include_readline = False
+# if args.no_readline:
+#     include_readline = False
 ext_extra_link_args = []
 if include_readline:
     ext_extra_link_args = ['-lreadline']
 # Experimental...
-if platform == 'darwin' and args.libcpp:
+if platform == 'darwin':
     ext_extra_link_args.extend([f'-mmacosx-version-min={MACOSX_VERSION_MIN}'])
-if args.local:
-    ext_extra_link_args.extend([f'-Wl,-rpath,{abs_libhfst_src_dir}/.libs'])
+# if args.local:
+#     ext_extra_link_args.extend([f'-Wl,-rpath,{abs_libhfst_src_dir}/.libs'])
 
 
 
@@ -144,17 +136,11 @@ else:
 
 # ----- CONFIGURATION -----
 
-# TODO this logic does not match the comment
-# Include foma implementation for OS X only when c++11 is disabled.
-include_foma_backend = True
-if (platform == 'linux'
-        or platform == 'linux2'
-        or platform == 'win32'
-        or (platform == 'darwin' and not args.libcpp)):
-    include_foma_backend = True
 ext_define_macros = []
-if include_foma_backend:
-    ext_define_macros.append(('HAVE_FOMA', None))
+
+# TODO ??
+# Include foma implementation for OS X only when c++11 is disabled.
+ext_define_macros.append(('HAVE_FOMA', None))
 
 # Openfst backend is always enabled
 ext_define_macros.append(('HAVE_OPENFST', None))
@@ -174,14 +160,14 @@ if platform == 'win32':
 
 # If C++11 is not supported, what features will be disabled and where unordered
 # map and set are found.
-if not args.libcpp:
+if platform != 'darwin':
     # Disable c++11 features.
     ext_define_macros.append(('NO_CPLUSPLUS_11', None))
     # Unordered containers are in namespace std::tr1.
     ext_define_macros.append(('USE_TR1_UNORDERED_MAP_AND_SET', None))
     # On windows, the header files are not located in directory tr1
     # although the namespace is std::tr1.
-    if not platform == 'win32':
+    if platform != 'win32':
         ext_define_macros.append(('INCLUDE_TR1_UNORDERED_MAP_AND_SET', None))
 
 
@@ -191,10 +177,10 @@ ext_extra_compile_args = []
 if platform == 'linux' or platform == 'linux2' or platform == 'darwin':
     ext_extra_compile_args = ['-Wno-sign-compare', '-Wno-strict-prototypes']
     # C++11 standard does not need to be specifically requested for msvc compilers.
-    if args.libcpp:
+    if platform == 'darwin':
         ext_extra_compile_args.extend(['-std=c++0x'])
 # Experimental...
-if platform == 'darwin' and args.libcpp:
+if platform == 'darwin':
     ext_extra_compile_args.extend(['-stdlib=libc++',
                                    f'-mmacosx-version-min={MACOSX_VERSION_MIN}'])
 # define error handling mechanism on windows
@@ -215,9 +201,9 @@ if platform == 'win32':
 # foma source file extension (C++ by default)
 foma_src_dir = 'hfst_src/back-ends/foma/'
 fe = cpp
-if not args.cpp_foma:
-    foma_src_dir = 'hfst_src/back-ends/foma/cpp-version/'
-    fe = '.c'
+# if not args.cpp_foma:
+#     foma_src_dir = 'hfst_src/back-ends/foma/cpp-version/'
+#     fe = '.c'
 
 # all c++ extension source files
 
