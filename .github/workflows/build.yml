@@ -39,7 +39,7 @@ jobs:
           CIBW_BEFORE_ALL_MACOS: "{package}/cibw_before_all_macos.sh"
           CIBW_BEFORE_ALL_LINUX: "{package}/cibw_before_all_linux.sh"
           CIBW_BUILD_VERBOSITY: 3
-          CIBW_SKIP: cp27-* cp35-* cp*-win*
+          CIBW_SKIP: cp27-* cp35-* pp27-*
 
       - uses: actions/upload-artifact@v2
         with:
