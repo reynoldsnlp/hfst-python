@@ -14,3 +14,4 @@ pacman -S base-devel  \
 	  swig
 
 /c/msys64/bin/bash build_hfst.sh
+python setup.py build_ext

@@ -21,3 +21,4 @@ brew install swig
 
 # Build HFST from source
 ./build_hfst.sh
+python setup.py build_ext
