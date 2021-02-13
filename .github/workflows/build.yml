@@ -45,7 +45,7 @@ jobs:
           CIBW_BEFORE_ALL_WINDOWS: "bash {package}/cibw_before_all_windows.sh"
           CIBW_BUILD_VERBOSITY: 3
           CIBW_SKIP: cp27-* cp35-* pp27-*
-          CIBW_TEST_COMMAND: sh test_builds.sh python
+          CIBW_TEST_COMMAND: "pwd && bash {package}/test_builds.sh python"
 
       - name: Publish distribution 📦 to Test PyPI
         uses: pypa/gh-action-pypi-publish@master
