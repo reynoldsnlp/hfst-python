@@ -20,9 +20,14 @@ BISON_VERSION=$(bison --version | python -c "import re, sys; print(re.search(r'(
 echo ${BISON_VERSION}
 if [[ ${BISON_VERSION} < 3 ]]; then
     echo "Bison is too old. Upgrading...";
-    curl http://springdale.princeton.edu/data/springdale/6/x86_64/os/Computational/bison3-3.0.2-3.sdl6.x86_64.rpm > bison3-3.0.2-3.sdl6.x86_64.rpm
-    rpm -Uvh springdale-computational*rpm
-    yum install -y bison3
+    curl http://mirrors.ibiblio.org/gnu/ftp/gnu/bison/bison-3.7.5.tar.gz > /tmp/bison-3.7.5.tar.gz
+    pushd /tmp
+    tar -zxf bison-3.7.5.tar.gz
+    cd bison-3.7.5
+    ./configure
+    make
+    make install
+    popd
 else
     echo "Bison is new enough. No upgrade needed.";
 fi
