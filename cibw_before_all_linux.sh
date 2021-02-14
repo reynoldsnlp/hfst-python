@@ -18,7 +18,7 @@ popd
 
 BISON_VERSION=$(bison --version | python -c "import re, sys; print(re.search(r'([0-9]+)\.[0-9]+\.[0-9]+.*', sys.stdin.read(), re.S).group(1))")
 echo ${BISON_VERSION}
-if [[ ${BISON_VERSION} -le 7 ]]; then
+if [[ ${BISON_VERSION} < 3 ]]; then
     echo "Bison is too old. Upgrading...";
     curl http://springdale.princeton.edu/data/springdale/6/x86_64/os/Computational/bison3-3.0.2-3.sdl6.x86_64.rpm > bison3-3.0.2-3.sdl6.x86_64.rpm
     rpm -Uvh springdale-computational*rpm
