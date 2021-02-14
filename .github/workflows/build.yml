@@ -34,9 +34,9 @@ jobs:
         run: |
           python -m cibuildwheel --output-dir wheelhouse
         env:
+          CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux2010  # 2014 unavailable
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
           CIBW_MANYLINUX_I686_IMAGE: manylinux2014
-          CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux2010  # 2014 unavailable
           CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
           CIBW_MANYLINUX_PPC64LE_IMAGE: manylinux2014
           CIBW_MANYLINUX_S390X_IMAGE: manylinux2014
@@ -45,7 +45,7 @@ jobs:
           CIBW_BEFORE_ALL_WINDOWS: "bash {package}/cibw_before_all_windows.sh"
           CIBW_BUILD_VERBOSITY: 3
           CIBW_SKIP: cp27-* cp35-* pp27-*
-          CIBW_TEST_COMMAND: "pwd && bash {package}/test_builds.sh python"
+          CIBW_TEST_COMMAND: "pushd {package}/test && ./test.sh --python $(which python) ; popd"
         shell: bash
 
       - uses: actions/upload-artifact@v2
