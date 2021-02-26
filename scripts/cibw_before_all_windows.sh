@@ -1,12 +1,12 @@
-!/bin/bash
+#!/bin/bash
 
 # This script is run by cibuildwheel in .github/actions/build.yml
-# (specified under CIBW_BEFORE_ALL_MACOS)
+# (specified under CIBW_BEFORE_ALL_WINDOWS)
 
 
 set -e -x
 
-choco install -y --no-progress winflexbison3 swig  # libicu-devel readline-devel
+choco upgrade -y --no-progress winflexbison3 swig  # libicu-devel readline-devel
 # pacman -S --noconfirm --needed  \
 #           base-devel  \
 #           bison  \

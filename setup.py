@@ -32,7 +32,7 @@ import sys
 from sys import platform
 from sys import version_info
 
-MACOSX_VERSION_MIN = '10.9'
+MACOSX_VERSION_MIN = os.environ.get('MACOSX_DEPLOYMENT_TARGET', '10.9')
 
 parser = argparse.ArgumentParser(description='Build hfst python module')
 
@@ -74,12 +74,6 @@ sys.argv = sys.argv[0:1] + unknown
 def readme():
     with open('README.rst') as f:
         return f.read()
-
-
-# Experimental...
-if platform == 'darwin':
-    os.environ['_PYTHON_HOST_PLATFORM'] = f'macosx-{MACOSX_VERSION_MIN}-x86_64'
-
 
 # ----- SWIG CONFIGURATION -----
 

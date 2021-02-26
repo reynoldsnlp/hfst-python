@@ -22,6 +22,8 @@ brew install swig
 # cp tmp/hfst/lib/libhfst.dylib hfst/lib/
 # export LDFLAGS="-L$(pwd)/tmp/hfst/lib ${LDFLAGS}"
 
+export MACOSX_DEPLOYMENT_TARGET=10.9
+
 # Build HFST from source
 ./build_hfst.sh
 python setup.py build_ext
