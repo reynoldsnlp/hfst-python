@@ -1,8 +1,12 @@
 #!/bin/bash
 
+# This script is run by cibuildwheel in .github/actions/build.yml
+# (specified under CIBW_BEFORE_ALL_LINUX)
+
 set -e -x
 
-yum install -y flex libicu-devel readline-devel
+yum update -d 1
+yum install -y bison flex libicu-devel readline-devel
 
 # manually install swig 4 since yum has 3 :(
 yum install -y pcre-devel
@@ -16,6 +20,7 @@ make install
 popd
 
 
+# pypy 2010 manylinux image has outdated bison
 BISON_VERSION=$(bison --version | python -c "import re, sys; print(re.search(r'([0-9]+)\.[0-9]+\.[0-9]+.*', sys.stdin.read(), re.S).group(1))")
 echo ${BISON_VERSION}
 if [[ ${BISON_VERSION} < 3 ]]; then

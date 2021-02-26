@@ -40,36 +40,19 @@ jobs:
           CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
           CIBW_MANYLINUX_PPC64LE_IMAGE: manylinux2014
           CIBW_MANYLINUX_S390X_IMAGE: manylinux2014
-          CIBW_BEFORE_ALL_LINUX:   "{package}/cibw_before_all_linux.sh"
-          CIBW_BEFORE_ALL_MACOS:   "{package}/cibw_before_all_macos.sh"
-          CIBW_BEFORE_ALL_WINDOWS: "C:\\msys64\\usr\\bin\\bash {package}\\cibw_before_all_windows.sh"
+          CIBW_BEFORE_ALL_LINUX:   "{package}/scripts/cibw_before_all_linux.sh"
+          CIBW_BEFORE_ALL_MACOS:   "{package}/scripts/cibw_before_all_macos.sh"
+          CIBW_BEFORE_ALL_WINDOWS: "{package}/scripts/cibw_before_all_windows.sh"
           CIBW_BUILD_VERBOSITY: 3
           CIBW_SKIP: cp27-* cp35-* pp27-*
-          CIBW_TEST_COMMAND: "pushd {package}/test && ./test.sh --python $(which python) ; popd"
-
-      - uses: actions/upload-artifact@v2
-        with:
-          path: ./wheelhouse/*.whl
-
-  build_sdist:
-    name: Build source distribution
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: actions/setup-python@v2
-        name: Install Python
-        with:
-          python-version: '3.8'
-
-      - name: Build sdist
-        run: python setup.py sdist --dist-dir=wheelhouse
-
+          CIBW_TEST_COMMAND: "pushd {package}/test && ./test.sh --python $(which python) --verbose ; popd"
       # TODO test sdist by trying to build from it
 
       - uses: actions/upload-artifact@v2
         with:
-          path: dist/*.tar.gz
+          path: |
+                  ./wheelhouse/*.whl
+                  ./dist/*.tar.gz
 
   upload_pypi:
     needs: [build_wheels, build_sdist]

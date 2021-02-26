@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This script is run by cibuildwheel in .github/actions/build.yml
+# (specified under CIBW_BEFORE_ALL_MACOS)
+
 set -e -x
 
 brew install automake bison flex  # to build from source
