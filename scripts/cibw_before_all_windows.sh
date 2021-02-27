@@ -18,5 +18,5 @@ choco upgrade -y --no-progress winflexbison3 swig  # libicu-devel readline-devel
 #           mingw-w64-x86_64-readline  \
 #           swig
 
-./build_hfst.sh
+./scripts/build_hfst.sh
 python setup.py build_ext

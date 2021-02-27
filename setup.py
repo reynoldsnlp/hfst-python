@@ -22,7 +22,7 @@ and msvc 14.0 (with python 3.5 and 3.6).
 
 """
 
-import argparse
+# import argparse
 from glob import glob
 import os
 from pprint import pprint
@@ -34,7 +34,7 @@ from sys import version_info
 
 MACOSX_VERSION_MIN = os.environ.get('MACOSX_DEPLOYMENT_TARGET', '10.9')
 
-parser = argparse.ArgumentParser(description='Build hfst python module')
+# parser = argparse.ArgumentParser(description='Build hfst python module')
 
 # # By default, use the C++ version of foma backend. C++11 requires option
 # # -std=c++0x to be set for C/C++ compiler (this cannot de defined for each file
@@ -46,13 +46,13 @@ parser = argparse.ArgumentParser(description='Build hfst python module')
 # foma_group.add_argument('--with-c-foma', action='store_const', dest='cpp_foma',
 #                         const=False, help='Use C version of foma backend')
 
-wrapper_group = parser.add_mutually_exclusive_group()
-wrapper_group.add_argument('--generate-wrapper', action='store_const',
-                           dest='generate_wrapper', const=True, default=True,
-                           help='Generate the SWIG wrapper (default)')
-wrapper_group.add_argument('--no-generate-wrapper', action='store_const',
-                           dest='generate_wrapper', const=False,
-                           help='Do not generate SWIG wrapper.')
+# wrapper_group = parser.add_mutually_exclusive_group()
+# wrapper_group.add_argument('--generate-wrapper', action='store_const',
+#                            dest='generate_wrapper', const=True, default=True,
+#                            help='Generate the SWIG wrapper (default)')
+# wrapper_group.add_argument('--no-generate-wrapper', action='store_const',
+#                            dest='generate_wrapper', const=False,
+#                            help='Do not generate SWIG wrapper.')
 
 # local_group = parser.add_mutually_exclusive_group()
 # local_group.add_argument('--local-hfst', action='store_const', dest='local',
@@ -65,15 +65,16 @@ wrapper_group.add_argument('--no-generate-wrapper', action='store_const',
 # parser.add_argument('--no-readline', action='store_true',
 #                     help='Do not include readline')
 
-args, unknown = parser.parse_known_args()
-print(args, file=sys.stderr)
+# args, unknown = parser.parse_known_args()
+# print(args, file=sys.stderr)
 # remaining args are passed to setup using sys.argv
-sys.argv = sys.argv[0:1] + unknown
+# sys.argv = sys.argv[0:1] + unknown
 
 
 def readme():
     with open('README.rst') as f:
         return f.read()
+
 
 # ----- SWIG CONFIGURATION -----
 
@@ -84,10 +85,10 @@ abs_libhfst_src_dir = os.path.abspath('hfst_src/libhfst/src/')
 ext_swig_opts = ['-c++', '-I' + abs_libhfst_src_dir, '-Wall']
 
 # By default, we build the wrapper
-if args.generate_wrapper:
-    ext_source = ['hfst/libhfst.i']
-else:
-    ext_source = ['hfst/libhfst_wrap.cpp']
+# if args.generate_wrapper:
+#     ext_source = ['hfst/libhfst.i']
+# else:
+#     ext_source = ['hfst/libhfst_wrap.cpp']
 
 
 # ----- LINKER ARGUMENTS -----
@@ -351,7 +352,7 @@ if (platform == 'win32'):
 
 libhfst_module = Extension('hfst._libhfst',
                            language='c++',
-                           sources=ext_source + libhfst_source_files,
+                           sources=['hfst/libhfst.i'] + libhfst_source_files,
                            swig_opts=ext_swig_opts,
                            include_dirs=ext_include_dirs,
                            library_dirs=[abs_libhfst_src_dir + '/.libs'],

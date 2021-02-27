@@ -25,5 +25,5 @@ brew install swig
 export MACOSX_DEPLOYMENT_TARGET=10.9
 
 # Build HFST from source
-./build_hfst.sh
+./scripts/build_hfst.sh
 python setup.py build_ext

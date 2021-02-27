@@ -9,7 +9,7 @@ for p in ${PYTHON_EXECUTABLES}; do
 done
 
 echo "STEP Cleaning old files..."
-./clean.sh
+./scripts/clean.sh
 
 echo "STEP Building HFST C++..."
 cd hfst_src/
@@ -41,4 +41,4 @@ echo "STEP Building source distribution..."
 ${p} setup.py sdist --with-libc++
 
 echo "STEP Running tests..."
-./test_builds.sh ${PYTHON_EXECUTABLES}
+./scripts/test_builds.sh ${PYTHON_EXECUTABLES}

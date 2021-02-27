@@ -37,5 +37,5 @@ else
     echo "Bison is new enough. No upgrade needed.";
 fi
 
-./build_hfst.sh
+./scripts/build_hfst.sh
 python setup.py build_ext
