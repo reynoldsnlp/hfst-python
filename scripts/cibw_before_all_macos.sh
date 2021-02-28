@@ -31,7 +31,7 @@ autoreconf -fvi
 ./configure --disable-static  \
 	    --enable-all-tools  \
 	    --with-readline  \
-	    --with-unicode-handler=glib  \  # TODO glib
+	    --with-unicode-handler=glib  \
 	    MACOSX_DEPLOYMENT_TARGET=10.9
 make
 make check V=1 VERBOSE=1
