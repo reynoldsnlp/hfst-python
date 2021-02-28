@@ -37,5 +37,12 @@ else
     echo "Bison is new enough. No upgrade needed.";
 fi
 
-./scripts/build_hfst.sh
+cd hfst_src/
+autoreconf -fvi
+./configure --disable-static --enable-all-tools --with-readline --with-unicode-handler=glib
+make
+make check V=1 VERBOSE=1
+make install
+cd ..
+
 python setup.py build_ext
