@@ -18,12 +18,9 @@ choco upgrade -y --no-progress winflexbison3 swig  # libicu-devel readline-devel
 #           mingw-w64-x86_64-readline  \
 #           swig
 
-echo \$PATH
-echo ${PATH}
-find / -type f -name autoreconf
-
 cd hfst_src/
-/usr/bin/autoreconf -fvi
+# autoreconf in msys, which is not on PATH
+/c/msys64/usr/bin/autoreconf -fvi
 ./configure --disable-static --enable-all-tools --with-readline --with-unicode-handler=glib
 make
 make check V=1 VERBOSE=1
