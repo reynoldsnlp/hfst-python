@@ -25,14 +25,15 @@ brew install swig
 export MACOSX_DEPLOYMENT_TARGET=10.9
 
 # Build ICU (brew has too recent MACOSX_DEPLOYMENT_TARGET)
-mkdir icu
-cd icu/
+mkdir icu_tmp
+cd icu_tmp/
 wget https://github.com/unicode-org/icu/archive/release-68-2.tar.gz
 tar -xzf release-68-2.tar.gz
 cd icu-release-68-2/icu4c/source/
 ./runConfigureICU MacOSX/GCC
 make
 make install
+cd ../../../../
 
 # Build HFST from source
 echo "deployment target: ${MACOSX_DEPLOYMENT_TARGET}"
