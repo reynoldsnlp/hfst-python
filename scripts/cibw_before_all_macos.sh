@@ -6,10 +6,9 @@
 set -e -x
 
 brew install automake bison flex glib  # to build hfst from source
-export PATH="/usr/local/opt/icu4c/bin:/usr/local/opt/icu4c/sbin:/usr/local/opt/bison/bin:/usr/local/opt/flex/bin:$PATH"
-export CPPFLAGS="-I/usr/local/opt/flex/include -I/usr/local/opt/icu4c/include"
-export LDFLAGS="-L/usr/local/opt/bison/lib -L/usr/local/opt/flex/lib -L/usr/local/opt/icu4c/lib"
-export PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig"
+export PATH="/usr/local/opt/bison/bin:/usr/local/opt/flex/bin:$PATH"
+export CPPFLAGS="-I/usr/local/opt/flex/include"
+export LDFLAGS="-L/usr/local/opt/bison/lib -L/usr/local/opt/flex/lib"
 
 brew install swig
 
@@ -24,6 +23,16 @@ brew install swig
 # export LDFLAGS="-L$(pwd)/tmp/hfst/lib ${LDFLAGS}"
 
 export MACOSX_DEPLOYMENT_TARGET=10.9
+
+# Build ICU (brew has too recent MACOSX_DEPLOYMENT_TARGET)
+mkdir icu
+cd icu/
+wget https://github.com/unicode-org/icu/archive/release-68-2.tar.gz
+tar -xzf release-68-2.tar.gz
+cd icu-release-68-2/icu4c/source/
+./runConfigureICU MacOSX/GCC
+make
+make install
 
 # Build HFST from source
 echo "deployment target: ${MACOSX_DEPLOYMENT_TARGET}"
