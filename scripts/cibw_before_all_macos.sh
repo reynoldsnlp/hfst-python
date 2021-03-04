@@ -23,6 +23,8 @@ brew install swig
 # export LDFLAGS="-L$(pwd)/tmp/hfst/lib ${LDFLAGS}"
 
 export MACOSX_DEPLOYMENT_TARGET=10.9
+echo "ENV DEBUG"
+env
 
 # Build ICU (brew has too recent MACOSX_DEPLOYMENT_TARGET)
 mkdir icu_tmp
