@@ -6,6 +6,7 @@
 set -e -x
 
 brew install automake bison flex glib  # to build hfst from source
+# TODO choose between glib and ICU
 export PATH="/usr/local/opt/bison/bin:/usr/local/opt/flex/bin:$PATH"
 export CPPFLAGS="-I/usr/local/opt/flex/include"
 export LDFLAGS="-L/usr/local/opt/bison/lib -L/usr/local/opt/flex/lib"
@@ -27,15 +28,15 @@ echo "ENV DEBUG"
 env
 
 # Build ICU (brew has too recent MACOSX_DEPLOYMENT_TARGET)
-mkdir icu_tmp
-cd icu_tmp/
-wget https://github.com/unicode-org/icu/archive/release-68-2.tar.gz
-tar -xzf release-68-2.tar.gz
-cd icu-release-68-2/icu4c/source/
-./runConfigureICU MacOSX/GCC
-make
-make install
-cd ../../../../
+# mkdir icu_tmp
+# cd icu_tmp/
+# wget https://github.com/unicode-org/icu/archive/release-68-2.tar.gz
+# tar -xzf release-68-2.tar.gz
+# cd icu-release-68-2/icu4c/source/
+# ./runConfigureICU MacOSX/GCC
+# make
+# make install
+# cd ../../../../
 
 # Build HFST from source
 echo "deployment target: ${MACOSX_DEPLOYMENT_TARGET}"
