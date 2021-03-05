@@ -10,16 +10,17 @@ set -e -x
 # export PATH="/c/msys2/usr/bin/:${PATH}"
 # export LDFLAGS="-L/c/msys2/usr/lib"
 
-# pacman -S --noconfirm --needed  \
+pacman -S --noconfirm --needed  \
+           bison  \
+           flex  \
+           icu-devel
+
 #           base-devel  \
-#           bison  \
-#           flex  \
 #           mingw-w64-i686-toolchain  \
 #           mingw-w64-x86_64-toolchain  \
 #           # mingw-w64-cross-toolchain  \
 #           mingw-w64-x86_64-libtool  \
 #           mingw-w64-x86_64-icu  \
-#           icu-devel  \
 #           glib2-devel  \
 #           swig
 
