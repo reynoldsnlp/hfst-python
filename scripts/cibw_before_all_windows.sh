@@ -7,8 +7,8 @@
 set -e -x
 
 # choco upgrade -y --no-progress winflexbison3 swig  # libicu-devel readline-devel
-export PATH="/c/msys2/usr/bin/:${PATH}"
-export LDFLAGS="-L/c/msys2/usr/lib"
+# export PATH="/c/msys2/usr/bin/:${PATH}"
+# export LDFLAGS="-L/c/msys2/usr/lib"
 pacman -S --noconfirm --needed  \
           base-devel  \
           bison  \
