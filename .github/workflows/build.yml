@@ -38,7 +38,7 @@ jobs:
 
           CIBW_BEFORE_ALL_WINDOWS: C:\msys64\msys2_shell.cmd -mingw64 -defterm -here -full-path -no-start -shell bash scripts/cibw_before_all_windows.sh
 
-          CIBW_TEST_COMMAND: "pushd test && ./test.sh --python $(which python) --verbose ; popd"
+          CIBW_TEST_COMMAND: "pushd {package}/test && ./test.sh --python $(which python) --verbose ; popd"
       # TODO test sdist by trying to build from it
 
       - uses: actions/upload-artifact@v2

@@ -10,12 +10,13 @@ set -e -x
 pacman -S --noconfirm --needed  \
            bison  \
            flex  \
-           icu-devel
+           icu-devel  \
+           swig
 
-export CPPFLAGS="-I/c/msys2/usr/include ${CPPFLAGS}"
-export LDFLAGS="-L/c/msys2/usr/lib ${LDFLAGS}"
-export PATH="/c/msys2/usr/bin/:${PATH}"
-export PKG_CONFIG_PATH="/c/msys2/usr/lib/pkgconfig:${PKG_CONFIG_PATH}"
+export CPPFLAGS="-I/usr/include ${CPPFLAGS}"
+export LDFLAGS="-L/usr/lib ${LDFLAGS}"
+export PATH="/usr/bin/:${PATH}"
+export PKG_CONFIG_PATH="/usr/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 
 #           base-devel  \

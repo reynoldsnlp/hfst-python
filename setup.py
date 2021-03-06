@@ -362,7 +362,7 @@ libhfst_module = Extension('hfst._libhfst',
                            extra_link_args=ext_extra_link_args,
                            )
 
-print('Extension arguments:', file=sys.stderr)
+print('Extension arguments:')
 pprint(libhfst_module.__dict__, stream=sys.stderr)
 
 setup(name='hfst',
