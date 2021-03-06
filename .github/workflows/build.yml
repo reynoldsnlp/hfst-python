@@ -40,10 +40,10 @@ jobs:
           CIBW_MANYLINUX_PPC64LE_IMAGE: manylinux2014
           CIBW_MANYLINUX_S390X_IMAGE: manylinux2014
           # CIBW_BEFORE_ALL:  echo "This is the main CIBW_BEFORE_ALL"
-          CIBW_BEFORE_ALL_LINUX:   ./scripts/cibw_before_all_linux.sh
+          CIBW_BEFORE_ALL_LINUX:   bash scripts/cibw_before_all_linux.sh
 
           CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"
-          CIBW_BEFORE_ALL_MACOS:   ./scripts/cibw_before_all_macos.sh
+          CIBW_BEFORE_ALL_MACOS:   bash scripts/cibw_before_all_macos.sh
 
           CIBW_BEFORE_ALL_WINDOWS: C:\msys64\msys2_shell.cmd -mingw64 -defterm -here -full-path -no-start -shell bash scripts/cibw_before_all_windows.sh
 
