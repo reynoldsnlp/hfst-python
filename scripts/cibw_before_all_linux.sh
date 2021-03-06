@@ -5,7 +5,7 @@
 
 set -e -x
 
-yum update -d 1
+# yum update -d 1
 yum install -y bison flex libicu-devel readline-devel
 
 # manually install swig 4 since yum has 3 :(
@@ -39,7 +39,7 @@ fi
 
 cd hfst_src/
 autoreconf -fvi
-./configure --disable-static --enable-all-tools --with-readline --with-unicode-handler=glib
+./configure --disable-static --enable-all-tools --with-readline --with-unicode-handler=icu
 make
 make check V=1 VERBOSE=1
 make install
