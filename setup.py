@@ -107,9 +107,9 @@ if include_readline:
     ext_extra_link_args = ['-lreadline']
 # Experimental...
 if platform == 'darwin':
-    ext_extra_link_args.extend([f'-mmacosx-version-min={MACOSX_VERSION_MIN}'])
+    ext_extra_link_args.extend(['-mmacosx-version-min=' + MACOSX_VERSION_MIN])
 # if args.local:
-#     ext_extra_link_args.extend([f'-Wl,-rpath,{abs_libhfst_src_dir}/.libs'])
+#     ext_extra_link_args.extend(['-Wl,-rpath,' + abs_libhfst_src_dir + '/.libs'])
 
 
 # ----- INCLUDE DIRECTORIES -----
@@ -176,7 +176,7 @@ if platform == 'linux' or platform == 'linux2' or platform == 'darwin':
 # Experimental...
 if platform == 'darwin':
     ext_extra_compile_args.extend(['-stdlib=libc++',
-                                   f'-mmacosx-version-min={MACOSX_VERSION_MIN}'])
+                                   '-mmacosx-version-min=' + MACOSX_VERSION_MIN])
 # define error handling mechanism on windows
 if platform == 'win32':
     ext_extra_compile_args = ['/EHsc']
