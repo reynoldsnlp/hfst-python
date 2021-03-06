@@ -5,8 +5,7 @@
 
 set -e -x
 
-brew install automake bison flex glib  # to build hfst from source
-# TODO choose between glib and ICU
+brew install automake bison flex icu4c  # to build hfst from source
 export PATH="/usr/local/opt/bison/bin:/usr/local/opt/flex/bin:$PATH"
 export CPPFLAGS="-I/usr/local/opt/flex/include"
 export LDFLAGS="-L/usr/local/opt/bison/lib -L/usr/local/opt/flex/lib"
