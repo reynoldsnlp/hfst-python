@@ -52,4 +52,4 @@ make check V=1 VERBOSE=1
 make install
 cd ..
 
-python setup.py build_ext
+python3 setup.py build_ext
