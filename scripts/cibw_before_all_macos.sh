@@ -7,8 +7,9 @@ set -e -x
 
 brew install automake bison flex icu4c  # to build hfst from source
 export PATH="/usr/local/opt/bison/bin:/usr/local/opt/flex/bin:$PATH"
-export CPPFLAGS="-I/usr/local/opt/flex/include"
-export LDFLAGS="-L/usr/local/opt/bison/lib -L/usr/local/opt/flex/lib"
+export CPPFLAGS="-I/usr/local/opt/flex/include -I/usr/local/opt/icu4c/include"
+export LDFLAGS="-L/usr/local/opt/bison/lib -L/usr/local/opt/flex/lib -L/usr/local/opt/icu4c/lib"
+export PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig"
 
 brew install swig
 

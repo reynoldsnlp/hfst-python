@@ -7,13 +7,16 @@
 set -e -x
 
 # choco upgrade -y --no-progress winflexbison3 swig  # libicu-devel readline-devel
-export PATH="/c/msys2/usr/bin/:${PATH}"
-export LDFLAGS="-L/c/msys2/usr/lib"
-
 pacman -S --noconfirm --needed  \
            bison  \
            flex  \
            icu-devel
+
+export CPPFLAGS="-I/c/msys2/usr/include ${CPPFLAGS}"
+export LDFLAGS="-L/c/msys2/usr/lib ${LDFLAGS}"
+export PATH="/c/msys2/usr/bin/:${PATH}"
+export PKG_CONFIG_PATH="/c/msys2/usr/lib/pkgconfig:${PKG_CONFIG_PATH}"
+
 
 #           base-devel  \
 #           mingw-w64-i686-toolchain  \
