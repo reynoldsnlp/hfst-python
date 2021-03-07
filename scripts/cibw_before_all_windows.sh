@@ -14,7 +14,8 @@ pacman -S --noconfirm --needed  \
            swig
 
 export CPPFLAGS="-I/usr/include ${CPPFLAGS}"
-export LDFLAGS="-L/usr/lib ${LDFLAGS}"
+export LDFLAGS="-static"
+# export LDFLAGS="-L/usr/lib ${LDFLAGS}"
 export PATH="/usr/bin/:${PATH}"
 export PKG_CONFIG_PATH="/usr/lib/pkgconfig:${PKG_CONFIG_PATH}"
 

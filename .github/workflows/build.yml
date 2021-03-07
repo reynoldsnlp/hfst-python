@@ -22,7 +22,8 @@ jobs:
         env:
           CIBW_BUILD_VERBOSITY: 3
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.6"
-          CIBW_SKIP: cp27-* cp35-* pp27-*
+          CIBW_SKIP: cp27-* cp35-* pp*
+          # TODO don't skip pypy?
 
           CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux2010  # 2014 unavailable
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
