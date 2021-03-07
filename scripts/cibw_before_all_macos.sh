@@ -7,8 +7,8 @@ set -e -x
 
 brew install automake bison flex icu4c  # to build hfst from source
 export PATH="/usr/local/opt/bison/bin:/usr/local/opt/flex/bin:$PATH"
-export CPPFLAGS="-I/usr/local/opt/icu4c/include"
-export LDFLAGS="-static"
+export CPPFLAGS="-I/usr/local/opt/flex/include -I/usr/local/opt/icu4c/include"
+export LDFLAGS="-L/usr/local/opt/bison/lib -L/usr/local/opt/flex/lib -L/usr/local/opt/icu4c/lib"
 export PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig"
 
 brew install swig
@@ -42,9 +42,7 @@ env
 echo "deployment target: ${MACOSX_DEPLOYMENT_TARGET}"
 cd hfst_src/
 autoreconf -fvi
-./configure --disable-static  \
-	    --enable-all-tools  \
-	    --with-readline  \
+./configure --with-readline  \
 	    --with-unicode-handler=icu  \
 	    MACOSX_DEPLOYMENT_TARGET=10.9
 make

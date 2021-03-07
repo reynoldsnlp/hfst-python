@@ -13,9 +13,16 @@ pacman -S --noconfirm --needed  \
            icu-devel  \
            swig
 
+
+git clone https://github.com/dlfcn-win32/dlfcn-win32.git
+cd dlfcn-win32/
+./configure
+make
+make install
+cd ..
+
 export CPPFLAGS="-I/usr/include ${CPPFLAGS}"
-export LDFLAGS="-static"
-# export LDFLAGS="-L/usr/lib ${LDFLAGS}"
+export LDFLAGS="-L/usr/lib ${LDFLAGS}"
 export PATH="/usr/bin/:${PATH}"
 export PKG_CONFIG_PATH="/usr/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
