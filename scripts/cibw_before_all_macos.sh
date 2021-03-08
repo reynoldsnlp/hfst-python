@@ -43,8 +43,6 @@ echo "deployment target: ${MACOSX_DEPLOYMENT_TARGET}"
 cd hfst_src/
 autoreconf -fvi
 ./configure --with-readline  \
-            --enable-static  \
-            --disable-shared  \
             --with-unicode-handler=icu  \
             MACOSX_DEPLOYMENT_TARGET=10.9
 make
