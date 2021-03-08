@@ -38,7 +38,7 @@ export PKG_CONFIG_PATH="/usr/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 cd hfst_src/
 autoreconf -fvi
-./configure --with-unicode-handler=icu
+./configure --enable-mingw --with-unicode-handler=icu
 make
 make check V=1 VERBOSE=1
 make install
