@@ -36,7 +36,7 @@ jobs:
 
           CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"
           CIBW_BEFORE_ALL_MACOS:   bash scripts/cibw_before_all_macos.sh
-          CIBW_REPAIR_WHEEL_COMMAND_MACOS: "delocate-listdeps {wheel} && delocate-wheel --require-archs {delocate_archs} -w {dest_dir} {wheel} && {package}/scripts/macos_fix_links.sh {dest_dir} {wheel}"
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: delocate-listdeps {wheel} && delocate-wheel --require-archs {delocate_archs} -w {dest_dir} {wheel} && {package}/scripts/macos_fix_links.sh {dest_dir} {wheel}
 
           CIBW_BEFORE_ALL_WINDOWS: C:\msys64\msys2_shell.cmd -mingw64 -defterm -here -full-path -no-start -shell bash scripts/cibw_before_all_windows.sh
 
