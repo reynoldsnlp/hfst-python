@@ -21,7 +21,7 @@ log = subprocess.run(['git', 'log', '-1', '-p'],
                      stdout=subprocess.PIPE,
                      universal_newlines=True).stdout
 
-diff = 'diff --git a/VERSION ' in log
+diff = '\ndiff --git a/VERSION ' in log
 if diff:
     version_diff = re.search(r'^(diff --git a/VERSION .*?)(?:\Z|^diff --git a/)',
                              log, re.S | re.M).group(1)
