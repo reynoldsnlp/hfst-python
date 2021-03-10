@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+"""
+To use this script as a local pre-commit check...
+    1) Copy this file to .git/hooks/pre-commit
+    2) Ensure that it is executable (chmod +x .git/hooks/pre-commit).
+"""
+
+import re
+import subprocess
+import sys
+
+diff = subprocess.run(['git', 'diff', 'setup.py'],
+                      stdout=subprocess.PIPE,
+                      universal_newlines=True).stdout.split('\n')
+diff = [line for line in diff if re.match(r'[-+]\s+version\s*=.*', line)]
+
+if len(diff) != 2:
+    response = None
+    print('You have not bumped the version. Would you like to bump it now?')
+    while response not in {'C', 'I', 'R', 'T'}:
+        response = input('\t(C) Cancel commit.\n'
+                         '\t(I) Ignore (proceed with commit without bumping)\n'
+                         '\t(R) Make a (R)elease (bump version and add tag)\n'
+                         '\t(T) Make a (T)est release (bump beta version)\n'
+                         '\t (C/I/R/T) > ')
+if response in {'C', 'c'}:
+    sys.exit(1)
+elif response in {'I', 'i'}:
+    sys.exit(0)
+elif response in {'R', 'r'}:
+    version = subprocess.run(['./scripts/bump_version.py'],
+                             stderr=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             universal_newlines=True).stdout.split('\n')
+    subprocess.run(['git', 'tag', version])
+    sys.exit(0)
+elif response in {'T', 't'}:
+    version = subprocess.run(['./scripts/bump_version.py', '--test'],
+                             stderr=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             universal_newlines=True).stdout.split('\n')
+    sys.exit(0)

@@ -54,9 +54,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v2
+        id: download
         with:
           name: artifact
-          path: ./wheelhouse/
+          path: dist
+
+      - name: Show artifact directory structure
+        run: find ${{ steps.download.outputs.download-path }}
 
       - name: Publish distribution 📦 to Test PyPI
         # upload to Test PyPI on every tag NOT starting with 'v'
@@ -67,8 +71,8 @@ jobs:
         with:
           user: __token__
           password: ${{ secrets.TEST_PYPI_TOKEN }}
-          packages_dir: ./wheelhouse/
           repository_url: https://test.pypi.org/legacy/
+          verbose: true
 
       - name: Publish distribution 📦 to PyPI
         # upload to PyPI on every tag starting with 'v'
@@ -79,4 +83,4 @@ jobs:
         with:
           user: __token__
           password: ${{ secrets.PYPI_TOKEN }}
-          packages_dir: ./wheelhouse/
+          verbose: true
