@@ -11,6 +11,8 @@ import sys
 
 sys.stdin = open('/dev/tty')
 
+print(f'Running {__file__} ...', file=sys.stderr)
+
 diff = subprocess.run(['git', 'diff', 'setup.py'],
                       stdout=subprocess.PIPE,
                       universal_newlines=True).stdout.split('\n')
@@ -41,14 +43,20 @@ if response in {'C', 'c'}:
 elif response in {'I', 'i'}:
     sys.exit(0)
 elif response in {'R', 'r'}:
-    version = subprocess.run(['./scripts/bump_version.py'],
-                             stderr=subprocess.PIPE,
-                             stdout=subprocess.PIPE,
-                             universal_newlines=True).stdout.split('\n')
+    completed = subprocess.run(['./scripts/bump_version.py'],
+                               stderr=subprocess.PIPE,
+                               stdout=subprocess.PIPE,
+                               universal_newlines=True)
+    autoversion = completed.stdout.split('\n')
+    print(completed)
+    print(f'Version set to {autoversion}')
     sys.exit(0)
 elif response in {'T', 't'}:
-    version = subprocess.run(['./scripts/bump_version.py', '--test'],
-                             stderr=subprocess.PIPE,
-                             stdout=subprocess.PIPE,
-                             universal_newlines=True).stdout.split('\n')
+    completed = subprocess.run(['./scripts/bump_version.py', '--test'],
+                               stderr=subprocess.PIPE,
+                               stdout=subprocess.PIPE,
+                               universal_newlines=True)
+    autoversion = completed.stdout.split('\n')
+    print(completed)
+    print(f'Version set to {autoversion}')
     sys.exit(0)

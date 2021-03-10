@@ -10,6 +10,8 @@ import sys
 import requests
 
 
+print(f'Running {__file__} ...', file=sys.stderr)
+
 TEST = '--test' in sys.argv
 
 
@@ -72,9 +74,9 @@ path_to_setup_py = __file__.replace('scripts/bump_version.py', '') + 'setup.py'
 with open(path_to_setup_py) as f:
     setup_py = f.read()
 
-setup_py = re.sub(r"version='.*?',  # automatically bumped by scripts/bump_version.py",
+setup_py = re.sub(r"""version\s*=\s*['"].*?['"].*?$""",
                   f"version='{new_version}',  # automatically bumped by scripts/bump_version.py",
-                  setup_py)
+                  setup_py, flags=re.M)
 
 with open(path_to_setup_py, 'w') as f:
     f.write(setup_py)

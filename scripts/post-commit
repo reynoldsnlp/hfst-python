@@ -16,9 +16,10 @@ print(f'Running {__file__}...', file=sys.stderr)
 log = subprocess.run(['git', 'log', '-1', '-p'],
                      stdout=subprocess.PIPE,
                      universal_newlines=True).stdout
+print('log:', log)  # TODO delete me
 setup_py_log = re.search(r'^(diff --git a/setup\.py.*?)(?:\Z|^diff --git a/)',
                          log, re.S | re.M).group(1)
-print(setup_py_log)  # TODO delete me
+print('setup_py_log:', setup_py_log)  # TODO delete me
 if re.search(r'^\+\s+version\s*=\s*', setup_py_log, re.M):
     new_version = re.search(r"""^\+\s+version\s*=\s*['"]([0-9.b]+)['"]""",
                             setup_py_log).group(1)
