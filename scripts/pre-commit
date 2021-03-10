@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 To use this script as a local pre-commit check...
-    1) Copy this file to .git/hooks/pre-commit
+    1) Symlink (or copy) this file to .git/hooks/
     2) Ensure that it is executable (chmod +x .git/hooks/pre-commit).
 """
 
@@ -9,20 +9,33 @@ import re
 import subprocess
 import sys
 
+sys.stdin = open('/dev/tty')
+
 diff = subprocess.run(['git', 'diff', 'setup.py'],
                       stdout=subprocess.PIPE,
                       universal_newlines=True).stdout.split('\n')
 diff = [line for line in diff if re.match(r'[-+]\s+version\s*=.*', line)]
+try:
+    new_version = [line for line in diff if line.startswith('+')][0]
+    new_version = re.search(r"""version\s*=\s*['"]([0-9.b]+)['"]""",
+                            new_version).group(1)
+except IndexError:
+    new_version = None
 
 if len(diff) != 2:
-    response = None
-    print('You have not bumped the version. Would you like to bump it now?')
-    while response not in {'C', 'I', 'R', 'T'}:
-        response = input('\t(C) Cancel commit.\n'
-                         '\t(I) Ignore (proceed with commit without bumping)\n'
-                         '\t(R) Make a (R)elease (bump version and add tag)\n'
-                         '\t(T) Make a (T)est release (bump beta version)\n'
-                         '\t (C/I/R/T) > ')
+    print('How would you like to proceed?')
+else:
+    print(f'The version number in `setup.py` has changed to {new_version}. '
+          'It is recommended that you leave version numbering up to this '
+          'pre-commit script. How would you like to proceed?')
+response = None
+while response not in {'C', 'I', 'R', 'T'}:
+    response = input('\t(C) Cancel/abort commit.\n'
+                     f'\t(I) Ignore (commit as-is with v{new_version})\n'
+                     '\t(R) Make a (R)elease (auto-bump release version)\n'
+                     '\t(T) Make a (T)est release (auto-bump beta version)\n'
+                     '\t (C/I/R/T) > ')
+
 if response in {'C', 'c'}:
     sys.exit(1)
 elif response in {'I', 'i'}:
@@ -32,7 +45,6 @@ elif response in {'R', 'r'}:
                              stderr=subprocess.PIPE,
                              stdout=subprocess.PIPE,
                              universal_newlines=True).stdout.split('\n')
-    subprocess.run(['git', 'tag', version])
     sys.exit(0)
 elif response in {'T', 't'}:
     version = subprocess.run(['./scripts/bump_version.py', '--test'],

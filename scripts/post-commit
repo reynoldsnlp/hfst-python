@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+"""
+To use this script as a local post-commit check...
+    1) Symlink (or copy) this file to .git/hooks/
+    2) Ensure that it is executable (chmod +x .git/hooks/post-commit).
+"""
+
+import re
+import subprocess
+import sys
+
+sys.stdin = open('/dev/tty')
+
+print(f'Running {__file__}...', file=sys.stderr)
+
+log = subprocess.run(['git', 'log', '-1', '-p'],
+                     stdout=subprocess.PIPE,
+                     universal_newlines=True).stdout
+setup_py_log = re.search(r'^(diff --git a/setup\.py.*?)(?:\Z|^diff --git a/)',
+                         log, re.S | re.M).group(1)
+print(setup_py_log)  # TODO delete me
+if re.search(r'^\+\s+version\s*=\s*', setup_py_log, re.M):
+    new_version = re.search(r"""^\+\s+version\s*=\s*['"]([0-9.b]+)['"]""",
+                            setup_py_log).group(1)
+    if 'b' not in new_version:
+        response = input('This commit changed the version to {new_version}. '
+                         'Would you like to tag this commit to '
+                         'trigger a release on PyPI? This should only be '
+                         'done if this has already been successfully built '
+                         'and deployed on test.pypi.org (y/N) > ')
+        if response in {'Y', 'y'}:
+            completed = subprocess.run(['git', 'tag', f'v{new_version}'])
+            sys.exit(completed.returncode)
+    else:
+        
+        print('The last commit contained a new beta version in setup.py.')  # TODO delete me
