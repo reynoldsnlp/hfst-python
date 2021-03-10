@@ -17,6 +17,7 @@ diff = subprocess.run(['git', 'diff', 'VERSION'],
                       universal_newlines=True).stdout.strip()
 with open('VERSION') as f:
     new_version = f.read().strip()
+diff_msg = f' with v{new_version}' if diff else ''
 
 if diff:
     print(f'The version number in `setup.py` has changed to {new_version}. '
@@ -24,13 +25,11 @@ if diff:
           'pre-commit script. How would you like to proceed?')
 else:
     print('How would you like to proceed?')
-response = None
-while response not in {'C', 'I', 'R', 'T'}:
-    response = input('\t(C) Cancel/abort commit.\n'
-                     f'\t(I) Ignore (commit as-is with v{new_version})\n'
-                     '\t(R) Make a (R)elease (auto-bump release version)\n'
-                     '\t(T) Make a (T)est release (auto-bump beta version)\n'
-                     '\t (C/I/R/T) > ')
+response = input('\t(C) Cancel/abort commit.\n'
+                 f'\t(I) Ignore (commit as-is{diff_msg})\n'
+                 '\t(R) Make a (R)elease (auto-bump release version)\n'
+                 '\t(T) Make a (T)est release (auto-bump beta version)\n'
+                 '\t (c/i/r/T) > ')
 
 if response in {'C', 'c'}:
     sys.exit(1)
@@ -46,7 +45,7 @@ elif response in {'R', 'r'}:
     autoversion = completed.stdout.strip()
     print(f'Version set to {autoversion}')
     sys.exit(0)
-elif response in {'T', 't'}:
+elif response in {'T', 't', ''}:
     completed = subprocess.run(['./scripts/bump_version.py', '--test'],
                                stderr=subprocess.PIPE,
                                stdout=subprocess.PIPE,
@@ -56,3 +55,6 @@ elif response in {'T', 't'}:
     autoversion = completed.stdout.strip()
     print(f'Version set to {autoversion}')
     sys.exit(0)
+else:
+    print('Unrecognized option ({response}). Aborting...')
+    sys.exit(1)

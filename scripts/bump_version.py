@@ -74,7 +74,5 @@ path_to_VERSION = __file__.replace('scripts/bump_version.py', '') + 'VERSION'
 with open(path_to_VERSION, 'w') as f:
     f.write(new_version)
 
-print('Version updated to the following version:', file=sys.stderr)
+print(f'VERSION updated to {new_version}.', file=sys.stderr)
 print(new_version)
-print('Run the following to confirm:', file=sys.stderr)
-print('git diff VERSION', file=sys.stderr)

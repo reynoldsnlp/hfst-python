@@ -26,7 +26,7 @@ if diff:
     version_diff = re.search(r'^(diff --git a/VERSION .*?)(?:\Z|^diff --git a/)',
                              log, re.S | re.M).group(1)
     log_version = re.search(r'^\+\s*([0-9.b]+)\s*$',
-                            version_diff).group(1)
+                            version_diff, re.M).group(1)
     if log_version != file_version:
         warnings.warn('VERSION has been changed since the latest commit.')
     if 'b' not in log_version:
@@ -38,5 +38,3 @@ if diff:
         if response in {'Y', 'y'}:
             completed = subprocess.run(['git', 'tag', f'v{log_version}'])
             sys.exit(completed.returncode)
-    else:
-        print('The last commit contained a new beta version in VERSION.')  # TODO delete me
