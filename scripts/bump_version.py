@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Bump version number in setup.py based off the current HFST version and the
+"""Bump version number in VERSION based off the current HFST version and the
 current version already uploaded to PyPI (or Test PyPI, if the --test flag is
 given."""
 
@@ -28,10 +28,10 @@ def parse_python_pkg_version(input_str):
     return tuple(version)
 
 
-def bump_python_version(HFST_version, pypi_version, test=False):
-    new_version = '.'.join(str(v) for v in HFST_version)
-    assert pypi_version[:3] <= HFST_version
-    if pypi_version[:3] == HFST_version:
+def bump_python_version(hfst_version, pypi_version, test=False):
+    new_version = '.'.join(str(v) for v in hfst_version)
+    assert pypi_version[:3] <= hfst_version
+    if pypi_version[:3] == hfst_version:
         new_version += f'.{int(pypi_version[3]) + 1}'
     else:
         new_version += '.0'
@@ -43,13 +43,13 @@ def bump_python_version(HFST_version, pypi_version, test=False):
     return new_version
 
 
-def get_HFST_version():
+def get_hfst_version():
     with open('hfst_src/configure.ac') as f:
         configure_ac = f.read()
     major, minor, extension = re.search(r'LIBHFST_MAJOR=(\d+)\s*\n\s*LIBHFST_MINOR=(\d+)\s*\n\s*LIBHFST_EXTENSION=(\d+)', configure_ac).groups()
     # print(major, minor, extension)  # Check hfst_src/configure.ac manually
-    HFST_version = (int(major), int(minor), int(extension))
-    return HFST_version
+    hfst_version = (int(major), int(minor), int(extension))
+    return hfst_version
 
 
 def get_pypi_version(test=False):
@@ -63,25 +63,18 @@ def get_pypi_version(test=False):
     return pypi_version
 
 
-HFST_version = get_HFST_version()
+hfst_version = get_hfst_version()
 pypi_version = get_pypi_version(test=TEST)
-new_version = bump_python_version(HFST_version, pypi_version, test=TEST)
-print('HFST version:', HFST_version, file=sys.stderr)
+new_version = bump_python_version(hfst_version, pypi_version, test=TEST)
+print('HFST version:', hfst_version, file=sys.stderr)
 print(f'Current {"Test " if TEST else ""}PyPI version:', pypi_version, file=sys.stderr)
 print('New version:', new_version, file=sys.stderr)
 
-path_to_setup_py = __file__.replace('scripts/bump_version.py', '') + 'setup.py'
-with open(path_to_setup_py) as f:
-    setup_py = f.read()
-
-setup_py = re.sub(r"""version\s*=\s*['"].*?['"].*?$""",
-                  f"version='{new_version}',  # automatically bumped by scripts/bump_version.py",
-                  setup_py, flags=re.M)
-
-with open(path_to_setup_py, 'w') as f:
-    f.write(setup_py)
+path_to_VERSION = __file__.replace('scripts/bump_version.py', '') + 'VERSION'
+with open(path_to_VERSION, 'w') as f:
+    f.write(new_version)
 
 print('Version updated to the following version:', file=sys.stderr)
 print(new_version)
 print('Run the following to confirm:', file=sys.stderr)
-print('git diff setup.py', file=sys.stderr)
+print('git diff VERSION', file=sys.stderr)

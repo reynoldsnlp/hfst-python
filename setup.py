@@ -76,6 +76,11 @@ def readme():
         return f.read()
 
 
+def version():
+    with open('VERSION') as f:
+        return f.read().strip()
+
+
 # ----- SWIG CONFIGURATION -----
 
 # HFST C++ headers needed by swig when creating the python/c++ interface
@@ -366,7 +371,7 @@ print('Extension arguments:')
 pprint(libhfst_module.__dict__, stream=sys.stderr)
 
 setup(name='hfst',
-      version='3.15.2.0',
+      version=version(),
       author='HFST team',
       author_email='hfst-bugs@helsinki.fi',
       url='http://hfst.github.io/',
