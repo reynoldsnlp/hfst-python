@@ -40,8 +40,8 @@ jobs:
 
           CIBW_BEFORE_ALL_WINDOWS: C:\msys64\msys2_shell.cmd -mingw64 -defterm -here -full-path -no-start -shell bash scripts/cibw_before_all_windows.sh
 
-          CIBW_TEST_REQUIRES: pytest bracex
-          CIBW_TEST_COMMAND: python -m pytest
+          CIBW_TEST_REQUIRES: pytest
+          CIBW_TEST_COMMAND: pytest
       # TODO test sdist by trying to build from it
 
       - uses: actions/upload-artifact@v2
