@@ -44,10 +44,9 @@ def bump_python_version(hfst_version, pypi_version, test=False):
 
 
 def get_hfst_version():
-    with open('hfst_src/configure.ac') as f:
+    with open('libhfst_src/configure.ac') as f:
         configure_ac = f.read()
     major, minor, extension = re.search(r'LIBHFST_MAJOR=(\d+)\s*\n\s*LIBHFST_MINOR=(\d+)\s*\n\s*LIBHFST_EXTENSION=(\d+)', configure_ac).groups()
-    # print(major, minor, extension)  # Check hfst_src/configure.ac manually
     hfst_version = (int(major), int(minor), int(extension))
     return hfst_version
 

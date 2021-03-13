@@ -40,7 +40,7 @@ env
 
 # Build HFST from source
 echo "deployment target: ${MACOSX_DEPLOYMENT_TARGET}"
-cd hfst_src/
+cd libhfst_src/
 autoreconf -fvi
 ./configure --with-readline  \
             --with-unicode-handler=icu  \

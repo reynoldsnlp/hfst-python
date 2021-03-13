@@ -1,0 +1,4 @@
+Alphabet a b ;
+Rules
+"rule name"
+a:b => b _ b ;

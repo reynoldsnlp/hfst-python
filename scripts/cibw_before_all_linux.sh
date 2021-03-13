@@ -37,7 +37,7 @@ else
     echo "Bison is new enough. No upgrade needed.";
 fi
 
-cd hfst_src/
+cd libhfst_src/
 autoreconf -fvi
 ./configure --with-readline --with-unicode-handler=icu
 make

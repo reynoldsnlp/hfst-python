@@ -1,53 +1,55 @@
-# -*- coding: utf-8 -*-
-import sys
-if len(sys.argv) > 1:
-    sys.path.insert(0, sys.argv[1])
 import hfst
-
-types = []
-if hfst.HfstTransducer.is_implementation_type_available(hfst.ImplementationType.SFST_TYPE):
-    types.append(hfst.ImplementationType.SFST_TYPE)
-if hfst.HfstTransducer.is_implementation_type_available(hfst.ImplementationType.TROPICAL_OPENFST_TYPE):
-    types.append(hfst.ImplementationType.TROPICAL_OPENFST_TYPE)
-if hfst.HfstTransducer.is_implementation_type_available(hfst.ImplementationType.FOMA_TYPE):
-    types.append(hfst.ImplementationType.FOMA_TYPE)
-
-from hfst.xerox_rules import *
 from hfst import regex
+from hfst.xerox_rules import replace
+from hfst.xerox_rules import ReplaceType
+from hfst.xerox_rules import Rule
 
-for type in types:
-    if hfst.HfstTransducer.is_implementation_type_available(type):
 
-        hfst.set_default_fst_type(type)
+def test_xerox_rules():
+    types = []
+    if hfst.HfstTransducer.is_implementation_type_available(hfst.ImplementationType.SFST_TYPE):
+        types.append(hfst.ImplementationType.SFST_TYPE)
+    if hfst.HfstTransducer.is_implementation_type_available(hfst.ImplementationType.TROPICAL_OPENFST_TYPE):
+        types.append(hfst.ImplementationType.TROPICAL_OPENFST_TYPE)
+    if hfst.HfstTransducer.is_implementation_type_available(hfst.ImplementationType.FOMA_TYPE):
+        types.append(hfst.ImplementationType.FOMA_TYPE)
 
-        rule = Rule() # just testing the default constructor
+    for type in types:
+        if hfst.HfstTransducer.is_implementation_type_available(type):
 
-        mapping = ( (regex('a'),regex('b')), )
-        rule = Rule(mapping)
-        assert(replace(rule, False).compare(regex('a -> b')))
-        assert(replace(rule, True).compare(regex('a (->) b')))
+            hfst.set_default_fst_type(type)
 
-        mapping = ( (regex('a'),regex('b')), (regex('b'),regex('a')) )
-        rule = Rule(mapping)
-        assert(replace(rule, False).compare(regex('a -> b, b -> a')))
-        assert(replace(rule, True).compare(regex('a (->) b, b (->) a')))
+            rule = Rule()  # just testing the default constructor
 
-        for repl_type in [(ReplaceType.REPL_UP, '||'), (ReplaceType.REPL_DOWN, '\\/'), (ReplaceType.REPL_LEFT, '\\\\'), (ReplaceType.REPL_RIGHT,'//')]:
+            mapping = ((regex('a'), regex('b')), )
+            rule = Rule(mapping)
+            assert replace(rule, False).compare(regex('a -> b'))
+            assert replace(rule, True).compare(regex('a (->) b'))
 
-            mapping1 = ( (regex('a'),regex('b')), )
-            context1 = ( (regex('c'),regex('c')), )
+            mapping = ((regex('a'), regex('b')),
+                       (regex('b'), regex('a')))
+            rule = Rule(mapping)
+            assert replace(rule, False).compare(regex('a -> b, b -> a'))
+            assert replace(rule, True).compare(regex('a (->) b, b (->) a'))
 
-            rule1 = Rule(mapping1, context1, repl_type[0])
-            assert(replace(rule1, False).compare(regex('a -> b ' + repl_type[1] + ' c _ c')))
-            assert(replace(rule1, True).compare(regex('a (->) b ' + repl_type[1] + ' c _ c')))
+            for repl_type in [(ReplaceType.REPL_UP, '||'), (ReplaceType.REPL_DOWN, '\\/'), (ReplaceType.REPL_LEFT, '\\\\'), (ReplaceType.REPL_RIGHT, '//')]:
 
-            mapping2 = ( (regex('a'),regex('b')), (regex('b'),regex('a')) )
-            context2 = ( (regex('c'),regex('c')), (regex('d'),regex('d')) )
+                mapping1 = ((regex('a'), regex('b')), )
+                context1 = ((regex('c'), regex('c')), )
 
-            rule2 = Rule(mapping2, context2, repl_type[0])
-            assert(replace(rule2, False).compare(regex('a -> b, b -> a ' + repl_type[1] + ' c _ c, d _ d')))
-            assert(replace(rule2, True).compare(regex('a (->) b, b (->) a ' + repl_type[1] + ' c _ c, d _ d')))
+                rule1 = Rule(mapping1, context1, repl_type[0])
+                assert replace(rule1, False).compare(regex('a -> b ' + repl_type[1] + ' c _ c'))
+                assert replace(rule1, True).compare(regex('a (->) b ' + repl_type[1] + ' c _ c'))
 
-            rules = (rule1, rule2)
-            assert(replace(rules, False).compare(regex('a -> b ' + repl_type[1] + ' c _ c ,, a -> b, b -> a ' + repl_type[1] + ' c _ c, d _ d')))
-            assert(replace(rules, True).compare(regex('a (->) b ' + repl_type[1] + ' c _ c ,, a (->) b, b (->) a ' + repl_type[1] + ' c _ c, d _ d')))
+                mapping2 = ((regex('a'), regex('b')),
+                            (regex('b'), regex('a')))
+                context2 = ((regex('c'), regex('c')),
+                            (regex('d'), regex('d')))
+
+                rule2 = Rule(mapping2, context2, repl_type[0])
+                assert replace(rule2, False).compare(regex('a -> b, b -> a ' + repl_type[1] + ' c _ c, d _ d'))
+                assert replace(rule2, True).compare(regex('a (->) b, b (->) a ' + repl_type[1] + ' c _ c, d _ d'))
+
+                rules = (rule1, rule2)
+                assert replace(rules, False).compare(regex('a -> b ' + repl_type[1] + ' c _ c ,, a -> b, b -> a ' + repl_type[1] + ' c _ c, d _ d'))
+                assert replace(rules, True).compare(regex('a (->) b ' + repl_type[1] + ' c _ c ,, a (->) b, b (->) a ' + repl_type[1] + ' c _ c, d _ d'))

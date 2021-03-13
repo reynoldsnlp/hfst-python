@@ -36,7 +36,7 @@ export PKG_CONFIG_PATH="/usr/lib/pkgconfig:${PKG_CONFIG_PATH}"
 #           glib2-devel  \
 #           swig
 
-cd hfst_src/
+cd libhfst_src/
 autoreconf -fvi
 ./configure --enable-mingw --with-unicode-handler=icu
 make

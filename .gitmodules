@@ -1,4 +1,4 @@
 [submodule "hfst_src"]
-	path = hfst_src
+	path = libhfst_src
 	url = https://github.com/hfst/hfst
 	branch = master
