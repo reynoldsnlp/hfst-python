@@ -5,7 +5,7 @@ import hfst
 RSRC_DIR = os.path.dirname(__file__) + '/resources/'
 
 
-def test_att_reader():
+def test_att_reader1():
     transducers = []
 
     with open(RSRC_DIR + 'testfile.att', 'r') as f:
@@ -16,6 +16,8 @@ def test_att_reader():
     assert(f.closed)
     assert(len(transducers)) == 4
 
+
+def test_att_reader2():
     transducers = []
 
     with open(RSRC_DIR + 'testfile_fail.att', 'r') as f:
@@ -30,6 +32,8 @@ def test_att_reader():
     assert(f.closed)
     assert(len(transducers)) == 4
 
+
+def test_att_reader3():
     transducers = []
     with open(RSRC_DIR + 'testfile_unicode.att', 'r', encoding='utf-8') as f:
         r = hfst.AttReader(f)
