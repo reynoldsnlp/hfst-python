@@ -24,7 +24,7 @@ brew install swig
 # export LDFLAGS="-L$(pwd)/tmp/hfst/lib ${LDFLAGS}"
 
 # Build ICU (brew has too recent MACOSX_DEPLOYMENT_TARGET)
-brew uninstall icu4c
+brew uninstall --ignore-dependencies icu4c
 mkdir icu_tmp
 cd icu_tmp/
 wget https://github.com/unicode-org/icu/archive/release-68-2.tar.gz
