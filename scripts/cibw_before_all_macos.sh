@@ -46,5 +46,5 @@ make check V=1 VERBOSE=1
 make install
 cd ..
 
-python3 setup.py build_ext
-python3 setup.py sdist
+python setup.py build_ext
+python setup.py sdist
