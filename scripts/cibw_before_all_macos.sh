@@ -35,6 +35,7 @@ cd icu-release-68-2/icu4c/source/
 make
 make install
 cd ../../../../
+cp /usr/local/lib/libicu* .
 
 # Build HFST from source
 echo "deployment target: ${MACOSX_DEPLOYMENT_TARGET}"
