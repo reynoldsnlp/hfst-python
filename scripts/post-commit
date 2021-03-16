@@ -5,6 +5,7 @@ To use this script as a local post-commit check...
     2) Ensure that it is executable (chmod +x .git/hooks/post-commit).
 """
 
+import os
 import re
 import subprocess
 import sys
@@ -16,6 +17,10 @@ print(f'Running {__file__}...', file=sys.stderr)
 
 with open('VERSION') as f:
     file_version = f.read().strip()
+
+with open('is_release.tmp') as f:
+    is_release = bool(int(f.read().strip()))
+os.remove('is_release.tmp')
 
 log = subprocess.run(['git', 'log', '-1', '-p'],
                      stdout=subprocess.PIPE,
@@ -29,12 +34,12 @@ if diff:
                             version_diff, re.M).group(1)
     if log_version != file_version:
         warnings.warn('VERSION has been changed since the latest commit.')
-    if 'b' not in log_version:
+    if is_release:
         response = input(f'This commit changed the version to {log_version}. '
-                         'Would you like to tag this commit to '
-                         'trigger a release on PyPI? This should only be '
+                         'Confirm that you want to tag this commit to '
+                         'trigger a release on PyPI. This should only be '
                          'done if this has already been successfully built '
-                         'and deployed on test.pypi.org (y/N) > ')
+                         'and deployed on Test PyPI (y/N) > ')
         if response in {'Y', 'y'}:
             completed = subprocess.run(['git', 'tag', f'v{log_version}'])
             sys.exit(completed.returncode)

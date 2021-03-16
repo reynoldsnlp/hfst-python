@@ -10,6 +10,30 @@ import sys
 
 sys.stdin = open('/dev/tty')
 
+
+def bump_version(beta, test):
+    flags = []
+    if beta:
+        flags.append(' --beta')
+    if test:
+        flags.append(' --test')
+    completed = subprocess.run(['./scripts/bump_version.py'] + flags,
+                               stderr=subprocess.PIPE,
+                               stdout=subprocess.PIPE,
+                               universal_newlines=True)
+    subprocess.run(['git', 'add', 'VERSION'])
+    print(completed.stderr)
+    autoversion = completed.stdout.strip()
+    print(f'Version set to {autoversion}')
+    if test:
+        tag_commit = '0'
+    else:
+        tag_commit = '1'
+    with open('tag_commit.tmp', 'w') as f:
+        f.write(tag_commit)
+    sys.exit(0)
+
+
 print(f'Running {__file__} ...', file=sys.stderr)
 
 diff = subprocess.run(['git', 'diff', 'VERSION'],
@@ -27,34 +51,24 @@ else:
     print('How would you like to proceed?')
 response = input('\t(C) Cancel/abort commit.\n'
                  f'\t(I) Ignore (commit as-is{diff_msg})\n'
-                 '\t(R) Make a (R)elease (auto-bump release version)\n'
-                 '\t(T) Make a (T)est release (auto-bump beta version)\n'
-                 '\t (c/i/r/T) > ')
+                 '\t(R) Make a (R)elease (auto-bump release version and publish to PyPI)\n'
+                 '\t(BR) Make a (B)eta (R)elease (auto-bump beta version and publish to PyPI)\n'
+                 '\t(T) Make a (T)est release (auto-bump release version and publish to Test PyPI)\n'
+                 '\t(BT) Make a (B)eta (T)est release (auto-bump beta version and publish to Test PyPI)\n'
+                 '\t (c/i/r/br/T/bt) > ')
 
 if response in {'C', 'c'}:
     sys.exit(1)
 elif response in {'I', 'i'}:
     sys.exit(0)
 elif response in {'R', 'r'}:
-    completed = subprocess.run(['./scripts/bump_version.py'],
-                               stderr=subprocess.PIPE,
-                               stdout=subprocess.PIPE,
-                               universal_newlines=True)
-    subprocess.run(['git', 'add', 'VERSION'])
-    print(completed.stderr)
-    autoversion = completed.stdout.strip()
-    print(f'Version set to {autoversion}')
-    sys.exit(0)
+    bump_version(beta=False, test=False)
+elif response in {'BR', 'Br', 'bR', 'br'}:
+    bump_version(beta=True, test=False)
 elif response in {'T', 't', ''}:
-    completed = subprocess.run(['./scripts/bump_version.py', '--test'],
-                               stderr=subprocess.PIPE,
-                               stdout=subprocess.PIPE,
-                               universal_newlines=True)
-    subprocess.run(['git', 'add', 'VERSION'])
-    print(completed.stderr)
-    autoversion = completed.stdout.strip()
-    print(f'Version set to {autoversion}')
-    sys.exit(0)
+    bump_version(beta=False, test=True)
+elif response in {'BT', 'Bt', 'bT', 'bt'}:
+    bump_version(beta=True, test=True)
 else:
     print('Unrecognized option ({response}). Aborting...')
     sys.exit(1)
