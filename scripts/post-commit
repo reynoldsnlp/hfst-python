@@ -18,9 +18,12 @@ print(f'Running {__file__}...', file=sys.stderr)
 with open('VERSION') as f:
     file_version = f.read().strip()
 
-with open('is_release.tmp') as f:
-    is_release = bool(int(f.read().strip()))
-os.remove('is_release.tmp')
+try:
+    with open('is_release.tmp') as f:
+        is_release = bool(int(f.read().strip()))
+    os.remove('is_release.tmp')
+except FileNotFoundError:
+    sys.exit(0)
 
 log = subprocess.run(['git', 'log', '-1', '-p'],
                      stdout=subprocess.PIPE,
