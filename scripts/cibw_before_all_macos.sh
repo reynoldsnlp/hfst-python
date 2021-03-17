@@ -12,7 +12,7 @@ export LDFLAGS="-L/usr/local/opt/bison/lib -L/usr/local/opt/flex/lib -L/usr/loca
 # export PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig"
 export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
 
-brew install swig
+# brew install swig
 
 
 # Download precompiled HFST binaries from Apertium
@@ -48,5 +48,4 @@ make check V=1 VERBOSE=1
 make install
 cd ..
 
-python setup.py build_ext
 python setup.py sdist

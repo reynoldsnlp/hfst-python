@@ -130,14 +130,12 @@ else:
     openfstdir = 'libhfst_src/back-ends/openfst'
 
 # TODO determine which foma src files to include
-foma_src_dir = 'libhfst_src/back-ends/foma/'
-# foma_src_dir = 'libhfst_src/back-ends/foma/cpp-version/'
+# foma_src_dir = 'libhfst_src/back-ends/foma/'
+foma_src_dir = 'libhfst_src/back-ends/foma/cpp-version/'
 
-# all c++ extension source files
-
-libhfst_source_files = (glob('libhfst_src/libhfst/src/parsers/*.c[cp]*')
-                        + glob(foma_src_dir + '*.c[cp]*')
-                        + glob(openfstdir + '/src/lib/*.c[cp]*'))
+libhfst_source_files = (glob('libhfst_src/libhfst/src/parsers/*.cc')
+                        + glob(foma_src_dir + '*.c*')
+                        + glob(openfstdir + '/src/lib/*.cc'))
 
 package_data = {'hfst': []}
 if platform == 'win32':

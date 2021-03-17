@@ -3,8 +3,6 @@ __pycache__/
 build/
 dist/
 doc/
-src/hfst/libhfst_wrap.cpp
-src/hfst/libhfst.py
 src/hfst/lib/*.dylib
 hfst.egg-info/
 nohup.out

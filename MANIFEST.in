@@ -18,4 +18,5 @@ include README.rst
 include setup.cfg
 include src/docstrings.i
 include src/hfst/*.cpp
+include src/hfst/libhfst.i
 include src/hfst/lib/*.dylib

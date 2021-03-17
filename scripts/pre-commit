@@ -5,10 +5,39 @@ To use this script as a local pre-commit check...
     2) Ensure that it is executable (chmod +x .git/hooks/pre-commit).
 """
 
+import os
 import subprocess
 import sys
 
 sys.stdin = open('/dev/tty')
+
+
+def are_swig_generated_files_outdated():
+    """Determine whether swig-generated files are outdated."""
+    swig_fname = 'src/hfst/libhfst.i'
+    py_fname = 'src/hfst/libhfst.py'
+    cpp_fname = 'src/hfst/libhfst_wrap.cpp'
+    swig_mod_time = os.stat(swig_fname).st_mtime
+    py_mod_time = os.stat(py_fname).st_mtime
+    cpp_mod_time = os.stat(cpp_fname).st_mtime
+    if swig_mod_time > cpp_mod_time or swig_mod_time > py_mod_time:
+        print(f'WARNING: The swig-generated wrapper {cpp_fname} has not been '
+              f'updated since the last time {swig_fname} was modified.'
+              'The following sequence of commands will update it:\n')
+        print('cd libhfst_src/')
+        print('git pull remote master')
+        print('autoreconf -i')
+        print('./configure --with-unicode-handler=icu')  # TODO --with-readline?
+        print('cd back-ends')
+        print('make')
+        print('cd ../')
+        print('cd libhfst/')
+        print('make')
+        print('cd ../../')
+        print('swig -c++ -cppext cpp -python -Ilibhfst_src/libhfst/src/ -Wall')
+        return True
+    else:
+        return False
 
 
 def bump_version(beta, test):
@@ -43,12 +72,13 @@ with open('VERSION') as f:
     new_version = f.read().strip()
 diff_msg = f' with v{new_version}' if diff else ''
 
+are_swig_generated_files_outdated()
+
 if diff:
-    print(f'The version number in `setup.py` has changed to {new_version}. '
-          'It is recommended that you leave version numbering up to this '
-          'pre-commit script. How would you like to proceed?')
-else:
-    print('How would you like to proceed?')
+    print('WARNING: The version number in VERSION has changed to '
+          f'{new_version}. It is recommended that you leave version numbering '
+          'up to this pre-commit script.')
+print('How would you like to proceed?')
 response = input('\t(C) Cancel/abort commit.\n'
                  f'\t(I) Ignore (commit as-is{diff_msg})\n'
                  '\t(R) Make a (R)elease (auto-bump release version and publish to PyPI)\n'

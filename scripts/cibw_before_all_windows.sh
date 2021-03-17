@@ -10,8 +10,8 @@ set -e -x
 pacman -S --noconfirm --needed  \
            bison  \
            flex  \
-           icu-devel  \
-           swig
+           icu-devel
+#            swig
 
 
 git clone https://github.com/dlfcn-win32/dlfcn-win32.git
@@ -43,5 +43,3 @@ make
 make check V=1 VERBOSE=1
 make install
 cd ..
-
-python3 setup.py build_ext
