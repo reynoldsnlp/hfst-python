@@ -14,9 +14,9 @@ sys.stdin = open('/dev/tty')
 def bump_version(beta, test):
     flags = []
     if beta:
-        flags.append(' --beta')
+        flags.append('--beta')
     if test:
-        flags.append(' --test')
+        flags.append('--test')
     completed = subprocess.run(['./scripts/bump_version.py'] + flags,
                                stderr=subprocess.PIPE,
                                stdout=subprocess.PIPE,

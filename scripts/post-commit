@@ -19,9 +19,9 @@ with open('VERSION') as f:
     file_version = f.read().strip()
 
 try:
-    with open('is_release.tmp') as f:
+    with open('tag_commit.tmp') as f:
         is_release = bool(int(f.read().strip()))
-    os.remove('is_release.tmp')
+    os.remove('tag_commit.tmp')
 except FileNotFoundError:
     sys.exit(0)
 
