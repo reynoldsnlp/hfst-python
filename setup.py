@@ -163,9 +163,4 @@ pprint(libhfst_module.__dict__, stream=sys.stderr)
 
 # NOTE: metadata taken from setup.cfg (setup.cfg overrides setup.py)
 setup(ext_modules=[libhfst_module],
-      py_modules=['libhfst'],
-      # packages=['hfst', 'hfst.exceptions', 'hfst.sfst_rules',
-      #           'hfst.xerox_rules'],
-      package_data=package_data,
-      include_package_data=True
-      )
+      package_data=package_data)
