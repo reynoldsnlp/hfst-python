@@ -16,6 +16,7 @@ include LICENSE
 include pyproject.toml
 include README.rst
 include setup.cfg
+include setup.py
 include src/hfst/*.cpp
 include src/hfst/docstrings.i
 include src/hfst/libhfst.i
