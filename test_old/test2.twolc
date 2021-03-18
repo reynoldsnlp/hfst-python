@@ -1,4 +1,0 @@
-Alphabet a b ;
-Rules
-"rule name"
-a:b => x a _ ;

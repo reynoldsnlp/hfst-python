@@ -1,9 +1,0 @@
-LEXICON Root
-foo BAR ;
-foo BAZ ;
-
-LEXICON BAR
-bar # ;
-
-LEXICON BAZ
-baz # ;
