@@ -138,8 +138,8 @@ else:
     openfst_src_dir = 'libhfst_src/back-ends/openfst/src/lib/'
 
 # TODO determine which foma src files to include
-foma_src_dir = 'libhfst_src/back-ends/foma/'
-# foma_src_dir = 'libhfst_src/back-ends/foma/cpp-version/'
+# foma_src_dir = 'libhfst_src/back-ends/foma/'
+foma_src_dir = 'libhfst_src/back-ends/foma/cpp-version/'
 
 libhfst_source_files = (glob_cpp('libhfst_src/libhfst/src/parsers/')
                         + glob_cpp(foma_src_dir)
