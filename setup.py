@@ -22,10 +22,9 @@ and msvc 14.0 (with python 3.5 and 3.6).
 
 """
 
-# import argparse
-from glob import glob
 import os
 from pprint import pprint
+import re
 from setuptools import Extension
 from setuptools import setup
 import sys
@@ -123,19 +122,32 @@ elif platform == 'win32':
 
 # ----- C++ SOURCE FILES -----
 
+
+def re_glob(pattern, dir, **kwargs):
+    """Regular expression filename glob."""
+    fnames = []
+    with os.scandir(dir) as it:
+        for entry in it:
+            if re.search(pattern, entry.name, **kwargs) and entry.is_file():
+                fnames.append(entry.path)
+    return fnames
+
+
 # on windows, openfst back-end is in directory 'openfstwin'
 if platform == 'win32':
-    openfstdir = 'libhfst_src/back-ends/openfstwin'
+    openfst_src_dir = 'libhfst_src/back-ends/openfstwin/src/lib/'
 else:
-    openfstdir = 'libhfst_src/back-ends/openfst'
+    openfst_src_dir = 'libhfst_src/back-ends/openfst/src/lib/'
 
 # TODO determine which foma src files to include
 foma_src_dir = 'libhfst_src/back-ends/foma/'
 # foma_src_dir = 'libhfst_src/back-ends/foma/cpp-version/'
 
-libhfst_source_files = (glob('libhfst_src/libhfst/src/parsers/*.cc')
-                        + glob(foma_src_dir + '*.c*')
-                        + glob(openfstdir + '/src/lib/*.cc'))
+cpp_re = r'.*\.(?:c|cc|cpp)$'
+
+libhfst_source_files = (re_glob(cpp_re, 'libhfst_src/libhfst/src/parsers/')
+                        + re_glob(cpp_re, foma_src_dir)
+                        + re_glob(cpp_re, openfst_src_dir))
 
 package_data = {'hfst': []}
 if platform == 'win32':
