@@ -59,6 +59,9 @@ def get_hfst_version():
     github_version = (int(gh_major), int(gh_minor), int(gh_extension))
     if github_version > hfst_version:
         warnings.warn('WARNING: HFST master branch has newer version. Run `git submodule update --recursive`.')
+        response = input('Continue anyway? (y/N) ')
+        if response not in {'Y', 'y'}:
+            sys.exit(1)
     return parse('.'.join(str(i) for i in hfst_version))
 
 
