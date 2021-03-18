@@ -39,8 +39,7 @@ fi
 
 cd libhfst_src/
 autoreconf -fvi
-./configure --with-readline --with-unicode-handler=icu
-make
-make check V=1 VERBOSE=1
-make install
+./configure --with-unicode-handler=icu
+make -C back-ends
+make -C libhfst
 cd ..

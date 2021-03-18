@@ -35,17 +35,15 @@ cd icu-release-68-2/icu4c/source/
 make
 make install
 cd ../../../../
-cp /usr/local/lib/libicu* .
+cp /usr/local/lib/libicu* .  # TODO For some reason `delocate` looks here for dylibs
 
 # Build HFST from source
 echo "deployment target: ${MACOSX_DEPLOYMENT_TARGET}"
 cd libhfst_src/
 autoreconf -fvi
-./configure --with-readline  \
-            --with-unicode-handler=icu
-make
-make check V=1 VERBOSE=1
-make install
+./configure --with-unicode-handler=icu
+make -C back-ends
+make -C libhfst
 cd ..
 
 python setup.py sdist
