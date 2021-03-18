@@ -40,6 +40,7 @@ fi
 cd libhfst_src/
 autoreconf -fvi
 ./configure --with-unicode-handler=icu
-make -C back-ends
-make -C libhfst
+make
+# make -C back-ends
+# make -C libhfst
 cd ..

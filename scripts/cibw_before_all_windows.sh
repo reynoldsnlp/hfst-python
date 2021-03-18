@@ -39,6 +39,7 @@ export PKG_CONFIG_PATH="/usr/lib/pkgconfig:${PKG_CONFIG_PATH}"
 cd libhfst_src/
 autoreconf -fvi
 ./configure --enable-mingw --with-unicode-handler=icu
-make -C back-ends
-make -C libhfst
+make
+# make -C back-ends
+# make -C libhfst
 cd ..
