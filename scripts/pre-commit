@@ -18,23 +18,17 @@ def are_swig_generated_files_outdated():
     py_fname = 'src/hfst/libhfst.py'
     cpp_fname = 'src/hfst/libhfst_wrap.cpp'
     swig_mod_time = os.stat(swig_fname).st_mtime
-    py_mod_time = os.stat(py_fname).st_mtime
-    cpp_mod_time = os.stat(cpp_fname).st_mtime
+    try:
+        py_mod_time = os.stat(py_fname).st_mtime
+        cpp_mod_time = os.stat(cpp_fname).st_mtime
+    except FileNotFoundError:
+        print('WARNING: pre-generated swig file(s) not found')
+        return None
+
     if swig_mod_time > cpp_mod_time or swig_mod_time > py_mod_time:
         print(f'WARNING: The swig-generated wrapper {cpp_fname} has not been '
               f'updated since the last time {swig_fname} was modified.'
               'The following sequence of commands will update it:\n')
-        print('cd libhfst_src/')
-        print('git pull remote master')
-        print('autoreconf -i')
-        print('./configure --with-unicode-handler=icu')  # TODO --with-readline?
-        print('cd back-ends')
-        print('make')
-        print('cd ../')
-        print('cd libhfst/')
-        print('make')
-        print('cd ../../')
-        print('swig -c++ -cppext cpp -python -Ilibhfst_src/libhfst/src/ -Wall')
         return True
     else:
         return False

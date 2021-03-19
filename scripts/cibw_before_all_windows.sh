@@ -11,7 +11,7 @@ pacman -S --noconfirm --needed  \
            bison  \
            flex  \
            icu-devel
-#            swig
+           swig
 
 
 git clone https://github.com/dlfcn-win32/dlfcn-win32.git
