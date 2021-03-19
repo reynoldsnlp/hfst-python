@@ -3,6 +3,12 @@
 Package description
 *******************
 
+> NOTE: This document is out of date (inherited directly from
+> https://github.com/hfst/hfst). The purpose of this repository is to separate
+> the python code from the underlying C++ code, and to automate building
+> wheels. This document will be updated as soon as the Github Actions pipelines
+> are finalized with successful wheel builds.
+
 Package ``hfst`` contains python bindings for `HFST <https://hfst.github.io>`_
 (Helsinki Finite-State Technology) C++ library. HFST toolkit is intended for
 processing natural language morphologies. The toolkit is demonstrated by

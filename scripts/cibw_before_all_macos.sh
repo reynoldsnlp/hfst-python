@@ -42,9 +42,8 @@ echo "deployment target: ${MACOSX_DEPLOYMENT_TARGET}"
 cd libhfst_src/
 autoreconf -fvi
 ./configure --with-unicode-handler=icu
-make
-# make -C back-ends
-# make -C libhfst
+make -C back-ends
+make -C libhfst
 cd ..
 
 python setup.py sdist
