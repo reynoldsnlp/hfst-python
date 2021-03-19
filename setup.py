@@ -25,6 +25,7 @@ and msvc 14.0 (with python 3.5 and 3.6).
 from glob import glob
 import os
 from pprint import pprint
+import re
 from setuptools import Extension
 from setuptools import setup
 import sys
@@ -131,19 +132,42 @@ def glob_cpp(dir):
     return fnames
 
 
+# TODO determine which foma src files to include
+# foma_glob_pattern = 'libhfst_src/back-ends/foma/*.c'
+foma_glob_pattern = 'libhfst_src/back-ends/foma/cpp-version/*.cc'
+foma_exclude = ('foma', 'iface', 'lex.cmatrix', 'lex.interface', 'stack')
+foma_exclude_re = fr'/(?:{"|".join(re.escape(f) for f in foma_exclude)})\.cc?$'
+foma_glob = [fname for fname in glob(foma_glob_pattern)
+             if not re.search(foma_exclude_re, fname)]
+
 # on windows, openfst back-end is in directory 'openfstwin'
 if platform == 'win32':
-    openfst_src_dir = 'libhfst_src/back-ends/openfstwin/src/lib/'
+    openfst_glob_pattern = 'libhfst_src/back-ends/openfstwin/src/lib/*.cc'
 else:
-    openfst_src_dir = 'libhfst_src/back-ends/openfst/src/lib/'
+    openfst_glob_pattern = 'libhfst_src/back-ends/openfst/src/lib/*.cc'
+openfst_glob = glob(openfst_glob_pattern)
 
-# TODO determine which foma src files to include
-# foma_src_dir = 'libhfst_src/back-ends/foma/'
-foma_src_dir = 'libhfst_src/back-ends/foma/cpp-version/'
+base_path = 'libhfst_src/libhfst/src/'
+libhfst_glob = (glob(base_path + '*.cc')
+                + glob(base_path + 'implementations/*.cc')
+                + glob(base_path + 'implementations/compose_intersect/*.cc')
+                + glob(base_path + 'implementations/optimized-lookup/*.cc')
+                + glob(base_path + 'parsers/*.cc')
+                + glob(base_path + 'parsers/alphabet_src/*.cc')
+                + glob(base_path + 'parsers/io_src/*.cc')
+                + glob(base_path + 'parsers/rule_src/*.cc')
+                + glob(base_path + 'parsers/string_src/*.cc')
+                + glob(base_path + 'parsers/variable_src/*.cc'))
+libhfst_exclude = ('HfstXeroxRulesTest', 'ConvertSfstTransducer',
+                   'ConvertXfsmTransducer', 'HfstTransitionGraph',
+                   'MyTransducerLibraryTransducer', 'SfstTransducer',
+                   'XfsmTransducer')
+libhfst_exclude_re = fr'/(?:{"|".join(re.escape(f) for f in libhfst_exclude)})\.cc$'
+libhfst_glob = [fname for fname in libhfst_glob
+                if not re.search(libhfst_exclude_re, fname)]
 
-libhfst_source_files = (glob_cpp('libhfst_src/libhfst/src/parsers/')
-                        + glob_cpp(foma_src_dir)
-                        + glob_cpp(openfst_src_dir))
+libhfst_source_files = (libhfst_glob + foma_glob + openfst_glob)
+
 
 package_data = {'hfst': []}
 if platform == 'win32':
