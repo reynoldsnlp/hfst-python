@@ -84,8 +84,10 @@ if FOMA_CPP:
 else:
     ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/foma'))
 if platform == 'win32':
+    ext_include_dirs.append(os.path.abspath('libhfst_src/back-ends/openfstwin/src/include'))
     ext_include_dirs.append(os.path.abspath('libhfst_src/back-ends/openfstwin/src/include/fst'))
 else:
+    ext_include_dirs.append(os.path.abspath('libhfst_src/back-ends/openfst/src/include'))
     ext_include_dirs.append(os.path.abspath('libhfst_src/back-ends/openfst/src/include/fst'))
 
 
