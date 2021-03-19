@@ -1,22 +1,9 @@
 include libhfst_src/back-ends/foma/*.h
 include libhfst_src/back-ends/openfst/src/include/fst/*.h
 include libhfst_src/config.h
-include libhfst_src/libhfst/src/*.h
-include libhfst_src/libhfst/src/implementations/*.h
-include libhfst_src/libhfst/src/implementations/optimized-lookup/*.h
-include libhfst_src/libhfst/src/implementations/compose_intersect/*.h
-include libhfst_src/libhfst/src/parsers/*.h
-include libhfst_src/libhfst/src/parsers/*.hh
-include libhfst_src/libhfst/src/parsers/alphabet_src/*.h
-include libhfst_src/libhfst/src/parsers/io_src/*.h
-include libhfst_src/libhfst/src/parsers/rule_src/*.h
-include libhfst_src/libhfst/src/parsers/string_src/*.h
-include libhfst_src/libhfst/src/parsers/variable_src/*.h
-include LICENSE
-include pyproject.toml
-include README.rst
-include setup.cfg
-include setup.py
+recursive-include libhfst_src/libhfst/src/ *.h *.hh
+exclude           libhfst_src/libhfst/src/parsers/commandline_src/*.h
 include src/hfst/*.cpp
 include src/hfst/docstrings.i
 include src/hfst/libhfst.i
+include VERSION

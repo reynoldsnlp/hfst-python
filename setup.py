@@ -35,6 +35,9 @@ from sys import version_info
 # default to 10.9, unless the environment variable is set to something else
 MACOSX_VERSION_MIN = os.environ.get('MACOSX_DEPLOYMENT_TARGET', '10.9')
 
+# Whether to use the C++ version of the foma back-end
+FOMA_CPP = True
+
 # ----- SWIG CONFIGURATION -----
 
 # HFST C++ headers needed by swig when creating the python/c++ interface
@@ -62,17 +65,29 @@ if platform == 'darwin':
 # ----- INCLUDE DIRECTORIES -----
 
 # HFST headers needed when compiling the actual c++ extension
-ext_include_dirs = [os.path.abspath('src/hfst'),
-                    os.path.abspath('src/hfst/lib'),  # TODO delete this line?
-                    os.path.abspath('libhfst_src/back-ends/foma'),
-                    os.path.abspath('libhfst_src/back-ends'),
-                    os.path.abspath('libhfst_src/libhfst/src/'),
-                    os.path.abspath('libhfst_src/libhfst/src/parsers'),
+ext_include_dirs = [os.path.abspath('./libhfst_src'),
+                    os.path.abspath('./libhfst_src/back-ends/dlfcn'),
+                    os.path.abspath('./libhfst_src/back-ends/sfst'),
+                    os.path.abspath('./libhfst_src/libhfst/src'),
+                    os.path.abspath('./libhfst_src/libhfst/src/implementations'),
+                    os.path.abspath('./libhfst_src/libhfst/src/implementations/compose_intersect'),
+                    os.path.abspath('./libhfst_src/libhfst/src/implementations/optimized-lookup'),
+                    os.path.abspath('./libhfst_src/libhfst/src/parsers'),
+                    os.path.abspath('./libhfst_src/libhfst/src/parsers/alphabet_src'),
+                    os.path.abspath('./libhfst_src/libhfst/src/parsers/commandline_src'),
+                    os.path.abspath('./libhfst_src/libhfst/src/parsers/io_src'),
+                    os.path.abspath('./libhfst_src/libhfst/src/parsers/rule_src'),
+                    os.path.abspath('./libhfst_src/libhfst/src/parsers/string_src'),
+                    os.path.abspath('./libhfst_src/libhfst/src/parsers/variable_src')
                     ]
-if platform == 'win32':
-    ext_include_dirs.append(os.path.abspath('libhfst_src/back-ends/openfstwin/src/include'))
+if FOMA_CPP:
+    ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/foma/cpp-version'))
 else:
-    ext_include_dirs.append(os.path.abspath('libhfst_src/back-ends/openfst/src/include'))
+    ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/foma'))
+if platform == 'win32':
+    ext_include_dirs.append(os.path.abspath('libhfst_src/back-ends/openfstwin/src/include/fst'))
+else:
+    ext_include_dirs.append(os.path.abspath('libhfst_src/back-ends/openfst/src/include/fst'))
 
 
 # -----  MACROS CONFIGURATION  -----
@@ -132,9 +147,10 @@ def glob_cpp(dir):
     return fnames
 
 
-# TODO determine which foma src files to include
-# foma_glob_pattern = 'libhfst_src/back-ends/foma/*.c'
-foma_glob_pattern = 'libhfst_src/back-ends/foma/cpp-version/*.cc'
+if FOMA_CPP:
+    foma_glob_pattern = 'libhfst_src/back-ends/foma/cpp-version/*.cc'
+else:
+    foma_glob_pattern = 'libhfst_src/back-ends/foma/*.c'
 foma_exclude = ('foma', 'iface', 'lex.cmatrix', 'lex.interface', 'stack')
 foma_exclude_re = '/(?:' + '|'.join(re.escape(f) for f in foma_exclude) + r')\.cc?$'
 foma_glob = [fname for fname in glob(foma_glob_pattern)
