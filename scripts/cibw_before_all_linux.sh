@@ -8,7 +8,7 @@ set -e -x
 # yum update -d 1
 yum install -y bison flex libicu-devel readline-devel
 
-manually install swig 4 since yum has 3 :(
+# manually install swig 4 since yum has 3 :(
 yum install -y pcre-devel
 curl https://managedway.dl.sourceforge.net/project/swig/swig/swig-4.0.2/swig-4.0.2.tar.gz > /tmp/swig-4.0.2.tar.gz
 pushd /tmp

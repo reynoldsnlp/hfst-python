@@ -10,7 +10,7 @@ set -e -x
 pacman -S --noconfirm --needed  \
            bison  \
            flex  \
-           icu-devel
+           icu-devel  \
            swig
 
 
