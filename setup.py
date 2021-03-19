@@ -112,15 +112,15 @@ if platform == 'win32':
 
 # If C++11 is not supported, what features will be disabled and where unordered
 # map and set are found.
-if platform == 'win32':
+# if platform == 'win32':
     # Disable c++11 features.
-    ext_define_macros.append(('NO_CPLUSPLUS_11', None))
+    # ext_define_macros.append(('NO_CPLUSPLUS_11', None))
     # Unordered containers are in namespace std::tr1.
-    ext_define_macros.append(('USE_TR1_UNORDERED_MAP_AND_SET', None))
+    # ext_define_macros.append(('USE_TR1_UNORDERED_MAP_AND_SET', None))
     # On windows, the header files are not located in directory tr1
     # although the namespace is std::tr1.
-    if platform != 'win32':
-        ext_define_macros.append(('INCLUDE_TR1_UNORDERED_MAP_AND_SET', None))
+#     if platform != 'win32':
+#         ext_define_macros.append(('INCLUDE_TR1_UNORDERED_MAP_AND_SET', None))
 
 
 # ----- COMPILATION OPTIONS -----
