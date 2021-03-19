@@ -4,7 +4,7 @@ git submodule update --init --recursive
 cd libhfst_src/
 git reset --hard
 autoreconf -i
-./configure --with-unicode-handler=icu  # TODO --with-readline?
+./configure --with-unicode-handler=icu
 make -C back-ends
 make -C libhfst
 cd ..

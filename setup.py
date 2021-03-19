@@ -136,7 +136,7 @@ def glob_cpp(dir):
 # foma_glob_pattern = 'libhfst_src/back-ends/foma/*.c'
 foma_glob_pattern = 'libhfst_src/back-ends/foma/cpp-version/*.cc'
 foma_exclude = ('foma', 'iface', 'lex.cmatrix', 'lex.interface', 'stack')
-foma_exclude_re = fr'/(?:{"|".join(re.escape(f) for f in foma_exclude)})\.cc?$'
+foma_exclude_re = '/(?:' + '|'.join(re.escape(f) for f in foma_exclude) + r')\.cc?$'
 foma_glob = [fname for fname in glob(foma_glob_pattern)
              if not re.search(foma_exclude_re, fname)]
 
@@ -162,7 +162,7 @@ libhfst_exclude = ('HfstXeroxRulesTest', 'ConvertSfstTransducer',
                    'ConvertXfsmTransducer', 'HfstTransitionGraph',
                    'MyTransducerLibraryTransducer', 'SfstTransducer',
                    'XfsmTransducer')
-libhfst_exclude_re = fr'/(?:{"|".join(re.escape(f) for f in libhfst_exclude)})\.cc$'
+libhfst_exclude_re = '/(?:' + '|'.join(libhfst_exclude) + ')\.cc$'
 libhfst_glob = [fname for fname in libhfst_glob
                 if not re.search(libhfst_exclude_re, fname)]
 
