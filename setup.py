@@ -65,7 +65,8 @@ if platform == 'darwin':
 # ----- INCLUDE DIRECTORIES -----
 
 # HFST headers needed when compiling the actual c++ extension
-ext_include_dirs = [os.path.abspath('./libhfst_src'),
+ext_include_dirs = [os.path.abspath('./libhfst_src'),  # config.h
+                    os.path.abspath('./libhfst_src/back-ends'),
                     # os.path.abspath('./libhfst_src/back-ends/dlfcn'),
                     # os.path.abspath('./libhfst_src/back-ends/sfst'),
                     os.path.abspath('./libhfst_src/libhfst/src'),
@@ -78,7 +79,6 @@ ext_include_dirs = [os.path.abspath('./libhfst_src'),
                     # os.path.abspath('./libhfst_src/libhfst/src/parsers/rule_src'),
                     # os.path.abspath('./libhfst_src/libhfst/src/parsers/string_src'),
                     # os.path.abspath('./libhfst_src/libhfst/src/parsers/variable_src')
-                    os.path.abspath('./src/hfst'),
                     ]
 if FOMA_CPP:
     ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/foma/cpp-version'))
@@ -89,10 +89,10 @@ else:
 if platform == 'win32':
     ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/dlfcn'))
     ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfstwin/src/include'))
-    ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfstwin/src/include/fst'))
+    # ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfstwin/src/include/fst'))
 else:
     ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfst/src/include'))
-    ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfst/src/include/fst'))
+    # ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfst/src/include/fst'))
 
 
 # -----  MACROS CONFIGURATION  -----
