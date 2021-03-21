@@ -52,7 +52,7 @@ ext_swig_opts = ['-c++', '-I' + abs_libhfst_src_dir, '-Wall']
 # python bindings are run from has its own readline which will do.
 include_readline = False
 include_getline = False
-if platform == 'linux' or platform == 'linux2' or platform == 'darwin':
+if platform.startswith('linux') or platform == 'darwin':
     include_readline = True
     include_getline = True
 ext_extra_link_args = []
@@ -66,29 +66,32 @@ if platform == 'darwin':
 
 # HFST headers needed when compiling the actual c++ extension
 ext_include_dirs = [os.path.abspath('./libhfst_src'),
-                    os.path.abspath('./libhfst_src/back-ends/dlfcn'),
-                    os.path.abspath('./libhfst_src/back-ends/sfst'),
+                    # os.path.abspath('./libhfst_src/back-ends/dlfcn'),
+                    # os.path.abspath('./libhfst_src/back-ends/sfst'),
                     os.path.abspath('./libhfst_src/libhfst/src'),
-                    os.path.abspath('./libhfst_src/libhfst/src/implementations'),
-                    os.path.abspath('./libhfst_src/libhfst/src/implementations/compose_intersect'),
-                    os.path.abspath('./libhfst_src/libhfst/src/implementations/optimized-lookup'),
+                    # os.path.abspath('./libhfst_src/libhfst/src/implementations'),
+                    # os.path.abspath('./libhfst_src/libhfst/src/implementations/compose_intersect'),
+                    # os.path.abspath('./libhfst_src/libhfst/src/implementations/optimized-lookup'),
                     os.path.abspath('./libhfst_src/libhfst/src/parsers'),
-                    os.path.abspath('./libhfst_src/libhfst/src/parsers/alphabet_src'),
-                    os.path.abspath('./libhfst_src/libhfst/src/parsers/io_src'),
-                    os.path.abspath('./libhfst_src/libhfst/src/parsers/rule_src'),
-                    os.path.abspath('./libhfst_src/libhfst/src/parsers/string_src'),
-                    os.path.abspath('./libhfst_src/libhfst/src/parsers/variable_src')
+                    # os.path.abspath('./libhfst_src/libhfst/src/parsers/alphabet_src'),
+                    # os.path.abspath('./libhfst_src/libhfst/src/parsers/io_src'),
+                    # os.path.abspath('./libhfst_src/libhfst/src/parsers/rule_src'),
+                    # os.path.abspath('./libhfst_src/libhfst/src/parsers/string_src'),
+                    # os.path.abspath('./libhfst_src/libhfst/src/parsers/variable_src')
+                    os.path.abspath('./src/hfst'),
                     ]
 if FOMA_CPP:
     ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/foma/cpp-version'))
+    # some headers are only in foma/
+    ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/foma'))
 else:
     ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/foma'))
 if platform == 'win32':
-    ext_include_dirs.append(os.path.abspath('libhfst_src/back-ends/openfstwin/src/include'))
-    ext_include_dirs.append(os.path.abspath('libhfst_src/back-ends/openfstwin/src/include/fst'))
+    ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfstwin/src/include'))
+    ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfstwin/src/include/fst'))
 else:
-    ext_include_dirs.append(os.path.abspath('libhfst_src/back-ends/openfst/src/include'))
-    ext_include_dirs.append(os.path.abspath('libhfst_src/back-ends/openfst/src/include/fst'))
+    ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfst/src/include'))
+    ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfst/src/include/fst'))
 
 
 # -----  MACROS CONFIGURATION  -----
@@ -126,7 +129,7 @@ if platform == 'win32':
 # ----- COMPILATION OPTIONS -----
 
 ext_extra_compile_args = []
-if platform == 'linux' or platform == 'linux2':
+if platform.startswith('linux'):
     ext_extra_compile_args = ['-Wno-sign-compare']
 elif platform == 'darwin':
     ext_extra_compile_args.extend(['-std=c++0x', '-stdlib=libc++',
@@ -200,7 +203,7 @@ libhfst_module = Extension('hfst._libhfst',
                            # sources=['src/hfst/libhfst_wrap.cpp'] + libhfst_source_files,
                            swig_opts=ext_swig_opts,
                            include_dirs=ext_include_dirs,
-                           library_dirs=[abs_libhfst_src_dir + '/.libs'],
+                           # library_dirs=[abs_libhfst_src_dir + '/.libs'],
                            libraries=['hfst'],
                            define_macros=ext_define_macros,
                            extra_compile_args=ext_extra_compile_args,
