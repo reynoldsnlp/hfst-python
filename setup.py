@@ -44,7 +44,7 @@ FOMA_CPP = False
 abs_libhfst_src_dir = os.path.abspath('libhfst_src/libhfst/src/')
 
 # Generate wrapper for C++
-ext_swig_opts = ['-c++', '-I' + abs_libhfst_src_dir, '-Wall']
+swig_opts = ['-c++', '-I' + abs_libhfst_src_dir, '-Wall']
 
 # ----- LINKER ARGUMENTS -----
 
@@ -55,76 +55,76 @@ include_getline = False
 if platform.startswith('linux') or platform == 'darwin':
     include_readline = True
     include_getline = True
-ext_extra_link_args = []
+extra_link_args = []
 if include_readline:
-    ext_extra_link_args = ['-lreadline']
+    extra_link_args = ['-lreadline']
 if platform == 'darwin':
-    ext_extra_link_args.extend(['-mmacosx-version-min=' + MACOSX_VERSION_MIN])
+    extra_link_args.extend(['-mmacosx-version-min=' + MACOSX_VERSION_MIN])
 
 
 # ----- INCLUDE DIRECTORIES -----
 
 # HFST headers needed when compiling the actual c++ extension
-ext_include_dirs = [os.path.abspath('./libhfst_src'),  # config.h
-                    os.path.abspath('./libhfst_src/back-ends'),
-                    # os.path.abspath('./libhfst_src/back-ends/dlfcn'),
-                    # os.path.abspath('./libhfst_src/back-ends/sfst'),
-                    os.path.abspath('./libhfst_src/libhfst/src'),
-                    # os.path.abspath('./libhfst_src/libhfst/src/implementations'),
-                    # os.path.abspath('./libhfst_src/libhfst/src/implementations/compose_intersect'),
-                    # os.path.abspath('./libhfst_src/libhfst/src/implementations/optimized-lookup'),
-                    os.path.abspath('./libhfst_src/libhfst/src/parsers'),
-                    # os.path.abspath('./libhfst_src/libhfst/src/parsers/alphabet_src'),
-                    # os.path.abspath('./libhfst_src/libhfst/src/parsers/io_src'),
-                    # os.path.abspath('./libhfst_src/libhfst/src/parsers/rule_src'),
-                    # os.path.abspath('./libhfst_src/libhfst/src/parsers/string_src'),
-                    # os.path.abspath('./libhfst_src/libhfst/src/parsers/variable_src')
-                    ]
+include_dirs = [os.path.abspath('./libhfst_src'),  # config.h
+                os.path.abspath('./libhfst_src/back-ends'),
+                # os.path.abspath('./libhfst_src/back-ends/dlfcn'),
+                # os.path.abspath('./libhfst_src/back-ends/sfst'),
+                os.path.abspath('./libhfst_src/libhfst/src'),
+                # os.path.abspath('./libhfst_src/libhfst/src/implementations'),
+                # os.path.abspath('./libhfst_src/libhfst/src/implementations/compose_intersect'),
+                # os.path.abspath('./libhfst_src/libhfst/src/implementations/optimized-lookup'),
+                os.path.abspath('./libhfst_src/libhfst/src/parsers'),
+                # os.path.abspath('./libhfst_src/libhfst/src/parsers/alphabet_src'),
+                # os.path.abspath('./libhfst_src/libhfst/src/parsers/io_src'),
+                # os.path.abspath('./libhfst_src/libhfst/src/parsers/rule_src'),
+                # os.path.abspath('./libhfst_src/libhfst/src/parsers/string_src'),
+                # os.path.abspath('./libhfst_src/libhfst/src/parsers/variable_src')
+                ]
 if FOMA_CPP:
-    ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/foma/cpp-version'))
+    include_dirs.append(os.path.abspath('./libhfst_src/back-ends/foma/cpp-version'))
     # some headers are only in foma/
-    ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/foma'))
+    include_dirs.append(os.path.abspath('./libhfst_src/back-ends/foma'))
 else:
-    ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/foma'))
+    include_dirs.append(os.path.abspath('./libhfst_src/back-ends/foma'))
 if platform == 'win32':
-    ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/dlfcn'))
-    ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfstwin/src/include'))
-    # ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfstwin/src/include/fst'))
+    include_dirs.append(os.path.abspath('./libhfst_src/back-ends/dlfcn'))
+    include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfstwin/src/include'))
+    # include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfstwin/src/include/fst'))
 else:
-    ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfst/src/include'))
-    # ext_include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfst/src/include/fst'))
+    include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfst/src/include'))
+    # include_dirs.append(os.path.abspath('./libhfst_src/back-ends/openfst/src/include/fst'))
 
 
 # -----  MACROS CONFIGURATION  -----
 
-ext_define_macros = []
-ext_define_macros.append(('HAVE_FOMA', None))
-ext_define_macros.append(('HAVE_OPENFST', None))
-ext_define_macros.append(('HAVE_OPENFST_LOG', None))
+define_macros = []
+define_macros.append(('HAVE_FOMA', None))
+define_macros.append(('HAVE_OPENFST', None))
+define_macros.append(('HAVE_OPENFST_LOG', None))
 
 if include_readline:
-    ext_define_macros.append(('HAVE_READLINE', None))
+    define_macros.append(('HAVE_READLINE', None))
 if include_getline:
-    ext_define_macros.append(('HAVE_GETLINE', None))
+    define_macros.append(('HAVE_GETLINE', None))
 
 # msvc-specific macros.
 if platform == 'win32':
     # MSC_VER_ should already be defined
     for macro in ['HFSTEXPORT', 'OPENFSTEXPORT', 'WINDOWS', 'WIN32',
                   '_CRT_SECURE_NO_WARNINGS']:
-        ext_define_macros.append((macro, None))
+        define_macros.append((macro, None))
 
 # If C++11 is not supported, what features will be disabled and where unordered
 # map and set are found.
 # if platform == 'win32':
     # Disable c++11 features.
-    # ext_define_macros.append(('NO_CPLUSPLUS_11', None))
+    # define_macros.append(('NO_CPLUSPLUS_11', None))
     # Unordered containers are in namespace std::tr1.
-    # ext_define_macros.append(('USE_TR1_UNORDERED_MAP_AND_SET', None))
+    # define_macros.append(('USE_TR1_UNORDERED_MAP_AND_SET', None))
     # On windows, the header files are not located in directory tr1
     # although the namespace is std::tr1.
 #     if platform != 'win32':
-#         ext_define_macros.append(('INCLUDE_TR1_UNORDERED_MAP_AND_SET', None))
+#         define_macros.append(('INCLUDE_TR1_UNORDERED_MAP_AND_SET', None))
 
 
 # ----- COMPILATION OPTIONS -----
@@ -183,7 +183,7 @@ libhfst_exclude = ('HfstXeroxRulesTest', 'ConvertSfstTransducer',
                    'ConvertXfsmTransducer', 'HfstTransitionGraph',
                    'MyTransducerLibraryTransducer', 'SfstTransducer',
                    'XfsmTransducer')
-libhfst_exclude_re = '/(?:' + '|'.join(libhfst_exclude) + ')\.cc$'
+libhfst_exclude_re = '/(?:' + '|'.join(libhfst_exclude) + r')\.cc$'
 libhfst_glob = [fname for fname in libhfst_glob
                 if not re.search(libhfst_exclude_re, fname)]
 
@@ -200,15 +200,15 @@ if platform == 'win32':
 libhfst_module = Extension('hfst._libhfst',
                            language='c++',
                            # sources=['src/hfst/libhfst.i'] + libhfst_source_files,
-                           # swig_opts=ext_swig_opts,
+                           # swig_opts=swig_opts,
                            # swig-pre-generated source:
                            sources=['src/hfst/libhfst_wrap.cpp'] + libhfst_source_files,
-                           include_dirs=ext_include_dirs,
+                           include_dirs=include_dirs,
                            # library_dirs=[abs_libhfst_src_dir + '/.libs'],
                            # libraries=['hfst'],
-                           define_macros=ext_define_macros,
+                           define_macros=define_macros,
                            extra_compile_args=ext_extra_compile_args,
-                           extra_link_args=ext_extra_link_args,
+                           extra_link_args=extra_link_args,
                            )
 
 print('Extension arguments:')
