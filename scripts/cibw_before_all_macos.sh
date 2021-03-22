@@ -12,7 +12,7 @@ export LDFLAGS="-L/usr/local/opt/bison/lib -L/usr/local/opt/flex/lib -L/usr/loca
 # export PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig"
 export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
 
-brew install swig
+# brew install swig
 
 
 # Download precompiled HFST binaries from Apertium
@@ -35,7 +35,7 @@ cd icu-release-68-2/icu4c/source/
 make
 make install
 cd ../../../../
-cp /usr/local/lib/libicu* .  # TODO For some reason `delocate` looks here for dylibs
+# cp /usr/local/lib/libicu* .  # TODO For some reason `delocate` looks here for dylibs
 
 # Build HFST from source
 echo "deployment target: ${MACOSX_DEPLOYMENT_TARGET}"

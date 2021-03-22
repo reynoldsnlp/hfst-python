@@ -199,10 +199,10 @@ if platform == 'win32':
 
 libhfst_module = Extension('hfst._libhfst',
                            language='c++',
-                           sources=['src/hfst/libhfst.i'] + libhfst_source_files,
+                           # sources=['src/hfst/libhfst.i'] + libhfst_source_files,
+                           # swig_opts=ext_swig_opts,
                            # swig-pre-generated source:
-                           # sources=['src/hfst/libhfst_wrap.cpp'] + libhfst_source_files,
-                           swig_opts=ext_swig_opts,
+                           sources=['src/hfst/libhfst_wrap.cpp'] + libhfst_source_files,
                            include_dirs=ext_include_dirs,
                            # library_dirs=[abs_libhfst_src_dir + '/.libs'],
                            # libraries=['hfst'],
