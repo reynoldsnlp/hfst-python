@@ -36,7 +36,7 @@ from sys import version_info
 MACOSX_VERSION_MIN = os.environ.get('MACOSX_DEPLOYMENT_TARGET', '10.9')
 
 # Whether to use the C++ version of the foma back-end
-FOMA_CPP = True
+FOMA_CPP = False
 
 # ----- SWIG CONFIGURATION -----
 
