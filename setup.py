@@ -131,9 +131,9 @@ if platform == 'win32':
 
 ext_extra_compile_args = []
 if platform.startswith('linux'):
-    ext_extra_compile_args = ['-Wno-sign-compare']
+    ext_extra_compile_args = ['-Wno-sign-compare', '-std=c++11']
 elif platform == 'darwin':
-    ext_extra_compile_args.extend(['-std=c++0x', '-stdlib=libc++',
+    ext_extra_compile_args.extend(['-std=c++11', '-stdlib=libc++',
                                    '-mmacosx-version-min=' + MACOSX_VERSION_MIN,
                                    '-Wno-sign-compare'])
 elif platform == 'win32':
