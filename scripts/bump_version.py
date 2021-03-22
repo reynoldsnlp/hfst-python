@@ -103,6 +103,20 @@ def tests():
         assert bump_python_version(hv, parse(t), beta=True) == expected, ('1.2.3', t, expected)
 
 
+def write_version_files(new_version):
+    base_dir = __file__.replace('scripts/bump_version.py', '')
+
+    path_to_VERSION =  base_dir + 'VERSION'
+    with open(path_to_VERSION, 'w') as f:
+        f.write(new_version)
+
+    path_to_version_py = base_dir + 'src/hfst/version.py'
+    with open(path_to_version_py, 'w') as f:
+        print('version =', repr(new_version), file=f)
+
+    print(f'VERSION updated to {new_version}.', file=sys.stderr)
+
+
 if __name__ == '__main__':
     hfst_version = get_hfst_version()
     pypi_version = get_pypi_version(test=TEST)
@@ -110,10 +124,6 @@ if __name__ == '__main__':
     print('HFST version:', hfst_version, file=sys.stderr)
     print(f'Current {"Test " if TEST else ""}PyPI version:', pypi_version, file=sys.stderr)
     print('New version:', new_version, file=sys.stderr)
+    write_version_files(new_version)
 
-    path_to_VERSION = __file__.replace('scripts/bump_version.py', '') + 'VERSION'
-    with open(path_to_VERSION, 'w') as f:
-        f.write(new_version)
-
-    print(f'VERSION updated to {new_version}.', file=sys.stderr)
     print(new_version)

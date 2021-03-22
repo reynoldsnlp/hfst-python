@@ -47,7 +47,7 @@ CLASSES:
 
 """
 
-__version__ = "3.15.2.0"
+import sys
 
 import hfst.exceptions
 import hfst.libhfst
@@ -70,9 +70,10 @@ from hfst.libhfst import XreCompiler
 import hfst.sfst_rules
 import hfst.xerox_rules
 
+from .version import version as __version__
 
-from sys import version
-if int(version[0]) > 2:
+
+if int(sys.version[0]) > 2:
     def unicode(s, c):
         return s
 
@@ -110,7 +111,6 @@ def start_xfst(**kwargs):
         Implementation type of the compiler, defaults to
         hfst.get_default_fst_type().
     """
-    import sys
     idle = 'idlelib' in sys.modules
     if idle:
         print('It seems that you are running python in in IDLE. Note that all output from xfst will be buffered.')
@@ -150,7 +150,6 @@ def start_xfst(**kwargs):
     except ImportError:
       pass
 
-    import sys
     expression=""
     while True:
         expression += input(comp.get_prompt()).rstrip().lstrip()
@@ -162,7 +161,7 @@ def start_xfst(**kwargs):
         retval = -1
         if idle:
             retval = hfst.libhfst.hfst_compile_xfst_to_string_one(comp, expression)
-            stdout.write(hfst.libhfst.get_hfst_xfst_string_one())
+            sys.stdout.write(hfst.libhfst.get_hfst_xfst_string_one())
         else:
             # interactive command
             if (expression == "apply down" or expression == "apply up") and rl_found:
@@ -196,7 +195,6 @@ def start_xfst(**kwargs):
       for foo in range(readline.get_current_history_length() - rl_length_1):
          readline.remove_history_item(rl_length_1)
 
-from sys import stdout
 
 def regex(re, **kwargs):
     """
