@@ -22,15 +22,18 @@ and msvc 14.0 (with python 3.5 and 3.6).
 
 """
 
+from distutils.unixccompiler import UnixCCompiler
 from glob import glob
 import os
 from pprint import pprint
 import re
+from setuptools.command.build_ext import build_ext
 from setuptools import Extension
 from setuptools import setup
 import sys
 from sys import platform
 from sys import version_info
+
 
 # default to 10.9, unless the environment variable is set to something else
 MACOSX_VERSION_MIN = os.environ.get('MACOSX_DEPLOYMENT_TARGET', '10.9')
@@ -129,16 +132,19 @@ if platform == 'win32':
 
 # ----- COMPILATION OPTIONS -----
 
-ext_extra_compile_args = []
-if platform.startswith('linux'):
-    ext_extra_compile_args = ['-Wno-sign-compare', '-std=c++11']
-elif platform == 'darwin':
-    ext_extra_compile_args.extend(['-std=c++11', '-stdlib=libc++',
-                                   '-mmacosx-version-min=' + MACOSX_VERSION_MIN,
-                                   '-Wno-sign-compare'])
+extra_compile_args = []  # C and C++ flags
+extra_cpp_args = []      # C++ flags
+
+if platform == 'darwin' or platform.startswith('linux'):
+    extra_compile_args.extend(['-Wno-sign-compare', '-Wno-strict-prototypes'])
+    extra_cpp_args.extend(['-std=c++11'])
+
+if platform == 'darwin':
+    extra_cpp_args.extend(['-stdlib=libc++',
+                           '-mmacosx-version-min=' + MACOSX_VERSION_MIN])
 elif platform == 'win32':
     # define error handling mechanism on windows
-    ext_extra_compile_args = ['/EHsc']
+    extra_compile_args = ['/EHsc']
 
 
 # ----- C++ SOURCE FILES -----
@@ -187,7 +193,7 @@ libhfst_exclude_re = '/(?:' + '|'.join(libhfst_exclude) + r')\.cc$'
 libhfst_glob = [fname for fname in libhfst_glob
                 if not re.search(libhfst_exclude_re, fname)]
 
-libhfst_source_files = (libhfst_glob + foma_glob + openfst_glob)
+libhfst_src_files = (libhfst_glob + foma_glob + openfst_glob)
 
 
 package_data = {'hfst': []}
@@ -197,23 +203,56 @@ if platform == 'win32':
 
 # ----- The HFST C++ EXTENSION -----
 
-libhfst_module = Extension('hfst._libhfst',
-                           language='c++',
-                           # sources=['src/hfst/libhfst.i'] + libhfst_source_files,
-                           # swig_opts=swig_opts,
-                           # swig-pre-generated source:
-                           sources=['src/hfst/libhfst_wrap.cpp'] + libhfst_source_files,
-                           include_dirs=include_dirs,
-                           # library_dirs=[abs_libhfst_src_dir + '/.libs'],
-                           # libraries=['hfst'],
-                           define_macros=define_macros,
-                           extra_compile_args=ext_extra_compile_args,
-                           extra_link_args=extra_link_args,
-                           )
+
+class CCxxCompiler(UnixCCompiler):
+    """User different flags for C and C++.
+
+    Adapted from https://stackoverflow.com/a/65865696/2903532
+    """
+    def _compile(self, obj, src, ext, cc_args, extra_postargs, pp_opts):
+        if os.path.splitext(src)[-1] in ('.cpp', '.cxx', '.cc'):
+            _cc_args = extra_cpp_args + cc_args
+            try:
+                _cc_args.remove('-Wno-strict-prototypes')
+            except ValueError:
+                pass
+        else:
+            _cc_args = cc_args
+        UnixCCompiler._compile(self, obj, src, ext, _cc_args, extra_postargs,
+                               pp_opts)
+
+
+class BuildCCxxExtensions(build_ext):
+    """Adapted from https://stackoverflow.com/a/65865696/2903532"""
+    def build_extensions(self, ext):
+        if self.compiler.compiler_type == 'unix':
+            # Replace the compiler
+            old_compiler = self.compiler
+            self.compiler = CCxxCompiler()
+
+            # Copy its attributes
+            for attr, value in old_compiler.__dict__.items():
+                setattr(self.compiler, attr, value)
+        build_ext.build_extensions(self, ext)
+
+
+_libhfst = Extension('hfst._libhfst',
+                     language='c++',
+                     # sources=['src/hfst/libhfst.i'] + libhfst_src_files,
+                     # swig_opts=swig_opts,
+                     # swig-pre-generated source:
+                     sources=['src/hfst/libhfst_wrap.cpp'] + libhfst_src_files,
+                     include_dirs=include_dirs,
+                     # library_dirs=[abs_libhfst_src_dir + '/.libs'],
+                     # libraries=['hfst'],
+                     define_macros=define_macros,
+                     extra_compile_args=extra_compile_args,
+                     extra_link_args=extra_link_args,
+                     )
 
 print('Extension arguments:')
-pprint(libhfst_module.__dict__, stream=sys.stderr)
+pprint(_libhfst.__dict__, stream=sys.stderr)
 
 # NOTE: metadata taken from setup.cfg (setup.cfg overrides setup.py)
-setup(ext_modules=[libhfst_module],
+setup(ext_modules=[_libhfst],
       package_data=package_data)
