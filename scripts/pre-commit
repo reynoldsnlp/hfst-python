@@ -44,7 +44,7 @@ def bump_version(beta, test):
                                stderr=subprocess.PIPE,
                                stdout=subprocess.PIPE,
                                universal_newlines=True)
-    subprocess.run(['git', 'add', 'VERSION'])
+    subprocess.run(['git', 'add', 'VERSION', 'src/hfst/version.py'])
     print(completed.stderr)
     autoversion = completed.stdout.strip()
     print(f'Version set to {autoversion}')
