@@ -28,7 +28,7 @@ export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
 brew uninstall --ignore-dependencies icu4c
 mkdir icu_tmp
 cd icu_tmp/
-wget https://github.com/unicode-org/icu/archive/release-68-2.tar.gz
+wget -nv https://github.com/unicode-org/icu/archive/release-68-2.tar.gz
 tar -xzf release-68-2.tar.gz
 cd icu-release-68-2/icu4c/source/
 ./runConfigureICU MacOSX/GCC
