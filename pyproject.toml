@@ -1,21 +1,18 @@
+[project]
+requires-python = ">=3.6"
+
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
-]
+requires = ["setuptools>=42",
+            "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
-tests = [
-  'pytest',
-]
+tests = ["pytest",]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
 # addopts = "-ra -q"
-testpaths = [
-    "test",
-]
+testpaths = ["test",]
 
 [tool.cibuildwheel]
 build-verbosity = 3
