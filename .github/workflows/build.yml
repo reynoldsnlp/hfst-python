@@ -18,31 +18,7 @@ jobs:
           submodules: recursive
 
       - name: Build wheels
-        uses: joerick/cibuildwheel@v1.10.0
-        env:
-          CIBW_BUILD_VERBOSITY: 3
-          CIBW_PROJECT_REQUIRES_PYTHON: ">=3.6"
-          CIBW_SKIP: cp27-* cp35-* pp*
-          # TODO don't skip pypy?
-
-          CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux2010  # 2014 unavailable
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
-          CIBW_MANYLINUX_I686_IMAGE: manylinux2014
-          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
-          CIBW_MANYLINUX_PPC64LE_IMAGE: manylinux2014
-          CIBW_MANYLINUX_S390X_IMAGE: manylinux2014
-          # CIBW_BEFORE_ALL:  echo "This is the main CIBW_BEFORE_ALL"
-          CIBW_BEFORE_ALL_LINUX:   bash scripts/cibw_before_all_linux.sh
-
-          CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.9"
-          CIBW_BEFORE_ALL_MACOS:   bash scripts/cibw_before_all_macos.sh
-          # CIBW_REPAIR_WHEEL_COMMAND_MACOS: delocate-listdeps {wheel} && delocate-wheel --require-archs {delocate_archs} -w {dest_dir} {wheel} && bash scripts/macos_fix_links.sh {dest_dir} {wheel}
-
-          CIBW_BEFORE_ALL_WINDOWS: C:\msys64\msys2_shell.cmd -mingw64 -defterm -here -full-path -no-start -shell bash scripts/cibw_before_all_windows.sh
-
-          CIBW_TEST_REQUIRES: pytest
-          CIBW_TEST_COMMAND: "pytest {project}/test || true"
-      # TODO test sdist by trying to build from it
+        uses: joerick/cibuildwheel@v1.10.0  # see pyproject.toml for config
 
       - uses: actions/upload-artifact@v2
         with:

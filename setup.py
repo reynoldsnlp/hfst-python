@@ -150,14 +150,6 @@ elif platform == 'win32':
 # ----- C++ SOURCE FILES -----
 
 
-def glob_cpp(dir):
-    """Glob of c/cc/cpp files."""
-    fnames = []
-    for pattern in ['*.c', '*.cc', '*.cpp']:
-        fnames += glob(os.path.join(dir, pattern))
-    return fnames
-
-
 if FOMA_CPP:
     foma_glob_pattern = 'libhfst_src/back-ends/foma/cpp-version/*.cc'
 else:
