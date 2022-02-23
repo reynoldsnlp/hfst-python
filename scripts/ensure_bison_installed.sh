@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e -x
-
 # pypy 2010 manylinux image has outdated bison
 BISON_VERSION=$(bison --version | python -c "import re, sys; print(re.search(r'([0-9]+)\.[0-9]+\.[0-9]+.*', sys.stdin.read(), re.S).group(1))")
 echo ${BISON_VERSION}

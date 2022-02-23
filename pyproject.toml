@@ -18,8 +18,8 @@ test-command = "pytest {project}/test || true"
 
 [tool.cibuildwheel.linux]
 before-all = ["yum install -y bison flex libicu-devel readline-devel",
-              "bash scripts/ensure_bison_installed.sh",
-              "bash scripts/ensure_icu_installed.sh Linux",
+              "source scripts/ensure_bison_installed.sh",
+              "source scripts/ensure_icu_installed.sh Linux",
               "cd libhfst_src/",
               "autoreconf -fvi",
               "./configure --with-unicode-handler=icu",
@@ -45,8 +45,8 @@ manylinux-s390x-image = "manylinux2010"
 [[tool.cibuildwheel.overrides]]
 select = "*musllinux*"
 before-all = ["apk add bison flex icu-dev readline-dev",
-              "bash scripts/ensure_bison_installed.sh",
-              "bash scripts/ensure_icu_installed.sh Linux",
+              "source scripts/ensure_bison_installed.sh",
+              "source scripts/ensure_icu_installed.sh Linux",
               "cd libhfst_src/",
               "autoreconf -fvi",
               "./configure --with-unicode-handler=icu",
