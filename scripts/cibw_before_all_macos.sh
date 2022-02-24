@@ -5,7 +5,7 @@
 
 set -e -x
 
-brew install automake bison flex  # to build hfst from source
+brew install automake bison flex gettext libtool  # to build hfst from source
 export PATH="/usr/local/opt/bison/bin:/usr/local/opt/flex/bin:$PATH"
 export CPPFLAGS="-I/usr/local/opt/flex/include -I/usr/local/include/unicode"  # -I/usr/local/opt/icu4c/include"
 export LDFLAGS="-L/usr/local/opt/bison/lib -L/usr/local/opt/flex/lib -L/usr/local/lib"  # -L/usr/local/opt/icu4c/lib"

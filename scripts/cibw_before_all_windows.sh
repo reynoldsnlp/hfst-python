@@ -9,20 +9,25 @@ set -e -x
 # choco upgrade -y --no-progress winflexbison3 swig  # libicu-devel readline-devel
 pacman -S --noconfirm --needed  \
            bison  \
-           flex  \
-           icu-devel  \
-           autotools
+	   mingw-w64-autotools  \
+	   mingw-w64-dlfcn  \
+	   mingw-w64-flexdll  \
+	   mingw-w64-gettext  \
+           mingw-w64-icu
+           # autotools  \
+           # flex  \
+           # icu-devel  \
 
-git clone https://github.com/dlfcn-win32/dlfcn-win32.git
-cd dlfcn-win32/
-./configure
-make
-make install
-cd ..
+# git clone https://github.com/dlfcn-win32/dlfcn-win32.git
+# cd dlfcn-win32/
+# ./configure
+# make
+# make install
+# cd ..
 
 export CPPFLAGS="-I/usr/include -I/mingw/include ${CPPFLAGS}"
 export LDFLAGS="-L/usr/lib -L/mingw/lib ${LDFLAGS}"
-export PATH="/usr/bin/:${PATH}"
+export PATH="/usr/bin:${PATH}"
 export PKG_CONFIG_PATH="/usr/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 
