@@ -10,9 +10,8 @@ set -e -x
 pacman -S --noconfirm --needed  \
            bison  \
            flex  \
-           icu-devel
-           # swig
-
+           icu-devel  \
+           autotools
 
 git clone https://github.com/dlfcn-win32/dlfcn-win32.git
 cd dlfcn-win32/
