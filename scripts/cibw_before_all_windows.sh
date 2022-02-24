@@ -9,11 +9,16 @@ set -e -x
 # choco upgrade -y --no-progress winflexbison3 swig  # libicu-devel readline-devel
 pacman -S --noconfirm --needed  \
            bison  \
-	   mingw-w64-autotools  \
-	   mingw-w64-dlfcn  \
-	   mingw-w64-flexdll  \
-	   mingw-w64-gettext  \
-           mingw-w64-icu
+           mingw-w64-i686-autotools  \
+           mingw-w64-i686-dlfcn  \
+           mingw-w64-i686-flexdll  \
+           mingw-w64-i686-gettext  \
+           mingw-w64-i686-icu  \
+           mingw-w64-x86_64-autotools  \
+           mingw-w64-x86_64-dlfcn  \
+           mingw-w64-x86_64-flexdll  \
+           mingw-w64-x86_64-gettext  \
+           mingw-w64-x86_64-icu
            # autotools  \
            # flex  \
            # icu-devel  \
