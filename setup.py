@@ -30,7 +30,6 @@ import re
 from setuptools.command.build_ext import build_ext
 from setuptools import Extension
 from setuptools import setup
-import sys
 from sys import platform
 from sys import version_info
 
@@ -228,20 +227,20 @@ class BuildCCxxExtensions(build_ext):
         build_ext.build_extensions(self, ext)
 
 
-libhfst_extension_kwargs = {language='c++',
-                            # sources=['src/hfst/libhfst.i'] + libhfst_src_files,
-                            # swig_opts=swig_opts,
+libhfst_extension_kwargs = {'language': 'c++',
+                            # sources: ['src/hfst/libhfst.i'] + libhfst_src_files,
+                            # swig_opts: swig_opts,
                             # swig-pre-generated source:
-                            sources=['src/hfst/libhfst_wrap.cpp'] + libhfst_src_files,
-                            include_dirs=include_dirs,
-                            # library_dirs=[abs_libhfst_src_dir + '/.libs'],
-                            # libraries=['hfst'],
-                            define_macros=define_macros,
-                            extra_compile_args=extra_compile_args,
-                            extra_link_args=extra_link_args,
-                           }
-print('Extension arguments:')
-pprint(libhfst_extension_kwargs, stream=sys.stderr)
+                            'sources': ['src/hfst/libhfst_wrap.cpp'] + libhfst_src_files,
+                            'include_dirs': include_dirs,
+                            # 'library_dirs': [abs_libhfst_src_dir + '/.libs'],
+                            # 'libraries': ['hfst'],
+                            'define_macros': define_macros,
+                            'extra_compile_args': extra_compile_args,
+                            'extra_link_args': extra_link_args,
+                            }
+print('C++ extension arguments:')
+pprint(libhfst_extension_kwargs)
 _libhfst = Extension('hfst._libhfst', **libhfst_extension_kwargs)
 
 # NOTE: metadata taken from setup.cfg (setup.cfg overrides setup.py)
