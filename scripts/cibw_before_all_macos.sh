@@ -5,6 +5,11 @@
 
 set -e -x
 
+# Install MacPorts
+# curl -LO "https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci"
+# source macports-ci install
+# port selfupdate
+
 brew install automake bison flex gettext libtool  # to build hfst from source
 export PATH="/usr/local/opt/bison/bin:/usr/local/opt/flex/bin:/usr/local/opt/icu4c/bin:$PATH"
 export CPPFLAGS="-I/usr/local/opt/flex/include -I/usr/local/include/unicode -I/usr/local/opt/icu4c/include"

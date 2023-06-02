@@ -29,14 +29,14 @@ before-all = ["yum install -y bison flex libicu-devel readline-devel",
               "cd ..",
 ]
 
-# Before Python 3.10, manylinux2010 is the most compatible
+# Before Python 3.10, manylinux2010 is the most compatible???
 [[tool.cibuildwheel.overrides]]
 select = "cp3?-*"
-manylinux-x86_64-image = "manylinux2010"
-manylinux-i686-image = "manylinux2010"
-manylinux-aarch64-image = "manylinux2010"
-manylinux-ppc64le-image = "manylinux2010"
-manylinux-s390x-image = "manylinux2010"
+manylinux-x86_64-image = "manylinux_2_24"
+manylinux-i686-image = "manylinux_2_24"
+manylinux-aarch64-image = "manylinux_2_24"
+manylinux-ppc64le-image = "manylinux_2_24"
+manylinux-s390x-image = "manylinux_2_24"
 
 [[tool.cibuildwheel.overrides]]
 select = "*musllinux*"
