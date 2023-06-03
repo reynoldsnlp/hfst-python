@@ -53,7 +53,7 @@ before-all = ["apk add bison flex icu-dev readline-dev",
 
 [tool.cibuildwheel.macos]
 # Compare these environment variables to https://github.com/apertium/packaging/blob/main/osx-pre.sh
-environment = { CPPFLAGS="-D__APPLE__", CFLAGS="-O3 -m64 -D__APPLE__", CXXFLAGS="-O3 -m64 -std=gnu++11 -stdlib=libc++ -D__APPLE__ -I/opt/osx/include", LDFLAGS="-m64 -stdlib=libc++ -L/opt/osx/lib", MACOSX_DEPLOYMENT_TARGET="10.9", SDK_VERSION="10.9" }
+environment = { CPPFLAGS="-D__APPLE__", CFLAGS="-O3 -m64 -D__APPLE__", CXXFLAGS="-O3 -m64 -std=gnu++11 -stdlib=libc++ -D__APPLE__ -I/opt/osx/include -D_LIBCPP_DISABLE_AVAILABILITY", LDFLAGS="-m64 -stdlib=libc++ -L/opt/osx/lib", MACOSX_DEPLOYMENT_TARGET="10.9", SDK_VERSION="10.9" }
 before-all = "bash scripts/cibw_before_all_macos.sh"
 # repair-wheel-command = "delocate-listdeps {wheel} && delocate-wheel --require-archs {delocate_archs} -w {dest_dir} {wheel} && bash scripts/macos_fi {dest_dir} {wheel}"
 
