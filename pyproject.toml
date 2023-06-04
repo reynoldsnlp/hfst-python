@@ -3,9 +3,6 @@ requires = ["setuptools>=42",
             "wheel"]
 build-backend = "setuptools.build_meta"
 
-[project.optional-dependencies]
-tests = ["pytest",]
-
 [tool.pytest.ini_options]
 minversion = "6.0"
 # addopts = "-ra -q"
