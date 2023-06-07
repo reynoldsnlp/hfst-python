@@ -21,6 +21,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.13.0  # see pyproject.toml for config
 
       - uses: actions/upload-artifact@v2
+        if: ${{ cancelled() || failure() || success() }}
         with:
           path: |
                   ./wheelhouse/*.whl

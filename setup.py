@@ -52,16 +52,15 @@ swig_opts = ['-c++', '-I' + abs_libhfst_src_dir, '-Wall']
 
 # Readline is needed for hfst.start_xfst(). On windows the shell where HFST
 # python bindings are run from has its own readline which will do.
+extra_link_args = []
 include_readline = False
 include_getline = False
 if platform.startswith('linux') or platform == 'darwin':
     include_readline = True
     include_getline = True
-extra_link_args = []
-if include_readline:
-    extra_link_args = ['-lreadline']
+    extra_link_args.extend(['-lreadline', '-licudata', '-licuuc'])
 if platform == 'darwin':
-    extra_link_args.extend(['-mmacosx-version-min=' + MACOSX_VERSION_MIN])
+    extra_link_args.append('-mmacosx-version-min=' + MACOSX_VERSION_MIN)
 
 
 # ----- INCLUDE DIRECTORIES -----
@@ -69,7 +68,7 @@ if platform == 'darwin':
 # HFST headers needed when compiling the actual c++ extension
 include_dirs = [os.path.abspath('./libhfst_src'),  # config.h
                 os.path.abspath('./libhfst_src/back-ends'),
-                # os.path.abspath('./libhfst_src/back-ends/dlfcn'),
+                # os.path.abspath('./libhfst_src/back-ends/dlfcn'),  # TODO include this on Windows?
                 # os.path.abspath('./libhfst_src/back-ends/sfst'),
                 os.path.abspath('./libhfst_src/libhfst/src'),
                 # os.path.abspath('./libhfst_src/libhfst/src/implementations'),
