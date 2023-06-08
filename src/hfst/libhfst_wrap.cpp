@@ -7046,7 +7046,7 @@ SWIGINTERN std::string hfst_implementations_HfstBasicTransducer_get_att_string(h
     std::ostringstream oss;
     self->write_in_att_format(oss, write_weights);
     std::string retval = oss.str();
-    if (retval == "") // empty transducer must be represented as empty line in python, else read_att fails...
+    if (retval.empty()) // empty transducer must be represented as empty line in python, else read_att fails...
       retval = std::string("\n");
     return retval;
   }

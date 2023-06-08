@@ -3820,14 +3820,14 @@ class HfstTransducer(object):
 
            for k, v in s.items():
                if _is_string(k):
-                  if subst_type == "":
+                  if not subst_type:
                      subst_type="string"
                   elif subst_type == "string pair":
                      raise RuntimeError('')
                   if not _is_string(v):
                      raise RuntimeError('')
                elif _is_string_pair(k):
-                  if subst_type == "":
+                  if not subst_type:
                      subst_type="string pair"
                   elif subst_type == "string":
                      raise RuntimeError('')
@@ -4003,7 +4003,7 @@ class HfstOutputStream(object):
                 hfst_format = v
             if k == 'type':
                 type = v
-        if filename == "":
+        if not filename:
             self.this = _libhfst.create_hfst_output_stream("", type, hfst_format)
         else:
             self.this = _libhfst.create_hfst_output_stream(filename, type, hfst_format)
@@ -4526,14 +4526,14 @@ class HfstBasicTransducer(object):
 
            for k, v in s.items():
                if _is_string(k):
-                  if subst_type == "":
+                  if not subst_type:
                      subst_type="string"
                   elif subst_type == "string pair":
                      raise RuntimeError('')
                   if not _is_string(v):
                      raise RuntimeError('')
                elif _is_string_pair(k):
-                  if subst_type == "":
+                  if not subst_type:
                      subst_type="string pair"
                   elif subst_type == "string":
                      raise RuntimeError('')

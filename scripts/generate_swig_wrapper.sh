@@ -1,12 +1,19 @@
 #!/bin/bash
 
-git submodule update --init --recursive
-cd libhfst_src/
-git reset --hard
-autoreconf -i
-./configure --with-unicode-handler=icu
-make -C back-ends
-make -C libhfst
-cd ..
+pushd libhfst_src
+git pull origin master
+popd
 
-swig -c++ -cppext cpp -python -Ilibhfst_src/libhfst/src/ -Wall src/hfst/libhfst.i
+if cmp --silent -- libhfst_src/python/libhfst.i src/hfst/libhfst.i; then
+  echo "libhfst.i matches hfst/hfst version."
+else
+  echo "WARNING: libhfst.i does not match hfst/hfst version."
+fi
+
+if cmp --silent -- libhfst_src/python/docstrings.i src/hfst/docstrings.i; then
+  echo "docstrings.i matches hfst/hfst version."
+else
+  echo "WARNING: docstrings.i does not match hfst/hfst version."
+fi
+
+swig -c++ -cppext cpp -python -Wall src/hfst/libhfst.i
