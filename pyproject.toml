@@ -11,21 +11,14 @@ testpaths = ["test",]
 [tool.cibuildwheel]
 build-verbosity = 3
 test-requires = "pytest"
-test-command = "pytest -v {project}/test || true"  # TODO remove "|| true"
+test-command = "pytest -v {project}/test"
 
 [tool.cibuildwheel.linux]
 build = "*manylinux*"
-before-all = ["yum install -y bison flex libicu-devel readline-devel wget",
-              "source scripts/ensure_bison_flex_installed.sh",
-              "source scripts/ensure_icu_installed.sh Linux",
-              "pushd libhfst_src/",
-              "autoreconf -fvi",
-              "./configure --with-unicode-handler=icu",
-              "make -C back-ends",
-              "make -C libhfst",
-              "popd",
-]
-# repair-wheel-command = "LD_LIBRARY_PATH=/usr/lib64 auditwheel repair -w {dest_dir} {wheel}"  # Probably unnecessary
+skip = "cp3?-*"  # TODO delete me
+manylinux-x86_64-image = "manylinux_2_28"
+manylinux-i686-image = "manylinux_2_28"
+before-all = "bash scripts/build_libhfst_and_swig_linux.sh"
 
 [[tool.cibuildwheel.overrides]]
 select = "cp3?-*"  # Before Python 3.10, manylinux2010 is the most compatible
@@ -34,19 +27,6 @@ manylinux-i686-image = "manylinux2010"
 manylinux-aarch64-image = "manylinux2010"
 manylinux-ppc64le-image = "manylinux2010"
 manylinux-s390x-image = "manylinux2010"
-
-[[tool.cibuildwheel.overrides]]
-select = "*musllinux*"
-before-all = ["apk add bison flex icu-dev readline-dev",
-              "source scripts/ensure_bison_flex_installed.sh",
-              "source scripts/ensure_icu_installed.sh Linux",
-              "cd libhfst_src/",
-              "autoreconf -fvi",
-              "./configure --with-unicode-handler=icu",
-              "make -C back-ends",
-              "make -C libhfst",
-              "cd ..",
-]
 
 [tool.cibuildwheel.macos]
 # Compare these environment variables to https://github.com/apertium/packaging/blob/main/osx-pre.sh
