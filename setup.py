@@ -9,7 +9,7 @@ from setuptools import Extension
 from setuptools import setup
 
 
-libhfst_src_path = 'libhfst/src/'
+libhfst_src_path = 'libhfst_src/libhfst/src/'
 absolute_libhfst_src_path = os.path.abspath(libhfst_src_path)
 
 extra_link_arguments = []
@@ -22,7 +22,7 @@ extra_compile_arguments = ['-std=c++0x']
 if sys.platform == "darwin":
         extra_compile_arguments.extend(["-stdlib=libc++", "-mmacosx-version-min=10.7"])
 
-libhfst_module = Extension('_libhfst',
+libhfst_module = Extension('hfst._libhfst',
                            language = "c++",
                            sources = ["src/hfst/libhfst.i"],
                            swig_opts = ["-c++",

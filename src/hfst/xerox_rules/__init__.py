@@ -4,18 +4,22 @@ Hfst Xerox-type rule functions and classes.
 
 """
 
-from libhfst import Rule, \
-replace, replace_leftmost_longest_match, \
-replace_rightmost_longest_match, replace_leftmost_shortest_match, \
-replace_rightmost_shortest_match, replace_epenthesis, \
-before, after
+from ..libhfst import after
+from ..libhfst import before
+from ..libhfst import replace
+from ..libhfst import replace_epenthesis
+from ..libhfst import replace_leftmost_longest_match
+from ..libhfst import replace_leftmost_shortest_match
+from ..libhfst import replace_rightmost_longest_match
+from ..libhfst import replace_rightmost_shortest_match
+from ..libhfst import Rule
 
 # these functions had to be renamed in the swig interface
 # to prevent name collision
-from libhfst import xerox_replace_left as replace_left
-from libhfst import xerox_restriction as restriction
+from ..libhfst import xerox_replace_left as replace_left
+from ..libhfst import xerox_restriction as restriction
 
-import libhfst
+from .. import libhfst
 
 class ReplaceType:
     """

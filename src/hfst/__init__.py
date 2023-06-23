@@ -1,6 +1,4 @@
-"""
-
-Python bindings for HFST finite-state transducer library written in C++.
+"""Python bindings for HFST finite-state transducer library written in C++.
 
 FUNCTIONS:
 
@@ -44,47 +42,65 @@ CLASSES:
     PrologReader
     XfstCompiler
     XreCompiler
-
 """
 
-__version__ = "3.16.0.0"
+from io import StringIO
+import readline
+import sys
 
-import hfst.exceptions
-import hfst.sfst_rules
-import hfst.xerox_rules
-from libhfst import is_diacritic, compile_pmatch_expression, HfstTransducer, HfstOutputStream, HfstInputStream, \
-HfstTokenizer, HfstBasicTransducer, HfstBasicTransition, XreCompiler, LexcCompiler, \
-XfstCompiler, set_default_fst_type, get_default_fst_type, fst_type_to_string, PmatchContainer, Location
-import libhfst
+from . import exceptions
+from . import libhfst
+from .libhfst import compile_pmatch_expression
+from .libhfst import fst_type_to_string
+from .libhfst import get_default_fst_type
+from .libhfst import HfstBasicTransducer
+from .libhfst import HfstBasicTransition
+from .libhfst import HfstInputStream
+from .libhfst import HfstOutputStream
+from .libhfst import HfstTokenizer
+from .libhfst import HfstTransducer
+from .libhfst import is_diacritic
+from .libhfst import LexcCompiler
+from .libhfst import Location
+from .libhfst import PmatchContainer
+from .libhfst import set_default_fst_type
+from .libhfst import XfstCompiler
+from .libhfst import XreCompiler
+from . import sfst_rules
+from . import xerox_rules
 
-from sys import version
-if int(version[0]) > 2:
+from .version import version as __version__
+
+
+if int(sys.version[0]) > 2:
     def unicode(s, c):
         return s
 
-EPSILON='@_EPSILON_SYMBOL_@'
-UNKNOWN='@_UNKNOWN_SYMBOL_@'
-IDENTITY='@_IDENTITY_SYMBOL_@'
+EPSILON = '@_EPSILON_SYMBOL_@'
+UNKNOWN = '@_UNKNOWN_SYMBOL_@'
+IDENTITY = '@_IDENTITY_SYMBOL_@'
 
 # Windows...
-OUTPUT_TO_CONSOLE=False
+OUTPUT_TO_CONSOLE = False
+
 
 def set_output_to_console(val):
-    """
-    (Windows-specific:) set whether output is printed to console instead of standard output.
+    """(Windows-specific:) set whether output is printed to console
+    instead of standard output.
     """
     global OUTPUT_TO_CONSOLE
-    OUTPUT_TO_CONSOLE=val
+    OUTPUT_TO_CONSOLE = val
+
 
 def get_output_to_console():
-    """
-    (Windows-specific:) get whether output is printed to console instead of standard output.
+    """(Windows-specific:) get whether output is printed to console
+    instead of standard output.
     """
     return OUTPUT_TO_CONSOLE
 
+
 def start_xfst(**kwargs):
-    """
-    Start interactive xfst compiler.
+    """Start interactive xfst compiler.
 
     Parameters
     ----------
@@ -96,7 +112,6 @@ def start_xfst(**kwargs):
         Implementation type of the compiler, defaults to
         hfst.get_default_fst_type().
     """
-    import sys
     idle = 'idlelib' in sys.modules
     if idle:
         print('It seems that you are running python in in IDLE. Note that all output from xfst will be buffered.')
@@ -105,88 +120,84 @@ def start_xfst(**kwargs):
 
     type = get_default_fst_type()
     quit_on_fail = 'OFF'
-    to_console=get_output_to_console()
-    for k,v in kwargs.items():
-      if k == 'type':
-        type = v
-      elif k == 'output_to_console':
-        to_console=v
-      elif k == 'quit_on_fail':
-        if v == True:
-          quit_on_fail='ON'
-      else:
-        print('Warning: ignoring unknown argument %s.' % (k))
+    to_console = get_output_to_console()
+    for k, v in kwargs.items():
+        if k == 'type':
+            type = v
+        elif k == 'output_to_console':
+            to_console = v
+        elif k == 'quit_on_fail':
+            if v:
+                quit_on_fail = 'ON'
+        else:
+            print('Warning: ignoring unknown argument %s.' % (k))
 
     comp = XfstCompiler(type)
     comp.setReadInteractiveTextFromStdin(True)
-    comp.setReadline(False) # do not mix python and c++ readline
+    comp.setReadline(False)  # do not mix python and c++ readline
 
     if to_console and idle:
         print('Cannot output to console when running libhfst from IDLE.')
-        to_console=False
+        to_console = False
     comp.setOutputToConsole(to_console)
     comp.set('quit-on-fail', quit_on_fail)
 
     rl_length_1 = 0
     rl_found = False
     try:
-      import readline
-      rl_found = True
-      rl_length_1 = readline.get_current_history_length()
+        rl_found = True
+        rl_length_1 = readline.get_current_history_length()
     except ImportError:
-      pass
+        pass
 
-    import sys
-    expression=""
+    expression = ''
     while True:
         expression += input(comp.get_prompt()).rstrip().lstrip()
         if len(expression) == 0:
-           continue
+            continue
         if expression[-1] == '\\':
-           expression = expression[:-2] + '\n'
-           continue
+            expression = expression[:-2] + '\n'
+            continue
         retval = -1
         if idle:
             retval = libhfst.hfst_compile_xfst_to_string_one(comp, expression)
-            stdout.write(libhfst.get_hfst_xfst_string_one())
+            sys.stdout.write(libhfst.get_hfst_xfst_string_one())
         else:
             # interactive command
-            if (expression == "apply down" or expression == "apply up") and rl_found:
-               rl_length_2 = readline.get_current_history_length()
-               while True:
-                  try:
-                     line = input().rstrip().lstrip()
-                  except EOFError:
-                     break
-                  if expression == "apply down":
-                     comp.apply_down(line)
-                  elif expression == "apply up":
-                     comp.apply_up(line)
-               for foo in range(readline.get_current_history_length() - rl_length_2):
-                  readline.remove_history_item(rl_length_2)
-               retval = 0
-            elif expression == "inspect" or expression == "inspect net":
-               print('inspect net not supported')
-               retval = 0
+            if (expression == 'apply down' or expression == 'apply up') and rl_found:
+                rl_length_2 = readline.get_current_history_length()
+                while True:
+                    try:
+                        line = input().rstrip().lstrip()
+                    except EOFError:
+                        break
+                    if expression == 'apply down':
+                        comp.apply_down(line)
+                    elif expression == 'apply up':
+                        comp.apply_up(line)
+                for foo in range(readline.get_current_history_length() - rl_length_2):
+                    readline.remove_history_item(rl_length_2)
+                retval = 0
+            elif expression == 'inspect' or expression == 'inspect net':
+                print('inspect net not supported')
+                retval = 0
             else:
-               retval = comp.parse_line(expression + "\n")
+                retval = comp.parse_line(expression + '\n')
         if retval != 0:
-           print("expression '%s' could not be parsed" % expression)
-           if comp.get("quit-on-fail") == "ON":
-              return
+            print("expression '%s' could not be parsed" % expression)
+            if comp.get('quit-on-fail') == 'ON':
+                return
         if comp.quit_requested():
-           break
-        expression = ""
+            break
+        expression = ''
 
     if rl_found:
-      for foo in range(readline.get_current_history_length() - rl_length_1):
-         readline.remove_history_item(rl_length_1)
+        for foo in range(readline.get_current_history_length() - rl_length_1):
+            readline.remove_history_item(rl_length_1)
 
-from sys import stdout
 
 def regex(re, **kwargs):
-    """
-    Get a transducer as defined by regular expression *re*.
+    r"""Get a transducer as defined by regular expression *re*.
 
     Parameters
     ----------
@@ -305,109 +316,109 @@ def regex(re, **kwargs):
     #   starts a comment until end of line
     """
     type_ = get_default_fst_type()
-    to_console=get_output_to_console()
-    import sys
-    err=None
-    defs=None
+    to_console = get_output_to_console()
+    err = None
+    defs = None
 
-    for k,v in kwargs.items():
-      if k == 'output_to_console':
-          to_console=v
-      if k == 'error':
-          err=v
-      if k == 'definitions':
-          defs=v;
-      else:
-        print('Warning: ignoring unknown argument %s.' % (k))
+    for k, v in kwargs.items():
+        if k == 'output_to_console':
+            to_console = v
+        if k == 'error':
+            err = v
+        if k == 'definitions':
+            defs = v
+        else:
+            print('Warning: ignoring unknown argument %s.' % (k))
 
     comp = XreCompiler(type_)
     comp.setOutputToConsole(to_console)
-    if not defs == None:
-        for k,v in defs.items():
+    if defs is not None:
+        for k, v in defs.items():
             vtype = str(type(v))
-            if "HfstTransducer" in vtype:
-                comp.define_transducer(k,v)
+            if 'HfstTransducer' in vtype:
+                comp.define_transducer(k, v)
                 # print('defining transducer')
             else:
                 pass
 
-    if err == None:
-       return libhfst.hfst_regex(comp, re, "")
+    if err is None:
+        return libhfst.hfst_regex(comp, re, '')
     elif err == sys.stdout:
-       return libhfst.hfst_regex(comp, re, "cout")
+        return libhfst.hfst_regex(comp, re, 'cout')
     elif err == sys.stderr:
-       return libhfst.hfst_regex(comp, re, "cerr")
+        return libhfst.hfst_regex(comp, re, 'cerr')
     else:
-       retval = libhfst.hfst_regex(comp, re, "")
-       err.write(unicode(libhfst.get_hfst_regex_error_message(), 'utf-8'))
-       return retval
+        retval = libhfst.hfst_regex(comp, re, '')
+        err.write(unicode(libhfst.get_hfst_regex_error_message(), 'utf-8'))
+        return retval
+
 
 def _replace_symbols(symbol, epsilonstr=EPSILON):
     if symbol == epsilonstr:
-       return EPSILON
-    if symbol == "@0@":
-       return EPSILON
-    symbol = symbol.replace("@_SPACE_@", " ")
-    symbol = symbol.replace("@_TAB_@", "\t")
-    symbol = symbol.replace("@_COLON_@", ":")
+        return EPSILON
+    if symbol == '@0@':
+        return EPSILON
+    symbol = symbol.replace('@_SPACE_@', ' ')
+    symbol = symbol.replace('@_TAB_@', '\t')
+    symbol = symbol.replace('@_COLON_@', ':')
     return symbol
+
 
 def _parse_att_line(line, fsm, epsilonstr=EPSILON):
     # get rid of extra whitespace
-    line = line.replace('\t',' ')
-    line = " ".join(line.split())
+    line = line.replace('\t', ' ')
+    line = ' '.join(line.split())
     fields = line.split(' ')
     try:
         if len(fields) == 1:
-           if fields[0] == '': # empty transducer...
-               return True
-           fsm.add_state(int(fields[0]))
-           fsm.set_final_weight(int(fields[0]), 0)
+            if fields[0] == '':  # empty transducer...
+                return True
+            fsm.add_state(int(fields[0]))
+            fsm.set_final_weight(int(fields[0]), 0)
         elif len(fields) == 2:
-           fsm.add_state(int(fields[0]))
-           fsm.set_final_weight(int(fields[0]), float(fields[1]))
+            fsm.add_state(int(fields[0]))
+            fsm.set_final_weight(int(fields[0]), float(fields[1]))
         elif len(fields) == 4:
-           fsm.add_transition(int(fields[0]), int(fields[1]), _replace_symbols(fields[2]), _replace_symbols(fields[3]), 0)
+            fsm.add_transition(int(fields[0]), int(fields[1]), _replace_symbols(fields[2]), _replace_symbols(fields[3]), 0)
         elif len(fields) == 5:
-           fsm.add_transition(int(fields[0]), int(fields[1]), _replace_symbols(fields[2]), _replace_symbols(fields[3]), float(fields[4]))
+            fsm.add_transition(int(fields[0]), int(fields[1]), _replace_symbols(fields[2]), _replace_symbols(fields[3]), float(fields[4]))
         else:
-           return False
-    except ValueError as e:
+            return False
+    except ValueError:
         return False
     return True
 
+
 def read_att_string(att):
-    """
-    Create a transducer as defined in AT&T format in *att*.
-    """
+    """Create a transducer as defined in AT&T format in *att*."""
     linecount = 0
     fsm = HfstBasicTransducer()
     lines = att.split('\n')
     for line in lines:
         linecount = linecount + 1
         if not _parse_att_line(line, fsm):
-           raise hfst.exceptions.NotValidAttFormatException(line, "", linecount)
+            raise exceptions.NotValidAttFormatException(line, '', linecount)
     return HfstTransducer(fsm, get_default_fst_type())
 
+
 def read_att_input():
-    """
-    Create a transducer as defined in AT&T format in user input.
+    """Create a transducer as defined in AT&T format in user input.
     An empty line signals the end of input.
     """
     linecount = 0
     fsm = HfstBasicTransducer()
     while True:
         line = input().rstrip()
-        if line == "":
-           break
+        if line == '':
+            break
         linecount = linecount + 1
         if not _parse_att_line(line, fsm):
-           raise hfst.exceptions.NotValidAttFormatException(line, "", linecount)
+            raise exceptions.NotValidAttFormatException(line, '', linecount)
     return HfstTransducer(fsm, get_default_fst_type())
 
+
 def read_att_transducer(f, epsilonstr=EPSILON, linecount=[0]):
-    """
-    Create a transducer as defined in AT&T format in file *f*. *epsilonstr*
+    """Create a transducer as defined in AT&T format in file *f*. *epsilonstr*
     defines how epsilons are represented. *linecount* keeps track of the current
     line in the file.
     """
@@ -415,148 +426,143 @@ def read_att_transducer(f, epsilonstr=EPSILON, linecount=[0]):
     fsm = HfstBasicTransducer()
     while True:
         line = f.readline()
-        if line == "":
-           if linecount_ == 0:
-              raise hfst.exceptions.EndOfStreamException("","",0)
-           else:
-              linecount_ = linecount_ + 1
-              break
+        if line == '':
+            if linecount_ == 0:
+                raise exceptions.EndOfStreamException('', '', 0)
+            else:
+                linecount_ = linecount_ + 1
+                break
         linecount_ = linecount_ + 1
         if line[0] == '-':
-           break
+            break
         if not _parse_att_line(line, fsm, epsilonstr):
-           raise hfst.exceptions.NotValidAttFormatException(line, "", linecount[0] + linecount_)
+            raise exceptions.NotValidAttFormatException(line, '', linecount[0] + linecount_)
     linecount[0] = linecount[0] + linecount_
     return HfstTransducer(fsm, get_default_fst_type())
 
+
 class AttReader:
-      """
-      A class for reading input in AT&T text format and converting it into
-      transducer(s).
+    """A class for reading input in AT&T text format and converting it into
+    transducer(s).
 
-      An example that reads AT&T input from file 'testfile.att' where epsilon is
-      represented as \"<eps>\" and creates the corresponding transducers and prints
-      them. If the input cannot be parsed, a message showing the invalid line in AT&T
-      input is printed and reading is stopped.
+    An example that reads AT&T input from file 'testfile.att' where epsilon is
+    represented as \"<eps>\" and creates the corresponding transducers and prints
+    them. If the input cannot be parsed, a message showing the invalid line in AT&T
+    input is printed and reading is stopped.
 
-      with open('testfile.att', 'r') as f:
-           try:
-                r = hfst.AttReader(f, \"<eps>\")
-                for tr in r:
-                    print(tr)
-           except hfst.exceptions.NotValidAttFormatException as e:
-                print(e.what())
-      """
-      def __init__(self, f, epsilonstr=EPSILON):
-          """
-          Create an AttReader that reads input from file *f* where the epsilon is
-          represented as *epsilonstr*.
+    with open('testfile.att', 'r') as f:
+         try:
+              r = hfst.AttReader(f, \"<eps>\")
+              for tr in r:
+                  print(tr)
+         except exceptions.NotValidAttFormatException as e:
+              print(e.what())
+    """
+    def __init__(self, f, epsilonstr=EPSILON):
+        """Create an AttReader that reads input from file *f* where
+        the epsilon is represented as *epsilonstr*.
 
-          Parameters
-          ----------
-          * `f` :
-              A python file.
-          * `epsilonstr` :
-              How epsilon is represented in the file. By default, \"@_EPSILON_SYMBOL_@\"
-              and \"@0@\" are both recognized.
-          """
-          self.file = f
-          self.epsilonstr = epsilonstr
-          self.linecount = [0]
+        Parameters
+        ----------
+        * `f` :
+            A python file.
+        * `epsilonstr` :
+            How epsilon is represented in the file. By default, \"@_EPSILON_SYMBOL_@\"
+            and \"@0@\" are both recognized.
+        """
+        self.file = f
+        self.epsilonstr = epsilonstr
+        self.linecount = [0]
 
-      def read(self):
-          """
-          Read next transducer.
+    def read(self):
+        """Read next transducer.
 
-          Read next transducer description in AT&T format and return a corresponding
-          transducer.
+        Read next transducer description in AT&T format and return a corresponding
+        transducer.
 
-          Exceptions
-          ----------
-          * `hfst.exceptions.NotValidAttFormatException` :
-          * `hfst.exceptions.EndOfStreamException` :
-          """
-          return read_att_transducer(self.file, self.epsilonstr, self.linecount)
+        Exceptions
+        ----------
+        * `exceptions.NotValidAttFormatException` :
+        * `exceptions.EndOfStreamException` :
+        """
+        return read_att_transducer(self.file, self.epsilonstr, self.linecount)
 
-      def __iter__(self):
-          """
-          An iterator to the reader.
+    def __iter__(self):
+        """An iterator to the reader.
 
-          Needed for 'for ... in' statement.
+        Needed for 'for ... in' statement.
 
-          for transducer in att_reader:
-              print(transducer)
-          """
-          return self
+        for transducer in att_reader:
+            print(transducer)
+        """
+        return self
 
-      def next(self):
-          """
-          Return next element (for python version 3).
+    def next(self):
+        """Return next element (for python version 3).
 
-          Needed for 'for ... in' statement.
+        Needed for 'for ... in' statement.
 
-          for transducer in att_reader:
-              print(transducer)
+        for transducer in att_reader:
+            print(transducer)
 
-          Exceptions
-          ----------
-          * `StopIteration` :
-          """
-          try:
-             return self.read()
-          except hfst.exceptions.EndOfStreamException as e:
-             raise StopIteration
+        Exceptions
+        ----------
+        * `StopIteration` :
+        """
+        try:
+            return self.read()
+        except exceptions.EndOfStreamException:
+            raise StopIteration
 
-      def __next__(self):
-          """
-          Return next element (for python version 2).
+    def __next__(self):
+        """Return next element (for python version 2).
 
-          Needed for 'for ... in' statement.
+        Needed for 'for ... in' statement.
 
-          for transducer in att_reader:
-              print(transducer)
+        for transducer in att_reader:
+            print(transducer)
 
-          Exceptions
-          ----------
-          * `StopIteration` :
-          """
-          return self.next()
+        Exceptions
+        ----------
+        * `StopIteration` :
+        """
+        return self.next()
+
 
 def read_prolog_transducer(f, linecount=[0]):
-    """
-    Create a transducer as defined in prolog format in file *f*. *linecount*
+    """Create a transducer as defined in prolog format in file *f*. *linecount*
     keeps track of the current line in the file.
     """
     linecount_ = 0
     fsm = HfstBasicTransducer()
 
-    line = ""
+    line = ''
     while(True):
         line = f.readline()
         linecount_ = linecount_ + 1
-        if line == "":
-            raise hfst.exceptions.EndOfStreamException("","",linecount[0] + linecount_)
+        if line == '':
+            raise exceptions.EndOfStreamException('', '', linecount[0] + linecount_)
         line = line.rstrip()
-        if line == "":
-            pass # allow extra prolog separator(s)
+        if line == '':
+            pass  # allow extra prolog separator(s)
         if line[0] == '#':
-            pass # comment line
+            pass  # comment line
         else:
             break
 
     if not libhfst.parse_prolog_network_line(line, fsm):
-        raise hfst.exceptions.NotValidPrologFormatException(line,"",linecount[0] + linecount_)
+        raise exceptions.NotValidPrologFormatException(line, '', linecount[0] + linecount_)
 
     while(True):
         line = f.readline()
-        if (line == ""):
+        if (line == ''):
             retval = HfstTransducer(fsm, get_default_fst_type())
             retval.set_name(fsm.name)
             linecount[0] = linecount[0] + linecount_
             return retval
         line = line.rstrip()
         linecount_ = linecount_ + 1
-        if line == "":  # prolog separator
+        if line == '':  # prolog separator
             retval = HfstTransducer(fsm, get_default_fst_type())
             retval.set_name(fsm.name)
             linecount[0] = linecount[0] + linecount_
@@ -568,100 +574,94 @@ def read_prolog_transducer(f, linecount=[0]):
         elif libhfst.parse_prolog_symbol_line(line, fsm):
             pass
         else:
-            raise hfst.exceptions.NotValidPrologFormatException(line,"",linecount[0] + linecount_)
+            raise exceptions.NotValidPrologFormatException(line, '', linecount[0] + linecount_)
+
 
 class PrologReader:
-      """
-      A class for reading input in prolog text format and converting it into
-      transducer(s).
+    """A class for reading input in prolog text format and converting it into
+    transducer(s).
 
-      An example that reads prolog input from file 'testfile.prolog' and creates the
-      corresponding transducers and prints them. If the input cannot be parsed, a
-      message showing the invalid line in prolog input is printed and reading is
-      stopped.
+    An example that reads prolog input from file 'testfile.prolog' and creates the
+    corresponding transducers and prints them. If the input cannot be parsed, a
+    message showing the invalid line in prolog input is printed and reading is
+    stopped.
 
-          with open('testfile.prolog', 'r') as f:
-              try:
-                 r = hfst.PrologReader(f)
-                 for tr in r:
-                     print(tr)
-              except hfst.exceptions.NotValidPrologFormatException as e:
-                  print(e.what())
-      """
-      def __init__(self, f):
-          """
-          Create a PrologReader that reads input from file *f*.
+        with open('testfile.prolog', 'r') as f:
+            try:
+               r = hfst.PrologReader(f)
+               for tr in r:
+                   print(tr)
+            except exceptions.NotValidPrologFormatException as e:
+                print(e.what())
+    """
+    def __init__(self, f):
+        """Create a PrologReader that reads input from file *f*.
 
-          Parameters
-          ----------
-          * `f` :
-              A python file.
-          """
-          self.file = f
-          self.linecount = [0]
+        Parameters
+        ----------
+        * `f` :
+            A python file.
+        """
+        self.file = f
+        self.linecount = [0]
 
-      def read(self):
-          """
+    def read(self):
+        """Read next transducer.
 
-          Read next transducer.
+        Read next transducer description in prolog format and return a corresponding
+        transducer.
 
-          Read next transducer description in prolog format and return a corresponding
-          transducer.
+        Exceptions
+        ----------
+        * `exceptions.NotValidPrologFormatException` :
+        * `exceptions.EndOfStreamException` :
+        """
+        return read_prolog_transducer(self.file, self.linecount)
 
-          Exceptions
-          ----------
-          * `hfst.exceptions.NotValidPrologFormatException` :
-          * `hfst.exceptions.EndOfStreamException` :
-          """
-          return read_prolog_transducer(self.file, self.linecount)
+    def __iter__(self):
+        """An iterator to the reader.
 
-      def __iter__(self):
-          """
-          An iterator to the reader.
+        Needed for 'for ... in' statement.
 
-          Needed for 'for ... in' statement.
+        for transducer in prolog_reader:
+            print(transducer)
+        """
+        return self
 
-          for transducer in prolog_reader:
-              print(transducer)
-          """
-          return self
+    def next(self):
+        """Return next element (for python version 2).
 
-      def next(self):
-          """
-          Return next element (for python version 2).
+        Needed for 'for ... in' statement.
 
-          Needed for 'for ... in' statement.
+        for transducer in prolog_reader:
+            print(transducer)
 
-          for transducer in prolog_reader:
-              print(transducer)
+        Exceptions
+        ----------
+        * `StopIteration` :
+        """
+        try:
+            return self.read()
+        except exceptions.EndOfStreamException:
+            raise StopIteration
 
-          Exceptions
-          ----------
-          * `StopIteration` :
-          """
-          try:
-             return self.read()
-          except hfst.exceptions.EndOfStreamException as e:
-             raise StopIteration
+    def __next__(self):
+        """Return next element (for python version 2).
 
-      def __next__(self):
-          """
-          Return next element (for python version 2).
+        Needed for 'for ... in' statement.
 
-          Needed for 'for ... in' statement.
+        for transducer in prolog_reader:
+            print(transducer)
 
-          for transducer in prolog_reader:
-              print(transducer)
+        Exceptions
+        ----------
+        * `StopIteration` :
+        """
+        return self.next()
 
-          Exceptions
-          ----------
-          * `StopIteration` :
-          """
-          return self.next()
 
 def compile_xfst_file(filename, **kwargs):
-    """
-    Compile (run) xfst file *filename*.
+    """Compile (run) xfst file *filename*.
 
     Parameters
     ----------
@@ -685,80 +685,79 @@ def compile_xfst_file(filename, **kwargs):
     -------
     On success 0, else an integer greater than 0.
     """
-    if int(version[0]) > 2:
-      pass
+    if int(sys.version[0]) > 2:
+        pass
     else:
-      raise RuntimeError('hfst.compile_xfst_file not supported for python version 2')
-    verbosity=0
-    quit_on_fail='ON'
+        raise RuntimeError('hfst.compile_xfst_file not supported for python version 2')
+    verbosity = 0
+    quit_on_fail = 'ON'
     type = get_default_fst_type()
-    output=None
-    error=None
-    to_console=get_output_to_console()
+    output = None
+    error = None
+    to_console = get_output_to_console()
 
-    for k,v in kwargs.items():
-      if k == 'verbosity':
-        verbosity=v
-      elif k == 'quit_on_fail':
-        if v == False:
-          quit_on_fail='OFF'
-      elif k == 'output':
-          output=v
-      elif k == 'error':
-          error=v
-      elif k == 'output_to_console':
-          to_console=v
-      else:
-        print('Warning: ignoring unknown argument %s.' % (k))
+    for k, v in kwargs.items():
+        if k == 'verbosity':
+            verbosity = v
+        elif k == 'quit_on_fail':
+            if not v:
+                quit_on_fail = 'OFF'
+        elif k == 'output':
+            output = v
+        elif k == 'error':
+            error = v
+        elif k == 'output_to_console':
+            to_console = v
+        else:
+            print('Warning: ignoring unknown argument %s.' % (k))
 
     if verbosity > 1:
-      print('Compiling with %s implementation...' % fst_type_to_string(type))
+        print('Compiling with %s implementation...' % fst_type_to_string(type))
     xfstcomp = XfstCompiler(type)
     xfstcomp.setOutputToConsole(to_console)
     xfstcomp.setVerbosity(verbosity > 0)
     xfstcomp.set('quit-on-fail', quit_on_fail)
     if verbosity > 1:
-      print('Opening xfst file %s...' % filename)
+        print('Opening xfst file %s...' % filename)
     f = open(filename, 'r', encoding='utf-8')
     data = f.read()
     f.close()
     if verbosity > 1:
-      print('File closed...')
+        print('File closed...')
 
-    retval=-1
-    import sys
-    from io import StringIO
+    retval = -1
 
     # check special case
     if isinstance(output, StringIO) and isinstance(error, StringIO) and output == error:
-       retval = libhfst.hfst_compile_xfst_to_string_one(xfstcomp, data)
-       output.write(unicode(libhfst.get_hfst_xfst_string_one(), 'utf-8'))
+        retval = libhfst.hfst_compile_xfst_to_string_one(xfstcomp, data)
+        output.write(unicode(libhfst.get_hfst_xfst_string_one(), 'utf-8'))
     else:
-       arg1 = ""
-       arg2 = ""
-       if output == None or output == sys.stdout:
-          arg1 = "cout"
-       if output == sys.stderr:
-          arg1 == "cerr"
-       if error == None or error == sys.stderr:
-          arg2 = "cerr"
-       if error == sys.stdout:
-          arg2 == "cout"
+        arg1 = ''
+        arg2 = ''
+        if output is None or output == sys.stdout:
+            arg1 = 'cout'
+        if output == sys.stderr:
+            arg1 == 'cerr'
+        if error is None or error == sys.stderr:
+            arg2 = 'cerr'
+        if error == sys.stdout:
+            arg2 == 'cout'
 
-       retval = libhfst.hfst_compile_xfst(xfstcomp, data, arg1, arg2)
+        retval = libhfst.hfst_compile_xfst(xfstcomp, data, arg1, arg2)
 
-       if isinstance(output, StringIO):
-          output.write(unicode(libhfst.get_hfst_xfst_string_one(), 'utf-8'))
-       if isinstance(error, StringIO):
-          error.write(unicode(libhfst.get_hfst_xfst_string_two(), 'utf-8'))
+        if isinstance(output, StringIO):
+            output.write(unicode(libhfst.get_hfst_xfst_string_one(), 'utf-8'))
+        if isinstance(error, StringIO):
+            error.write(unicode(libhfst.get_hfst_xfst_string_two(), 'utf-8'))
 
     if verbosity > 1:
-      print('Parsed file with return value %i (0 indicating succesful parsing).' % retval)
+        print('Parsed file with return value %i (0 indicating succesful parsing).' % retval)
     return retval
 
+
 def compile_twolc_file(inputfilename, outputfilename, **kwargs):
-    """
-    Compile twolc file *inputfilename* and store the result to file *outputfilename*.
+    """Compile twolc file *inputfilename* and store the result to
+    file *outputfilename*.
 
     Parameters
     ----------
@@ -783,34 +782,36 @@ def compile_twolc_file(inputfilename, outputfilename, **kwargs):
     -------
     On success zero, else an integer other than zero.
     """
-    silent=False
-    verbose=False
-    resolve_right_conflicts=True
-    resolve_left_conflicts=False
-    implementation_type=get_default_fst_type()
+    silent = False
+    verbose = False
+    resolve_right_conflicts = True
+    resolve_left_conflicts = False
+    implementation_type = get_default_fst_type()
 
-    for k,v in kwargs.items():
+    for k, v in kwargs.items():
         if k == 'type':
             implementation_type = v
         elif k == 'silent':
-            silent=v
+            silent = v
         elif k == 'verbose':
-            verbose=v
+            verbose = v
         elif k == 'resolve_right_conflicts':
-            resolve_right_conflicts=v
+            resolve_right_conflicts = v
         elif k == 'resolve_left_conflicts':
-            resolve_left_conflicts=v
+            resolve_left_conflicts = v
         else:
             print('Warning: ignoring unknown argument %s.' % (k))
 
-    return libhfst.TwolcCompiler.compile(inputfilename, outputfilename, silent, verbose,
-                                         resolve_right_conflicts, resolve_left_conflicts,
-                                         implementation_type)
+    return libhfst.TwolcCompiler.compile(inputfilename, outputfilename,
+                                              silent, verbose,
+                                              resolve_right_conflicts,
+                                              resolve_left_conflicts,
+                                              implementation_type)
+
 
 def compile_pmatch_file(filename):
-    """
-    Compile pmatch expressions as defined in *filename* and return a tuple of
-    transducers.
+    """Compile pmatch expressions as defined in *filename* and
+    return a tuple of transducers.
 
     An example:
 
@@ -829,14 +830,14 @@ def compile_pmatch_file(filename):
       "Je marche seul dans l'<FrenchStreetName>avenue des Ternes</FrenchStreetName>."
     """
     with open(filename, 'r') as myfile:
-      data=myfile.read()
-      myfile.close()
+        data = myfile.read()
+        myfile.close()
     defs = compile_pmatch_expression(data)
     return defs
 
+
 def compile_sfst_file(filename, **kwargs):
-    """
-    Compile sfst file *filename* into a transducer.
+    """Compile sfst file *filename* into a transducer.
 
     Parameters
     ----------
@@ -854,38 +855,37 @@ def compile_sfst_file(filename, **kwargs):
     -------
     On success the resulting transducer, else None.
     """
-    verbosity=False
-    type = get_default_fst_type()
-    output=None
-    to_console=get_output_to_console()
+    verbosity = False
+    # type = get_default_fst_type()
+    output = None
+    to_console = get_output_to_console()
 
-    for k,v in kwargs.items():
-      if k == 'verbose':
-        verbosity=v
-      elif k == 'output':
-          output=v
-      elif k == 'output_to_console':
-          to_console=v
-      else:
-        print('Warning: ignoring unknown argument %s.' % (k))
+    for k, v in kwargs.items():
+        if k == 'verbose':
+            verbosity = v
+        elif k == 'output':
+            output = v
+        elif k == 'output_to_console':
+            to_console = v
+        else:
+            print('Warning: ignoring unknown argument %s.' % (k))
 
-    retval=None
-    import sys
-    if output == None:
-       retval = libhfst.hfst_compile_sfst(filename, "", verbosity, to_console)
+    retval = None
+    if output is None:
+        retval = libhfst.hfst_compile_sfst(filename, '', verbosity, to_console)
     elif output == sys.stdout:
-       retval = libhfst.hfst_compile_sfst(filename, "cout", verbosity, to_console)
+        retval = libhfst.hfst_compile_sfst(filename, 'cout', verbosity, to_console)
     elif output == sys.stderr:
-       retval = libhfst.hfst_compile_sfst(filename, "cerr", verbosity, to_console)
+        retval = libhfst.hfst_compile_sfst(filename, 'cerr', verbosity, to_console)
     else:
-       retval = libhfst.hfst_compile_sfst(filename, "", verbosity, to_console)
-       output.write(unicode(libhfst.get_hfst_sfst_output(), 'utf-8'))
+        retval = libhfst.hfst_compile_sfst(filename, '', verbosity, to_console)
+        output.write(unicode(libhfst.get_hfst_sfst_output(), 'utf-8'))
 
     return retval
 
+
 def compile_lexc_file(filename, **kwargs):
-    """
-    Compile lexc file *filename* into a transducer.
+    """Compile lexc file *filename* into a transducer.
 
     Parameters
     ----------
@@ -906,59 +906,61 @@ def compile_lexc_file(filename, **kwargs):
     -------
     On success the resulting transducer, else None.
     """
-    verbosity=0
-    withflags=False
-    alignstrings=False
+    verbosity = 0
+    withflags = False
+    alignstrings = False
     type = get_default_fst_type()
-    output=None
-    to_console=get_output_to_console()
+    output = None
+    to_console = get_output_to_console()
 
-    for k,v in kwargs.items():
-      if k == 'verbosity':
-        verbosity=v
-      elif k == 'with_flags':
-        if v == True:
-          withflags = v
-      elif k == 'align_strings':
-          alignstrings = v
-      elif k == 'output':
-          output=v
-      elif k == 'output_to_console':
-          to_console=v
-      else:
-        print('Warning: ignoring unknown argument %s.' % (k))
+    for k, v in kwargs.items():
+        if k == 'verbosity':
+            verbosity = v
+        elif k == 'with_flags':
+            if v:
+                withflags = v
+        elif k == 'align_strings':
+            alignstrings = v
+        elif k == 'output':
+            output = v
+        elif k == 'output_to_console':
+            to_console = v
+        else:
+            print('Warning: ignoring unknown argument %s.' % (k))
 
     lexccomp = LexcCompiler(type, withflags, alignstrings)
     lexccomp.setVerbosity(verbosity)
     lexccomp.setOutputToConsole(to_console)
 
-    retval=-1
-    import sys
-    if output == None:
-       retval = libhfst.hfst_compile_lexc(lexccomp, filename, "")
+    retval = -1
+    if output is None:
+        retval = libhfst.hfst_compile_lexc(lexccomp, filename, '')
     elif output == sys.stdout:
-       retval = libhfst.hfst_compile_lexc(lexccomp, filename, "cout")
+        retval = libhfst.hfst_compile_lexc(lexccomp, filename, 'cout')
     elif output == sys.stderr:
-       retval = libhfst.hfst_compile_lexc(lexccomp, filename, "cerr")
+        retval = libhfst.hfst_compile_lexc(lexccomp, filename, 'cerr')
     else:
-       retval = libhfst.hfst_compile_lexc(lexccomp, filename, "")
-       output.write(unicode(libhfst.get_hfst_lexc_output(), 'utf-8'))
+        retval = libhfst.hfst_compile_lexc(lexccomp, filename, '')
+        output.write(unicode(libhfst.get_hfst_lexc_output(), 'utf-8'))
 
     return retval
 
+
 def _is_weighted_word(arg):
     if isinstance(arg, tuple) and len(arg) == 2 and isinstance(arg[0], str) and isinstance(arg[1], (int, float)):
-       return True
+        return True
     return False
+
 
 def _check_word(arg):
     if len(arg) == 0:
-       raise RuntimeError('Empty word.')
+        raise RuntimeError('Empty word.')
     return arg
 
+
 def fsa(arg):
-    """
-    Get a transducer (automaton in this case) that recognizes one or more paths.
+    """Get a transducer (automaton in this case) that recognizes
+    one or more paths.
 
     Parameters
     ----------
@@ -985,36 +987,36 @@ def fsa(arg):
     deftok = HfstTokenizer()
     retval = HfstBasicTransducer()
     if isinstance(arg, str):
-       if len(arg) == 0:
-           retval.set_final_weight(0, 0) # epsilon transducer with zero weight
-       else:
-           retval.disjunct(deftok.tokenize(_check_word(arg)), 0)
+        if len(arg) == 0:
+            retval.set_final_weight(0, 0)  # epsilon transducer with zero weight
+        else:
+            retval.disjunct(deftok.tokenize(_check_word(arg)), 0)
     elif _is_weighted_word(arg):
-       if len(arg) == 0:
-           retval.set_final_weight(0, arg[1]) # epsilon transducer with weight
-       else:
-           retval.disjunct(deftok.tokenize(_check_word(arg[0])), arg[1])
+        if len(arg) == 0:
+            retval.set_final_weight(0, arg[1])  # epsilon transducer with weight
+        else:
+            retval.disjunct(deftok.tokenize(_check_word(arg[0])), arg[1])
     elif isinstance(arg, tuple) or isinstance(arg, list):
-       for word in arg:
-           if _is_weighted_word(word):
-              if len(word) == 0:
-                  retval.set_final_weight(0, word[1]) # epsilon transducer with weight
-              else:
-                  retval.disjunct(deftok.tokenize(_check_word(word[0])), word[1])
-           elif isinstance(word, str):
-              if len(word) == 0:
-                  retval.set_final_weight(0, 0) # epsilon transducer with zero weight
-              else:
-                  retval.disjunct(deftok.tokenize(_check_word(word)), 0)
-           else:
-              raise RuntimeError('Tuple/list element not a string or tuple of string and weight.')
+        for word in arg:
+            if _is_weighted_word(word):
+                if len(word) == 0:
+                    retval.set_final_weight(0, word[1])  # epsilon transducer with weight
+                else:
+                    retval.disjunct(deftok.tokenize(_check_word(word[0])), word[1])
+            elif isinstance(word, str):
+                if len(word) == 0:
+                    retval.set_final_weight(0, 0)  # epsilon transducer with zero weight
+                else:
+                    retval.disjunct(deftok.tokenize(_check_word(word)), 0)
+            else:
+                raise RuntimeError('Tuple/list element not a string or tuple of string and weight.')
     else:
-       raise RuntimeError('Not a string or tuple/list of strings.')
+        raise RuntimeError('Not a string or tuple/list of strings.')
     return HfstTransducer(retval, get_default_fst_type())
 
+
 def fst(arg):
-    """
-    Get a transducer that recognizes one or more paths.
+    """Get a transducer that recognizes one or more paths.
 
     Parameters
     ----------
@@ -1041,26 +1043,26 @@ def fst(arg):
         {'foo':'foo', 'bar':('foo',1.4), 'baz':(('foo',-1),'BAZ')}
     """
     if isinstance(arg, dict):
-       retval = regex('[0-0]') # empty transducer
-       for input, output in arg.items():
-           if not isinstance(input, str):
-              raise RuntimeError('Key not a string.')
-           left = fsa(input)
-           right = 0
-           if isinstance(output, str):
-              right = fsa(output)
-           elif isinstance(output, list) or isinstance(output, tuple):
-              right = fsa(output)
-           else:
-              raise RuntimeError('Value not a string or tuple/list of strings.')
-           left.cross_product(right)
-           retval.disjunct(left)
-       return retval
+        retval = regex('[0-0]')  # empty transducer
+        for input, output in arg.items():
+            if not isinstance(input, str):
+                raise RuntimeError('Key not a string.')
+            left = fsa(input)
+            right = 0
+            if isinstance(output, str):
+                right = fsa(output)
+            elif isinstance(output, list) or isinstance(output, tuple):
+                right = fsa(output)
+            else:
+                raise RuntimeError('Value not a string or tuple/list of strings.')
+            left.cross_product(right)
+            retval.disjunct(left)
+        return retval
     return fsa(arg)
 
+
 def fst_to_fsa(fst, separator=''):
-    """
-    (Experimental)
+    """(Experimental)
 
     Encode a transducer into an automaton, i.e. create a transducer where each
     transition <in:out> of *fst* is replaced with a transition <inSout:inSout>
@@ -1095,13 +1097,13 @@ def fst_to_fsa(fst, separator=''):
 
     """
     encoded_symbols = libhfst.StringSet()
-    retval = hfst.HfstBasicTransducer(fst)
+    retval = HfstBasicTransducer(fst)
     for state in retval.states():
         arcs = retval.transitions(state)
         for arc in arcs:
             input = arc.get_input_symbol()
             output = arc.get_output_symbol()
-            if (input == output) and ((input == hfst.EPSILON) or (input == hfst.UNKNOWN) or (input == hfst.IDENTITY)):
+            if (input == output) and ((input == EPSILON) or (input == UNKNOWN) or (input == IDENTITY)):
                 continue
             symbol = input + separator + output
             arc.set_input_symbol(symbol)
@@ -1109,13 +1111,13 @@ def fst_to_fsa(fst, separator=''):
             encoded_symbols.insert(symbol)
     retval.add_symbols_to_alphabet(encoded_symbols)
     if 'HfstTransducer' in str(type(fst)):
-        return hfst.HfstTransducer(retval)
+        return HfstTransducer(retval)
     else:
         return retval
 
+
 def fsa_to_fst(fsa, separator=''):
-    """
-    (Experimental)
+    """(Experimental)
 
     Decode an encoded automaton back into a transducer, i.e. create a
     transducer where each transition <inSout:inSout> of *fsa*, where 'S' is
@@ -1155,7 +1157,7 @@ def fsa_to_fst(fsa, separator=''):
 
     will create again the original transducer [f:b o:a o:r].
     """
-    retval = hfst.HfstBasicTransducer(fsa)
+    retval = HfstBasicTransducer(fsa)
     encoded_symbols = libhfst.StringSet()
     for state in retval.states():
         arcs = retval.transitions(state)
@@ -1165,7 +1167,7 @@ def fsa_to_fst(fsa, separator=''):
             symbols = []
             if not (input == output):
                 raise RuntimeError('Transition input and output symbols differ.')
-            if input == "":
+            if input == '':
                 raise RuntimeError('Transition symbol cannot be the empty string.')
             # separator given:
             if len(separator) > 0:
@@ -1181,9 +1183,9 @@ def fsa_to_fst(fsa, separator=''):
                     index = input.find('@', 1)
                     if index == -1:
                         raise RuntimeError('Transition symbol cannot have only one "@" sign.')
-                    symbols.append(input[0:index+1])
-                    if not input[index+1] == '':
-                        symbols.append(input[index+1:])
+                    symbols.append(input[0:index + 1])
+                    if not input[index + 1] == '':
+                        symbols.append(input[index + 1:])
             arc.set_input_symbol(symbols[0])
             arc.set_output_symbol(symbols[-1])
             # encoded symbol to be removed from alphabet of result
@@ -1191,14 +1193,14 @@ def fsa_to_fst(fsa, separator=''):
                 encoded_symbols.insert(input)
     retval.remove_symbols_from_alphabet(encoded_symbols)
     if 'HfstTransducer' in str(type(fsa)):
-        return hfst.HfstTransducer(retval)
+        return HfstTransducer(retval)
     else:
         return retval
 
+
 def tokenized_fst(arg, weight=0):
-    """
-    Get a transducer that recognizes the concatenation of symbols or symbol pairs in
-    *arg*.
+    """Get a transducer that recognizes the concatenation of symbols
+    or symbol pairs in *arg*.
 
     Parameters
     ----------
@@ -1218,39 +1220,39 @@ def tokenized_fst(arg, weight=0):
     retval = HfstBasicTransducer()
     state = 0
     if isinstance(arg, list) or isinstance(arg, tuple):
-       for token in arg:
-           if isinstance(token, str):
-              new_state = retval.add_state()
-              retval.add_transition(state, new_state, token, token, 0)
-              state = new_state
-           elif isinstance(token, list) or isinstance(token, tuple):
-              if len(token) == 2:
-                 new_state = retval.add_state()
-                 retval.add_transition(state, new_state, token[0], token[1], 0)
-                 state = new_state
-              elif len(token) == 1:
-                 new_state = retval.add_state()
-                 retval.add_transition(state, new_state, token, token, 0)
-                 state = new_state
-              else:
-                 raise RuntimeError('Symbol or symbol pair must be given.')
-       retval.set_final_weight(state, weight)
-       return HfstTransducer(retval, get_default_fst_type())
+        for token in arg:
+            if isinstance(token, str):
+                new_state = retval.add_state()
+                retval.add_transition(state, new_state, token, token, 0)
+                state = new_state
+            elif isinstance(token, list) or isinstance(token, tuple):
+                if len(token) == 2:
+                    new_state = retval.add_state()
+                    retval.add_transition(state, new_state, token[0], token[1], 0)
+                    state = new_state
+                elif len(token) == 1:
+                    new_state = retval.add_state()
+                    retval.add_transition(state, new_state, token, token, 0)
+                    state = new_state
+                else:
+                    raise RuntimeError('Symbol or symbol pair must be given.')
+        retval.set_final_weight(state, weight)
+        return HfstTransducer(retval, get_default_fst_type())
     else:
-       raise RuntimeError('Argument must be a list or a tuple')
+        raise RuntimeError('Argument must be a list or a tuple')
+
 
 def empty_fst():
-    """
-    Get an empty transducer.
+    """Get an empty transducer.
 
     Empty transducer has one state that is not final, i.e. it does not recognize any
     string.
     """
     return regex('[0-0]')
 
+
 def epsilon_fst(weight=0):
-    """
-    Get an epsilon transducer.
+    """Get an epsilon transducer.
 
     Parameters
     ----------
@@ -1260,59 +1262,54 @@ def epsilon_fst(weight=0):
     """
     return regex('[0]::' + str(weight))
 
+
 def concatenate(transducers):
-    """
-    Return a concatenation of *transducers*.
-    """
+    """Return a concatenation of *transducers*."""
     retval = epsilon_fst()
     for tr in transducers:
-      retval.concatenate(tr)
+        retval.concatenate(tr)
     retval.minimize()
     return retval
+
 
 def disjunct(transducers):
-    """
-    Return a disjunction of *transducers*.
-    """
+    """Return a disjunction of *transducers*."""
     retval = empty_fst()
     for tr in transducers:
-      retval.disjunct(tr)
+        retval.disjunct(tr)
     retval.minimize()
     return retval
+
 
 def intersect(transducers):
-    """
-    Return an intersection of *transducers*.
-    """
+    """Return an intersection of *transducers*."""
     retval = None
     for tr in transducers:
-      if retval == None:
-        retval = HfstTransducer(tr)
-      else:
-        retval.intersect(tr)
+        if retval is None:
+            retval = HfstTransducer(tr)
+        else:
+            retval.intersect(tr)
     retval.minimize()
     return retval
 
+
 def compose(transducers):
-    """
-    Return a composition of *transducers*.
-    """
+    """Return a composition of *transducers*."""
     retval = None
     for tr in transducers:
-        if retval == None:
+        if retval is None:
             retval = HfstTransducer(tr)
         else:
             retval.compose(tr)
     retval.minimize()
     return retval
 
+
 def cross_product(transducers):
-    """
-    Return a cross product of *transducers*.
-    """
+    """Return a cross product of *transducers*."""
     retval = None
     for tr in transducers:
-        if retval == None:
+        if retval is None:
             retval = HfstTransducer(tr)
         else:
             retval.cross_product(tr)
@@ -1320,10 +1317,8 @@ def cross_product(transducers):
     return retval
 
 
-
 class ImplementationType:
-    """
-    Back-end implementation.
+    """Back-end implementation.
 
     Attributes:
 
@@ -1349,4 +1344,3 @@ class ImplementationType:
     HFST2_TYPE = libhfst.HFST2_TYPE
     UNSPECIFIED_TYPE = libhfst.UNSPECIFIED_TYPE
     ERROR_TYPE = libhfst.ERROR_TYPE
-
