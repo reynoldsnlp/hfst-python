@@ -36,10 +36,9 @@ autoreconf -fvi
 make && make install
 popd
 
-git clone https://github.com/hfst/hfst.git libhfst
+git clone https://github.com/hfst/hfst.git libhfst  # TODO use libhfst_src submodule instead?
 pushd libhfst/
 autoreconf -fvi
-# ./configure --disable-static --with-unicode-handler=icu --with-openfst-upstream --with-foma-upstream  # TODO build without all tools and readline
-./configure --disable-static --enable-all-tools --with-readline --with-unicode-handler=icu --with-openfst-upstream --with-foma-upstream
+./configure --disable-static --with-unicode-handler=icu --with-openfst-upstream --with-foma-upstream
 make && make install
 popd
