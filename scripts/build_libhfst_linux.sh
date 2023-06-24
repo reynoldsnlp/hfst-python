@@ -3,6 +3,7 @@ set -x  # print commands as they are executed
 
 if [ -x "$(command -v dnf)" ]; then
     PM=dnf
+    ${PM} install -y gcc-toolset-12-libatomic-devel
 elif [ -x "$(command -v yum)" ]; then
     PM=yum
 else
@@ -10,7 +11,7 @@ else
     exit 1
 fi
 
-${PM} install -y autoconf automake bison flex gcc-toolset-12-libatomic-devel libicu-devel libtool pkgconfig readline-devel swig zlib-devel
+${PM} install -y autoconf automake bison flex libicu-devel libtool pkgconfig readline-devel swig zlib-devel
 
 git clone https://github.com/apertium/packaging.git
 
