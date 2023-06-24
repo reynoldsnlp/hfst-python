@@ -7,13 +7,24 @@
 set -e -x
 
 pacman -S --noconfirm --needed  \
-           bison  \
-           flex  \
-           mingw-w64-autotools  \
-           mingw-w64-dlfcn  \
-           mingw-w64-gettext  \
-           mingw-w64-icu  \
-           swig
+    bison  \
+    flex  \
+    mingw-w64-clang-i686-autotools  \
+    mingw-w64-clang-x86_64-autotools  \
+    mingw-w64-clang-aarch64-autotools  \
+    mingw-w64-i686-autotools  \
+    mingw-w64-x86_64-autotools  \
+    mingw-w64-clang-i686-dlfcn  \
+    mingw-w64-clang-x86_64-dlfcn  \
+    mingw-w64-clang-aarch64-dlfcn  \
+    mingw-w64-i686-dlfcn  \
+    mingw-w64-x86_64-dlfcn  \
+    mingw-w64-clang-i686-icu  \
+    mingw-w64-clang-x86_64-icu  \
+    mingw-w64-clang-aarch64-icu  \
+    mingw-w64-i686-icu  \
+    mingw-w64-x86_64-icu  \
+    swig
 
 export CPPFLAGS="-I/usr/include -I/mingw/include ${CPPFLAGS}"
 export LDFLAGS="-L/usr/lib -L/mingw/lib ${LDFLAGS}"
