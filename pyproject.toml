@@ -17,7 +17,7 @@ test-command = "pytest -v {project}/test"
 build = "*manylinux*"
 manylinux-x86_64-image = "manylinux_2_28"
 manylinux-i686-image = "manylinux2014"
-before-all = "bash scripts/build_libhfst_and_swig_linux.sh"
+before-all = "bash scripts/build_libhfst_linux.sh"
 
 # [[tool.cibuildwheel.overrides]]
 # select = "cp3?-*"  # Before Python 3.10, manylinux2010 is the most compatible
