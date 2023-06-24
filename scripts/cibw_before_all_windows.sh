@@ -3,10 +3,8 @@
 # This script is run by cibuildwheel in .github/actions/build.yml
 # (specified under CIBW_BEFORE_ALL_WINDOWS)
 
-
 set -e -x
 
-# choco upgrade -y --no-progress winflexbison3 swig  # libicu-devel readline-devel
 pacman -S --noconfirm --needed  \
            bison  \
            mingw-w64-i686-autotools  \
@@ -47,7 +45,7 @@ export PKG_CONFIG_PATH="/usr/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 cd libhfst_src/
 autoreconf -fvi
-./configure --enable-mingw --with-unicode-handler=icu
-make -C back-ends
-make -C libhfst
+./configure --enable-mingw --disable-static --enable-all-tools --with-readline --with-unicode-handler=icu
+make
+make install
 cd ..

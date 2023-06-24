@@ -21,7 +21,7 @@ pushd foma/foma/
 cmake .
 make && make install
 # foma installs to the wrong local folder, so fix that
-cp -av /usr/local/lib64/* /usr/local/lib/
+cp -av /usr/local/lib64/* /usr/local/lib/ || true  # allow this command to fail
 ldconfig 
 popd
 
