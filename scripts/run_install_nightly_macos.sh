@@ -23,7 +23,7 @@ if [ -x "$(command -v brew)" ]; then
     ln -s /usr/local/Cellar/icu4c/<VERSION>/bin/icu-config /usr/local/bin/icu-config
     ln -s /usr/local/Cellar/icu4c/<VERSION>/include/* /usr/local/include
     # export PATH="/usr/local/opt/bison/bin:/usr/local/opt/flex/bin:/usr/local/opt/icu4c/bin:$PATH"
-    export CPPFLAGS="-I/usr/local/include" # -I/usr/local/include/unicode -I/usr/local/opt/icu4c/include"
+    export CPPFLAGS="-I/usr/local/include -I/usr/local//Cellar/icu4c/73.2/include" # -I/usr/local/include/unicode -I/usr/local/opt/icu4c/include"
     export LDFLAGS="-L/usr/local/lib"  # -L/usr/local/opt/bison/lib -L/usr/local/opt/flex/lib -L/usr/local/opt/icu4c/lib"
     # export PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig"
 elif [ -x "$(command -v port)" ]; then
