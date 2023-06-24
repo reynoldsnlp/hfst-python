@@ -19,6 +19,9 @@ if [ -x "$(command -v brew)" ]; then
     pkg-config \
     wget
     # older macos should use apple-gcc42 instead of gcc
+
+    ln -s /usr/local/Cellar/icu4c/<VERSION>/bin/icu-config /usr/local/bin/icu-config
+    ln -s /usr/local/Cellar/icu4c/<VERSION>/include/* /usr/local/include
 elif [ -x "$(command -v port)" ]; then
   sudo port -N install \
     autoconf \

@@ -1,7 +1,16 @@
 set -e  # stop script on error
 set -x  # print commands as they are executed
 
-dnf install -y flex bison readline-devel libicu-devel libtool swig pkgconfig readline-devel zlib-devel autoconf automake gcc-toolset-12-libatomic-devel
+if [ -x "$(command -v dnf)" ]; then
+    PM=dnf
+elif [ -x "$(command -v yum)" ]; then
+    PM=yum
+else
+    echo "Neither dnf or yum found. Exiting."
+    exit 1
+fi
+
+${PM} install -y autoconf automake bison flex gcc-toolset-12-libatomic-devel libicu-devel libtool pkgconfig readline-devel swig zlib-devel
 
 git clone https://github.com/apertium/packaging.git
 
@@ -33,5 +42,3 @@ autoreconf -fvi
 ./configure --disable-static --enable-all-tools --with-readline --with-unicode-handler=icu --with-openfst-upstream --with-foma-upstream
 make && make install
 popd
-
-# swig -c++ -cppext cpp -python -Wall src/hfst/libhfst.i
