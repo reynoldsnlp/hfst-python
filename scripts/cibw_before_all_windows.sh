@@ -24,6 +24,11 @@ pacman -S --noconfirm --needed  \
     mingw-w64-clang-aarch64-icu  \
     mingw-w64-i686-icu  \
     mingw-w64-x86_64-icu  \
+    mingw-w64-clang-i686-readline  \
+    mingw-w64-clang-x86_64-readline  \
+    mingw-w64-clang-aarch64-readline  \
+    mingw-w64-i686-readline  \
+    mingw-w64-x86_64-readline  \
     swig
 
 export CPPFLAGS="-I/usr/include -I/mingw/include ${CPPFLAGS}"
