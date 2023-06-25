@@ -37,7 +37,7 @@ pacman -S --noconfirm --needed  \
     swig
 
 export CPPFLAGS="-I/c/msys64/mingw64/include -I/c/msys64/mingw32/include -I/usr/include -I/mingw/include ${CPPFLAGS}"
-export LDFLAGS="-L/c/msys64/mingw64/lib -L/c/msys64/mingw32/lib -L/usr/lib -L/mingw/lib ${LDFLAGS}"
+export LDFLAGS="-L/c/msys64/var/lib/pacman/local -L/c/msys64/mingw64/lib -L/c/msys64/mingw32/lib -L/usr/lib -L/mingw/lib ${LDFLAGS}"
 export PATH="/c/msys64/mingw64/bin:/c/msys64/mingw32/bin:/usr/bin:${PATH}"
 export PKG_CONFIG_PATH="/c/msys64/mingw64/lib/pkgconfig:/c/msys64/mingw32/lib/pkgconfig:/usr/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
