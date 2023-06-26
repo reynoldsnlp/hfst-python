@@ -25,6 +25,7 @@ archs = "x86_64 arm64"
 environment = { CPPFLAGS="-D__APPLE__", CFLAGS="-O3 -m64 -D__APPLE__", CXXFLAGS="-O3 -m64 -std=gnu++11 -stdlib=libc++ -D__APPLE__ -I/opt/osx/include -D_LIBCPP_DISABLE_AVAILABILITY", LDFLAGS="-m64 -stdlib=libc++ -L/opt/osx/lib", MACOSX_DEPLOYMENT_TARGET="10.9", SDK_VERSION="10.9" }
 # before-all = "bash scripts/run_install_nightly_macos.sh"
 before-all = "bash scripts/get_latest_hfst.sh"
+before-build = "bash scripts/before-build-macos.sh"
 
 [tool.cibuildwheel.windows]
 before-all = "C:\\msys64\\msys2_shell.cmd -mingw64 -defterm -here -full-path -no-start -shell bash scripts/cibw_before_all_windows.sh"
