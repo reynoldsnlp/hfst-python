@@ -21,9 +21,12 @@ ln -s /usr/local/Cellar/icu4c/73.2/include/* /usr/local/include
 # export PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig"
 
 curl https://apertium.projectjj.com/osx/nightly/x86_64/hfst-latest.x86_64.tar.bz2 -o hfst-latest.x86_64.tar.bz2
+curl https://apertium.projectjj.com/osx/nightly/x86_64/foma-latest.x86_64.tar.bz2 -o foma-latest.x86_64.tar.bz2
 mkdir hfst-x86_64
 tar -xf hfst-latest.x86_64.tar.bz2 -C hfst-x86_64
+tar -xf foma-latest.x86_64.tar.bz2 -C hfst-x86_64
 cp -RP hfst-x86_64/hfst/lib/*.dylib /usr/local/lib/
+cp -RP hfst-x86_64/foma/lib/*.dylib /usr/local/lib/
 
 # curl https://apertium.projectjj.com/osx/nightly/arm64/hfst-latest.arm64.tar.bz2  -o hfst-latest.arm64.tar.bz2
 # mkdir hfst-arm64
