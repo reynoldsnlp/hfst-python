@@ -11,7 +11,7 @@ find /usr/local/lib/ -lname '*hfst-x86_64/hfst/lib/*.dylib' -delete
 
 brew reinstall icu4c
 
-ln -s /usr/local/Cellar/icu4c/73.2/bin/icu-config /usr/local/bin/icu-config
-ln -s /usr/local/Cellar/icu4c/73.2/include/* /usr/local/include
-ln -s hfst-x86_64/foma/lib/*.dylib /usr/local/lib/
-ln -s hfst-x86_64/hfst/lib/*.dylib /usr/local/lib/
+ln -sF /usr/local/Cellar/icu4c/73.2/bin/icu-config /usr/local/bin/icu-config
+ln -sF /usr/local/Cellar/icu4c/73.2/include/* /usr/local/include
+ln -sF hfst-x86_64/foma/lib/*.dylib /usr/local/lib/
+ln -sF hfst-x86_64/hfst/lib/*.dylib /usr/local/lib/

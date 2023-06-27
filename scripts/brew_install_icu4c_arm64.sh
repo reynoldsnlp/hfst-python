@@ -12,7 +12,7 @@ find /usr/local/lib/ -lname '*hfst-x86_64/hfst/lib/*.dylib' -delete
 brew fetch --force --bottle-tag=arm64_big_sur icu4c
 brew install --force $(brew --cache --bottle-tag=arm64_big_sur icu4c)
 
-ln -s /usr/local/Cellar/icu4c/73.2/bin/icu-config /usr/local/bin/icu-config
-ln -s /usr/local/Cellar/icu4c/73.2/include/* /usr/local/include
-ln -s hfst-arm64/foma/lib/*.dylib /usr/local/lib/
-ln -s hfst-arm64/hfst/lib/*.dylib /usr/local/lib/
+ln -sF /usr/local/Cellar/icu4c/73.2/bin/icu-config /usr/local/bin/icu-config
+ln -sF /usr/local/Cellar/icu4c/73.2/include/* /usr/local/include
+ln -sF hfst-arm64/foma/lib/*.dylib /usr/local/lib/
+ln -sF hfst-arm64/hfst/lib/*.dylib /usr/local/lib/
