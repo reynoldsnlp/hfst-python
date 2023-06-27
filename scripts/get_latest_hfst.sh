@@ -7,6 +7,7 @@ curl https://apertium.projectjj.com/osx/nightly/x86_64/foma-latest.x86_64.tar.bz
 mkdir hfst-x86_64
 tar -xf hfst-latest.x86_64.tar.bz2 -C hfst-x86_64
 tar -xf foma-latest.x86_64.tar.bz2 -C hfst-x86_64
+cp hfst-x86_64/hfst/lib/hfst.la /usr/local/lib/
 cp hfst-x86_64/hfst/lib/pkgconfig/hfst.pc /usr/local/lib/pkgconfig/
 
 
