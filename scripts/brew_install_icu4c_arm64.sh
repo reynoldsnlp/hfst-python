@@ -14,7 +14,7 @@ brew install --force $(brew --cache --bottle-tag=arm64_big_sur icu4c)
 
 ln -sF /usr/local/Cellar/icu4c/73.2/bin/icu-config /usr/local/bin/icu-config
 ln -sF /usr/local/Cellar/icu4c/73.2/include/* /usr/local/include
-ln -sF hfst-arm64/foma/lib/*.dylib /usr/local/lib/
-ln -sF hfst-arm64/hfst/lib/*.dylib /usr/local/lib/
+ln -sF hfst-arm64/foma/lib/*.dylib hfst-arm64/foma/lib/*.la /usr/local/lib/
+ln -sF hfst-arm64/hfst/lib/*.dylib hfst-arm64/hfst/lib/*.la /usr/local/lib/
 
 ls -l /usr/local/lib
