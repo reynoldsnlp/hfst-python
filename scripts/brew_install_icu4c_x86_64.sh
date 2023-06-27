@@ -2,6 +2,8 @@
 
 set -e -x
 
+ls -l /usr/local/lib/*hfst*
+
 if [[ $(file /usr/local/lib/libhfst.dylib | rev | cut -d " " -f 1 | rev) != x86_64 ]]; then
     rm -f /usr/local/bin/icu-config
     find /usr/local/include/ -lname '/usr/local/Cellar/icu4c/73.2/include/*' -delete

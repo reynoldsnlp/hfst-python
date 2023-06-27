@@ -4,6 +4,7 @@ setup for HFST-swig
 
 import os
 import sys
+import sysconfig
 import subprocess
 
 from setuptools import Extension
@@ -19,6 +20,8 @@ extra_link_arguments = []
 if sys.platform == "darwin":
     extra_link_arguments.extend(['-mmacosx-version-min=10.7'])
     if os.environ['GITHUB_ACTIONS'] == 'true':
+        sysconfig_platform = sysconfig.get_platform()
+        print('sysconfig.get_platform():', sysconfig_platform)
         library_dirs = ['/usr/local/lib']
         if 'x86_64' in sys.executable:
             subprocess.check_call(['./scripts/brew_install_icu4c_x86_64.sh'])
