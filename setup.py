@@ -16,6 +16,7 @@ absolute_libhfst_src_path = os.path.abspath(libhfst_src_path)
 extra_link_arguments = []
 if sys.platform == "darwin":
         extra_link_arguments.extend(['-mmacosx-version-min=10.7'])
+        print('sys.executable:', sys.executable)
         print('platform.version():', platform.version())
         print('platform.uname():', platform.uname())
 if '--local-hfst' in sys.argv:  # If you wish to link to the local HFST library:
