@@ -1,7 +1,7 @@
 set -e -x
 
 brew install icu4c
-brew install icu4c --force --bottle-tag=arm64_big_sur
+brew install --force --bottle-tag=arm64_big_sur icu4c
 
 ln -s /usr/local/Cellar/icu4c/73.2/bin/icu-config /usr/local/bin/icu-config
 ln -s /usr/local/Cellar/icu4c/73.2/include/* /usr/local/include
