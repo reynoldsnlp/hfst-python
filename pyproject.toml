@@ -22,7 +22,7 @@ before-all = "bash scripts/build_libhfst_linux.sh"
 [tool.cibuildwheel.macos]
 archs = "x86_64 arm64"
 # Compare these environment variables to https://github.com/apertium/packaging/blob/main/osx-pre.sh
-environment = { CXXFLAGS="-std=gnu++11 -stdlib=libc++", LDFLAGS="-stdlib=libc++ -L{project}/hfst-x86_64/lib -L{project}/hfst-arm64/lib", MACOSX_DEPLOYMENT_TARGET="10.9", SDK_VERSION="10.9" }
+environment = { CXXFLAGS="-std=gnu++11 -stdlib=libc++", LDFLAGS="-stdlib=libc++ -L/usr/local/lib", MACOSX_DEPLOYMENT_TARGET="10.9", SDK_VERSION="10.9" }
 # before-all = "bash scripts/run_install_nightly_macos.sh"
 before-all = "bash scripts/get_latest_hfst.sh"
 before-build = "env"
