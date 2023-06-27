@@ -15,3 +15,5 @@ ln -sF /usr/local/Cellar/icu4c/73.2/bin/icu-config /usr/local/bin/icu-config
 ln -sF /usr/local/Cellar/icu4c/73.2/include/* /usr/local/include
 ln -sF hfst-x86_64/foma/lib/*.dylib /usr/local/lib/
 ln -sF hfst-x86_64/hfst/lib/*.dylib /usr/local/lib/
+
+ls -l /usr/local/lib

@@ -21,12 +21,12 @@ if sys.platform == "darwin":
     if os.environ['GITHUB_ACTIONS'] == 'true':
         if 'x86_64' in sys.executable:
             subprocess.check_call(['./scripts/brew_install_icu4c_x86_64.sh'])
-            include_dirs.append(os.path.abspath('./hfst-x86_64/hfst/include'))
-            library_dirs.append(os.path.abspath('./hfst-x86_64/hfst/lib'))
+            # include_dirs.append(os.path.abspath('hfst-x86_64/hfst/include'))
+            # library_dirs.append(os.path.abspath('hfst-x86_64/hfst/lib'))
         elif 'arm64' in sys.executable:
             subprocess.check_call(['./scripts/brew_install_icu4c_arm64.sh'])
-            include_dirs.append(os.path.abspath('./hfst-arm64/hfst/include'))
-            library_dirs.append(os.path.abspath('./hfst-arm64/hfst/lib'))
+            # include_dirs.append(os.path.abspath('hfst-arm64/hfst/include'))
+            # library_dirs.append(os.path.abspath('hfst-arm64/hfst/lib'))
         else:
             raise ValueError("Cannot determine cibuildwheel's target "
                              f"architecture from {sys.executable}.")
