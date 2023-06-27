@@ -23,9 +23,8 @@ ln -s /usr/local/Cellar/icu4c/73.2/include/* /usr/local/include
 curl https://apertium.projectjj.com/osx/nightly/x86_64/hfst-latest.x86_64.tar.bz2 -o hfst-latest.x86_64.tar.bz2
 mkdir hfst-x86_64
 tar -xf hfst-latest.x86_64.tar.bz2 -C hfst-x86_64
+cp hfst-x86_64/hfst/lib/* /usr/local/lib/
 
-curl https://apertium.projectjj.com/osx/nightly/arm64/hfst-latest.arm64.tar.bz2  -o hfst-latest.arm64.tar.bz2
-mkdir hfst-arm64
-tar -xf hfst-latest.arm64.tar.bz2 -C hfst-arm64
-
-# . scripts/run_install_nightly_macos.sh
+# curl https://apertium.projectjj.com/osx/nightly/arm64/hfst-latest.arm64.tar.bz2  -o hfst-latest.arm64.tar.bz2
+# mkdir hfst-arm64
+# tar -xf hfst-latest.arm64.tar.bz2 -C hfst-arm64

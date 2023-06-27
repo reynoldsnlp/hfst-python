@@ -20,9 +20,9 @@ manylinux-i686-image = "manylinux2014"
 before-all = "bash scripts/build_libhfst_linux.sh"
 
 [tool.cibuildwheel.macos]
-archs = "x86_64 arm64"
+archs = "x86_64"
 # Compare these environment variables to https://github.com/apertium/packaging/blob/main/osx-pre.sh
-environment = { CPPFLAGS="-D__APPLE__", CFLAGS="-O3 -m64 -D__APPLE__", CXXFLAGS="-O3 -m64 -std=gnu++11 -stdlib=libc++ -D__APPLE__ -I/opt/osx/include -D_LIBCPP_DISABLE_AVAILABILITY", LDFLAGS="-m64 -stdlib=libc++ -L/opt/osx/lib", MACOSX_DEPLOYMENT_TARGET="10.9", SDK_VERSION="10.9" }
+environment = { CXXFLAGS="-std=gnu++11 -stdlib=libc++", LDFLAGS="-stdlib=libc++", MACOSX_DEPLOYMENT_TARGET="10.9", SDK_VERSION="10.9" }
 # before-all = "bash scripts/run_install_nightly_macos.sh"
 before-all = "bash scripts/get_latest_hfst.sh"
 before-build = "env"
