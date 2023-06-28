@@ -4,7 +4,6 @@ setup for HFST-swig
 
 from glob import glob
 import os
-from pathlib import Path
 import sys
 import sysconfig
 import subprocess
@@ -28,8 +27,8 @@ if sys.platform == "darwin":
         include_dirs = ['icu/source/common', 'hfst-x86_64/hfst/include/hfst']
         print('GLOB', glob('*'))
         print('GLOB', glob('icu/*'))
-        print('GLOB', glob(local_dir / 'icu/source/common/unicode/unistr.h'))
-        print('GLOB', glob(local_dir / 'icu/source/common/unicode/uchar.h'))
+        print('GLOB', glob('icu/source/common/unicode/unistr.h'))
+        print('GLOB', glob('icu/source/common/unicode/uchar.h'))
         if 'x86_64' in sys.executable:
             subprocess.check_call(['./scripts/macos_switch_arch.sh', 'x86_64'])
         elif 'arm64' in sys.executable:
