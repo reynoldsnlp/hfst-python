@@ -7,7 +7,9 @@ ls -l /usr/local/lib/*hfst* || true  # TODO rm
 ls -l /usr/local/lib/*foma* || true  # TODO rm
 
 if [[ -e /usr/local/lib/libhfst.dylib ]]; then
-    CURR_ARCH=$(file /usr/local/lib/libhfst.dylib | rev | cut -d " " -f 1 | rev)
+    FILE_OUT=$(file /usr/local/lib/libhfst.dylib)
+    echo ${FILE_OUT}
+    CURR_ARCH=$( echo ${FILE_OUT} | rev | cut -d " " -f 1 | rev)
     echo "Architecture ${CURR_ARCH} is currently installed."
 else
     CURR_ARCH=""
