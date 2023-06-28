@@ -17,6 +17,6 @@ if [[ $(file /usr/local/lib/libhfst.dylib | rev | cut -d " " -f 1 | rev) != arm6
 
     ln -sF /usr/local/Cellar/icu4c/73.2/bin/icu-config /usr/local/bin/icu-config
     ln -sF /usr/local/Cellar/icu4c/73.2/include/* /usr/local/include
-    ln -sF hfst-arm64/foma/lib/*.dylib /usr/local/lib/
-    ln -sF hfst-arm64/hfst/lib/*.dylib /usr/local/lib/
+    ln -sF $(pwd)/hfst-arm64/foma/lib/*.dylib /usr/local/lib/
+    ln -sF $(pwd)/hfst-arm64/hfst/lib/*.dylib /usr/local/lib/
 fi
