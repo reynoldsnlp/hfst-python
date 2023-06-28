@@ -3,11 +3,16 @@
 set -e -x
 REQ_ARCH=$1
 
-ls -l /usr/local/lib/*hfst*  # TODO rm
-ls -l /usr/local/lib/*foma*  # TODO rm
+ls -l /usr/local/lib/*hfst* || true  # TODO rm
+ls -l /usr/local/lib/*foma* || true  # TODO rm
 
-CURR_ARCH=$(file /usr/local/lib/libhfst.dylib | rev | cut -d " " -f 1 | rev)
-echo "Architecture ${CURR_ARCH} is currently installed."
+if [[ -e /usr/local/lib/libhfst.dylib ]]; then
+    CURR_ARCH=$(file /usr/local/lib/libhfst.dylib | rev | cut -d " " -f 1 | rev)
+    echo "Architecture ${CURR_ARCH} is currently installed."
+else
+    CURR_ARCH=""
+    echo "libhfst.dylib is not yet installed in /usr/local/lib/."
+fi
 
 if [[ ${CURR_ARCH} != ${REQ_ARCH} ]]; then
     rm -f /usr/local/bin/icu-config
@@ -28,4 +33,6 @@ if [[ ${CURR_ARCH} != ${REQ_ARCH} ]]; then
     ln -sF /usr/local/Cellar/icu4c/73.2/include/* /usr/local/include
     ln -sF $(pwd)/hfst-arm64/foma/lib/*.dylib /usr/local/lib/
     ln -sF $(pwd)/hfst-arm64/hfst/lib/*.dylib /usr/local/lib/
+else
+    echo "Requested architecture is already installed."
 fi
