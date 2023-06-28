@@ -31,10 +31,10 @@ if [[ ${CURR_ARCH} != ${REQ_ARCH} ]]; then
     #     brew reinstall icu4c
     # fi
 
-    ln -sF /usr/local/Cellar/icu4c/73.2/bin/icu-config /usr/local/bin/icu-config
-    ln -sF /usr/local/Cellar/icu4c/73.2/include/* /usr/local/include
-    ln -sF $(pwd)/hfst-arm64/foma/lib/*.dylib /usr/local/lib/
-    ln -sF $(pwd)/hfst-arm64/hfst/lib/*.dylib /usr/local/lib/
+    # ln -sF /usr/local/Cellar/icu4c/73.2/bin/icu-config /usr/local/bin/icu-config
+    # ln -sF /usr/local/Cellar/icu4c/73.2/include/* /usr/local/include
+    ln -sF $(pwd)/hfst-${REQ_ARCH}/foma/lib/*.dylib /usr/local/lib/
+    ln -sF $(pwd)/hfst-${REQ_ARCH}/hfst/lib/*.dylib /usr/local/lib/
 else
     echo "Requested architecture is already installed."
 fi
