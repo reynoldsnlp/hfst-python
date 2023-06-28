@@ -23,7 +23,7 @@ if sys.platform == "darwin":
         sysconfig_platform = sysconfig.get_platform()
         print('sysconfig.get_platform():', sysconfig_platform)
         library_dirs = ['/usr/local/lib']
-        include_dirs = ['/tmp/icu/icu4c/source/common', 'hfst-x86_64/hfst/include']
+        include_dirs = ['/tmp/icu/icu4c/source/common', 'hfst-x86_64/hfst/include/hfst']
         if 'x86_64' in sys.executable:
             subprocess.check_call(['./scripts/macos_switch_arch.sh', 'x86_64'])
         elif 'arm64' in sys.executable:
