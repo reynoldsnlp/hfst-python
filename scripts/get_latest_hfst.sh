@@ -9,8 +9,6 @@ for each_arch in arm64 x86_64; do
     tar -xf hfst-latest.${each_arch}.tar.bz2 -C hfst-${each_arch}
     tar -xf foma-latest.${each_arch}.tar.bz2 -C hfst-${each_arch}
     cp -r hfst-${each_arch}/foma/lib/*.dylib hfst-${each_arch}/hfst/lib/
-    # cp hfst-${each_arch}/hfst/lib/libhfst.la /usr/local/lib/
-    # cp hfst-${each_arch}/hfst/lib/pkgconfig/hfst.pc /usr/local/lib/pkgconfig/
 done
 
 brew uninstall --ignore-dependencies icu4c

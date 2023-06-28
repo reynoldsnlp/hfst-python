@@ -2,7 +2,6 @@
 setup for HFST-swig
 """
 
-from glob import glob
 import os
 import sys
 import sysconfig
@@ -21,21 +20,17 @@ extra_link_arguments = []
 if sys.platform == "darwin":
     extra_link_arguments.extend(['-mmacosx-version-min=10.7'])
     if os.environ['GITHUB_ACTIONS'] == 'true':
-        sysconfig_platform = sysconfig.get_platform()  # TODO use this instead of sys.executable path?
-        print('sysconfig.get_platform():', sysconfig_platform)
         library_dirs = ['/usr/local/lib']
         include_dirs = ['icu/source/common', 'hfst-x86_64/hfst/include/hfst']
-        print('GLOB', glob('*'))
-        print('GLOB', glob('icu/*'))
-        print('GLOB', glob('icu/source/common/unicode/unistr.h'))
-        print('GLOB', glob('icu/source/common/unicode/uchar.h'))
-        if 'x86_64' in sys.executable:
+        # TODO symlinks to /usr/local/lib may not be necessary
+        # maybe just add hfst-{arch}/hfst/lib to library dirs instead
+        if sysconfig.get_platform().endswith('x86_64'):
             subprocess.check_call(['./scripts/macos_switch_arch.sh', 'x86_64'])
-        elif 'arm64' in sys.executable:
+        elif sysconfig.get_platform().endswith('arm64'):
             subprocess.check_call(['./scripts/macos_switch_arch.sh', 'arm64'])
         else:
-            raise ValueError("Cannot determine cibuildwheel's target "
-                             f"architecture from {sys.executable}.")
+            raise ValueError("Cannot determine target architecture from "
+                             f"sysconfig: {sysconfig.get_platform()}")
 if '--local-hfst' in sys.argv:  # If you wish to link to the local HFST library:
     extra_link_arguments.extend(["-Wl,-rpath=" + absolute_libhfst_src_path + "/.libs"])
 
