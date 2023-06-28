@@ -12,3 +12,12 @@ for each_arch in arm64 x86_64; do
     # cp hfst-${each_arch}/hfst/lib/libhfst.la /usr/local/lib/
     # cp hfst-${each_arch}/hfst/lib/pkgconfig/hfst.pc /usr/local/lib/pkgconfig/
 done
+
+brew uninstall icu4c
+
+ICU_VERSION=$(ls hfst-x86_64/hfst/lib/libicudata.*.*.dylib | sed "s/.dylib$//g" | sed "s/.*libicudata\.//g" | sed "s/\./-/g")
+
+curl https://github.com/unicode-org/icu/archive/refs/tags/release-${ICU_VERSION}.tar.gz -o /tmp/icu-${ICU_VERSION}.tar.gz
+pushd /tmp
+tar -xzf icu-${ICU_VERSION}.tar.gz
+popd

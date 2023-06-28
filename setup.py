@@ -23,14 +23,11 @@ if sys.platform == "darwin":
         sysconfig_platform = sysconfig.get_platform()
         print('sysconfig.get_platform():', sysconfig_platform)
         library_dirs = ['/usr/local/lib']
+        include_dirs = ['/tmp/icu/icu4c/source/common', 'hfst-x86_64/hfst/include']
         if 'x86_64' in sys.executable:
             subprocess.check_call(['./scripts/macos_switch_arch.sh', 'x86_64'])
-            # include_dirs.append(os.path.abspath('hfst-x86_64/hfst/include'))
-            # library_dirs.append(os.path.abspath('hfst-x86_64/hfst/lib'))
         elif 'arm64' in sys.executable:
             subprocess.check_call(['./scripts/macos_switch_arch.sh', 'arm64'])
-            # include_dirs.append(os.path.abspath('hfst-arm64/hfst/include'))
-            # library_dirs.append(os.path.abspath('hfst-arm64/hfst/lib'))
         else:
             raise ValueError("Cannot determine cibuildwheel's target "
                              f"architecture from {sys.executable}.")

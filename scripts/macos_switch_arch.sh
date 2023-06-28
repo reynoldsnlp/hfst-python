@@ -24,12 +24,12 @@ if [[ ${CURR_ARCH} != ${REQ_ARCH} ]]; then
     find /usr/local/lib/ -lname '*hfst-x86_64/foma/lib/*.dylib' -delete
     find /usr/local/lib/ -lname '*hfst-x86_64/hfst/lib/*.dylib' -delete
 
-    if [[ ${REQ_ARCH} == arm64 ]]; then
-        brew fetch --force --bottle-tag=arm64_big_sur icu4c
-        brew install --force $(brew --cache --bottle-tag=arm64_big_sur icu4c)
-    elif [[ ${REQ_ARCH} == x86_64 ]]; then
-        brew reinstall icu4c
-    fi
+    # if [[ ${REQ_ARCH} == arm64 ]]; then
+    #     brew fetch --force --bottle-tag=arm64_big_sur icu4c
+    #     brew install --force $(brew --cache --bottle-tag=arm64_big_sur icu4c)
+    # elif [[ ${REQ_ARCH} == x86_64 ]]; then
+    #     brew reinstall icu4c
+    # fi
 
     ln -sF /usr/local/Cellar/icu4c/73.2/bin/icu-config /usr/local/bin/icu-config
     ln -sF /usr/local/Cellar/icu4c/73.2/include/* /usr/local/include
