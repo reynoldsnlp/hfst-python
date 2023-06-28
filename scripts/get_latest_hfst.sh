@@ -2,17 +2,13 @@
 
 set -e -x
 
-curl https://apertium.projectjj.com/osx/nightly/x86_64/hfst-latest.x86_64.tar.bz2 -o hfst-latest.x86_64.tar.bz2
-curl https://apertium.projectjj.com/osx/nightly/x86_64/foma-latest.x86_64.tar.bz2 -o foma-latest.x86_64.tar.bz2
-mkdir hfst-x86_64
-tar -xf hfst-latest.x86_64.tar.bz2 -C hfst-x86_64
-tar -xf foma-latest.x86_64.tar.bz2 -C hfst-x86_64
-cp hfst-x86_64/hfst/lib/libhfst.la /usr/local/lib/
-cp hfst-x86_64/hfst/lib/pkgconfig/hfst.pc /usr/local/lib/pkgconfig/
-
-
-curl https://apertium.projectjj.com/osx/nightly/arm64/hfst-latest.arm64.tar.bz2  -o hfst-latest.arm64.tar.bz2
-curl https://apertium.projectjj.com/osx/nightly/arm64/foma-latest.arm64.tar.bz2  -o foma-latest.arm64.tar.bz2
-mkdir hfst-arm64
-tar -xf hfst-latest.arm64.tar.bz2 -C hfst-arm64
-tar -xf foma-latest.arm64.tar.bz2 -C hfst-arm64
+for each_arch in arm64 x86_64; do
+    curl https://apertium.projectjj.com/osx/nightly/${each_arch}/hfst-latest.${each_arch}.tar.bz2 -o hfst-latest.${each_arch}.tar.bz2
+    curl https://apertium.projectjj.com/osx/nightly/${each_arch}/foma-latest.${each_arch}.tar.bz2 -o foma-latest.${each_arch}.tar.bz2
+    mkdir hfst-${each_arch}
+    tar -xf hfst-latest.${each_arch}.tar.bz2 -C hfst-${each_arch}
+    tar -xf foma-latest.${each_arch}.tar.bz2 -C hfst-${each_arch}
+    cp -r hfst-${each_arch}/foma/lib/*.dylib hfst-${each_arch}/hfst/lib/
+    # cp hfst-${each_arch}/hfst/lib/libhfst.la /usr/local/lib/
+    # cp hfst-${each_arch}/hfst/lib/pkgconfig/hfst.pc /usr/local/lib/pkgconfig/
+done

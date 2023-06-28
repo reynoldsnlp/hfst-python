@@ -24,11 +24,11 @@ if sys.platform == "darwin":
         print('sysconfig.get_platform():', sysconfig_platform)
         library_dirs = ['/usr/local/lib']
         if 'x86_64' in sys.executable:
-            subprocess.check_call(['./scripts/brew_install_icu4c_x86_64.sh'])
+            subprocess.check_call(['./scripts/macos_switch_arch.sh', 'x86_64'])
             # include_dirs.append(os.path.abspath('hfst-x86_64/hfst/include'))
             # library_dirs.append(os.path.abspath('hfst-x86_64/hfst/lib'))
         elif 'arm64' in sys.executable:
-            subprocess.check_call(['./scripts/brew_install_icu4c_arm64.sh'])
+            subprocess.check_call(['./scripts/macos_switch_arch.sh', 'arm64'])
             # include_dirs.append(os.path.abspath('hfst-arm64/hfst/include'))
             # library_dirs.append(os.path.abspath('hfst-arm64/hfst/lib'))
         else:
