@@ -16,6 +16,7 @@ done
 brew uninstall --ignore-dependencies icu4c
 
 ICU_VERSION=$(ls hfst-x86_64/hfst/lib/libicudata.*.*.dylib | sed "s/.dylib$//g" | sed "s/.*libicudata\.//g" | sed "s/\./-/g")
+ICU_VERSION_=$(echo ${ICU_VERSION} | sed "s/-/_/g")
 
-curl https://github.com/unicode-org/icu/archive/refs/tags/release-${ICU_VERSION}.tar.gz -o icu-${ICU_VERSION}.tar.gz
-tar -xzf icu-${ICU_VERSION}.tar.gz
+curl -L https://github.com/unicode-org/icu/releases/download/release-${ICU_VERSION}/icu4c-${ICU_VERSION_}-src.tgz -o icu.tar.gz
+tar -xzf icu.tar.gz

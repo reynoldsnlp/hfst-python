@@ -22,17 +22,14 @@ extra_link_arguments = []
 if sys.platform == "darwin":
     extra_link_arguments.extend(['-mmacosx-version-min=10.7'])
     if os.environ['GITHUB_ACTIONS'] == 'true':
-        sysconfig_platform = sysconfig.get_platform()
-        local_dir = Path(__file__).parent.absolute()
-        print('local_dir: ', local_dir)
+        sysconfig_platform = sysconfig.get_platform()  # TODO use this instead of sys.executable path?
         print('sysconfig.get_platform():', sysconfig_platform)
         library_dirs = ['/usr/local/lib']
-        include_dirs = [local_dir / 'icu/icu4c/source/common',
-                        local_dir / 'hfst-x86_64/hfst/include/hfst']
+        include_dirs = ['icu/source/common', 'hfst-x86_64/hfst/include/hfst']
         print('GLOB', glob('*'))
         print('GLOB', glob('icu/*'))
-        print('GLOB', glob(local_dir / 'icu/icu4c/source/common/unicode/unistr.h'))
-        print('GLOB', glob(local_dir / 'icu/icu4c/source/common/unicode/uchar.h'))
+        print('GLOB', glob(local_dir / 'icu/source/common/unicode/unistr.h'))
+        print('GLOB', glob(local_dir / 'icu/source/common/unicode/uchar.h'))
         if 'x86_64' in sys.executable:
             subprocess.check_call(['./scripts/macos_switch_arch.sh', 'x86_64'])
         elif 'arm64' in sys.executable:
