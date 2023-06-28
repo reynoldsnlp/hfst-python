@@ -11,21 +11,19 @@ testpaths = ["test",]
 [tool.cibuildwheel]
 build-verbosity = 3
 test-requires = "pytest"
-test-command = "pytest -v {project}/test"
+test-command = "pytest {project}/test"
 
 [tool.cibuildwheel.linux]
 build = "*manylinux*"
 manylinux-x86_64-image = "manylinux_2_28"
 manylinux-i686-image = "manylinux2014"
-before-all = "bash scripts/build_libhfst_linux.sh"
+before-all = "bash scripts/linux_before_all.sh"
 
 [tool.cibuildwheel.macos]
 archs = "x86_64 arm64"
 # Compare these environment variables to https://github.com/apertium/packaging/blob/main/osx-pre.sh
-# environment = { CXXFLAGS="-std=gnu++11 -stdlib=libc++", LDFLAGS="-stdlib=libc++ -L/usr/local/lib", MACOSX_DEPLOYMENT_TARGET="10.9", SDK_VERSION="10.9" }
-# before-all = "bash scripts/run_install_nightly_macos.sh"
-before-all = "bash scripts/get_latest_hfst.sh"
-before-build = "env"
+environment = { CXXFLAGS="-std=gnu++11 -stdlib=libc++", LDFLAGS="-stdlib=libc++ -L/usr/local/lib", MACOSX_DEPLOYMENT_TARGET="10.9", SDK_VERSION="10.9" }
+before-all = "bash scripts/macos_before_all.sh"
 
 [tool.cibuildwheel.windows]
-before-all = "C:\\msys64\\msys2_shell.cmd -mingw64 -defterm -here -full-path -no-start -shell bash scripts/cibw_before_all_windows.sh"
+before-all = "C:\\msys64\\msys2_shell.cmd -mingw64 -defterm -here -full-path -no-start -shell bash scripts/win_before_all.sh"
