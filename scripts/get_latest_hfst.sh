@@ -13,7 +13,7 @@ for each_arch in arm64 x86_64; do
     # cp hfst-${each_arch}/hfst/lib/pkgconfig/hfst.pc /usr/local/lib/pkgconfig/
 done
 
-brew uninstall icu4c
+brew uninstall --ignore-dependencies icu4c
 
 ICU_VERSION=$(ls hfst-x86_64/hfst/lib/libicudata.*.*.dylib | sed "s/.dylib$//g" | sed "s/.*libicudata\.//g" | sed "s/\./-/g")
 
