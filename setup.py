@@ -22,14 +22,10 @@ if sys.platform == "darwin":
     if os.environ['GITHUB_ACTIONS'] == 'true':
         # library_dirs = ['/usr/local/lib']
         include_dirs = ['icu/source/common', 'hfst-x86_64/hfst/include/hfst']
-        # TODO symlinks to /usr/local/lib may not be necessary
-        # maybe just add hfst-{arch}/hfst/lib to library dirs instead
         if sysconfig.get_platform().endswith('x86_64'):
-            library_dirs = ["hfst-x86_64/hfst/lib"]
-            # subprocess.check_call(['./scripts/macos_switch_arch.sh', 'x86_64'])  # TODO delete script if this is not necessary
+            subprocess.check_call(['./scripts/macos_switch_arch.sh', 'x86_64'])
         elif sysconfig.get_platform().endswith('arm64'):
-            library_dirs = ["hfst-arm64/hfst/lib"]
-            # subprocess.check_call(['./scripts/macos_switch_arch.sh', 'arm64'])
+            subprocess.check_call(['./scripts/macos_switch_arch.sh', 'arm64'])
         else:
             raise ValueError("Cannot determine target architecture from "
                              f"sysconfig: {sysconfig.get_platform()}")
