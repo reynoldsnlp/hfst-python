@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Bump version number in VERSION based off the current HFST version and the
 current version already uploaded to PyPI (or Test PyPI, if the --test flag is
 given."""
