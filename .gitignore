@@ -9,3 +9,4 @@ nohup.out
 test_old/*.hfst
 test_old/tmp/
 tmp/
+wheelhouse/
