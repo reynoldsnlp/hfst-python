@@ -3030,7 +3030,7 @@ Parameters
 
 Example
 
-     import hfst
+     import libhfst
      tok = hfst.HfstTokenizer()
      tok.add_multichar_symbol('foo')
      tok.add_multichar_symbol('bar')

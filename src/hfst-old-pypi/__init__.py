@@ -48,26 +48,26 @@ from io import StringIO
 import readline
 import sys
 
-from . import exceptions
-from . import libhfst
-from .libhfst import compile_pmatch_expression
-from .libhfst import fst_type_to_string
-from .libhfst import get_default_fst_type
-from .libhfst import HfstBasicTransducer
-from .libhfst import HfstBasicTransition
-from .libhfst import HfstInputStream
-from .libhfst import HfstOutputStream
-from .libhfst import HfstTokenizer
-from .libhfst import HfstTransducer
-from .libhfst import is_diacritic
-from .libhfst import LexcCompiler
-from .libhfst import Location
-from .libhfst import PmatchContainer
-from .libhfst import set_default_fst_type
-from .libhfst import XfstCompiler
-from .libhfst import XreCompiler
-from . import sfst_rules
-from . import xerox_rules
+import hfst.exceptions
+import hfst.libhfst
+from hfst.libhfst import compile_pmatch_expression
+from hfst.libhfst import fst_type_to_string
+from hfst.libhfst import get_default_fst_type
+from hfst.libhfst import HfstBasicTransducer
+from hfst.libhfst import HfstBasicTransition
+from hfst.libhfst import HfstInputStream
+from hfst.libhfst import HfstOutputStream
+from hfst.libhfst import HfstTokenizer
+from hfst.libhfst import HfstTransducer
+from hfst.libhfst import is_diacritic
+from hfst.libhfst import LexcCompiler
+from hfst.libhfst import Location
+from hfst.libhfst import PmatchContainer
+from hfst.libhfst import set_default_fst_type
+from hfst.libhfst import XfstCompiler
+from hfst.libhfst import XreCompiler
+import hfst.sfst_rules
+import hfst.xerox_rules
 
 from .version import version as __version__
 
@@ -160,8 +160,8 @@ def start_xfst(**kwargs):
             continue
         retval = -1
         if idle:
-            retval = libhfst.hfst_compile_xfst_to_string_one(comp, expression)
-            sys.stdout.write(libhfst.get_hfst_xfst_string_one())
+            retval = hfst.libhfst.hfst_compile_xfst_to_string_one(comp, expression)
+            sys.stdout.write(hfst.libhfst.get_hfst_xfst_string_one())
         else:
             # interactive command
             if (expression == 'apply down' or expression == 'apply up') and rl_found:
@@ -342,14 +342,14 @@ def regex(re, **kwargs):
                 pass
 
     if err is None:
-        return libhfst.hfst_regex(comp, re, '')
+        return hfst.libhfst.hfst_regex(comp, re, '')
     elif err == sys.stdout:
-        return libhfst.hfst_regex(comp, re, 'cout')
+        return hfst.libhfst.hfst_regex(comp, re, 'cout')
     elif err == sys.stderr:
-        return libhfst.hfst_regex(comp, re, 'cerr')
+        return hfst.libhfst.hfst_regex(comp, re, 'cerr')
     else:
-        retval = libhfst.hfst_regex(comp, re, '')
-        err.write(unicode(libhfst.get_hfst_regex_error_message(), 'utf-8'))
+        retval = hfst.libhfst.hfst_regex(comp, re, '')
+        err.write(unicode(hfst.libhfst.get_hfst_regex_error_message(), 'utf-8'))
         return retval
 
 
@@ -397,7 +397,7 @@ def read_att_string(att):
     for line in lines:
         linecount = linecount + 1
         if not _parse_att_line(line, fsm):
-            raise exceptions.NotValidAttFormatException(line, '', linecount)
+            raise hfst.exceptions.NotValidAttFormatException(line, '', linecount)
     return HfstTransducer(fsm, get_default_fst_type())
 
 
@@ -413,7 +413,7 @@ def read_att_input():
             break
         linecount = linecount + 1
         if not _parse_att_line(line, fsm):
-            raise exceptions.NotValidAttFormatException(line, '', linecount)
+            raise hfst.exceptions.NotValidAttFormatException(line, '', linecount)
     return HfstTransducer(fsm, get_default_fst_type())
 
 
@@ -428,7 +428,7 @@ def read_att_transducer(f, epsilonstr=EPSILON, linecount=[0]):
         line = f.readline()
         if line == '':
             if linecount_ == 0:
-                raise exceptions.EndOfStreamException('', '', 0)
+                raise hfst.exceptions.EndOfStreamException('', '', 0)
             else:
                 linecount_ = linecount_ + 1
                 break
@@ -436,7 +436,7 @@ def read_att_transducer(f, epsilonstr=EPSILON, linecount=[0]):
         if line[0] == '-':
             break
         if not _parse_att_line(line, fsm, epsilonstr):
-            raise exceptions.NotValidAttFormatException(line, '', linecount[0] + linecount_)
+            raise hfst.exceptions.NotValidAttFormatException(line, '', linecount[0] + linecount_)
     linecount[0] = linecount[0] + linecount_
     return HfstTransducer(fsm, get_default_fst_type())
 
@@ -455,7 +455,7 @@ class AttReader:
               r = hfst.AttReader(f, \"<eps>\")
               for tr in r:
                   print(tr)
-         except exceptions.NotValidAttFormatException as e:
+         except hfst.exceptions.NotValidAttFormatException as e:
               print(e.what())
     """
     def __init__(self, f, epsilonstr=EPSILON):
@@ -482,8 +482,8 @@ class AttReader:
 
         Exceptions
         ----------
-        * `exceptions.NotValidAttFormatException` :
-        * `exceptions.EndOfStreamException` :
+        * `hfst.exceptions.NotValidAttFormatException` :
+        * `hfst.exceptions.EndOfStreamException` :
         """
         return read_att_transducer(self.file, self.epsilonstr, self.linecount)
 
@@ -511,7 +511,7 @@ class AttReader:
         """
         try:
             return self.read()
-        except exceptions.EndOfStreamException:
+        except hfst.exceptions.EndOfStreamException:
             raise StopIteration
 
     def __next__(self):
@@ -541,7 +541,7 @@ def read_prolog_transducer(f, linecount=[0]):
         line = f.readline()
         linecount_ = linecount_ + 1
         if line == '':
-            raise exceptions.EndOfStreamException('', '', linecount[0] + linecount_)
+            raise hfst.exceptions.EndOfStreamException('', '', linecount[0] + linecount_)
         line = line.rstrip()
         if line == '':
             pass  # allow extra prolog separator(s)
@@ -550,8 +550,8 @@ def read_prolog_transducer(f, linecount=[0]):
         else:
             break
 
-    if not libhfst.parse_prolog_network_line(line, fsm):
-        raise exceptions.NotValidPrologFormatException(line, '', linecount[0] + linecount_)
+    if not hfst.libhfst.parse_prolog_network_line(line, fsm):
+        raise hfst.exceptions.NotValidPrologFormatException(line, '', linecount[0] + linecount_)
 
     while(True):
         line = f.readline()
@@ -567,14 +567,14 @@ def read_prolog_transducer(f, linecount=[0]):
             retval.set_name(fsm.name)
             linecount[0] = linecount[0] + linecount_
             return retval
-        if libhfst.parse_prolog_arc_line(line, fsm):
+        if hfst.libhfst.parse_prolog_arc_line(line, fsm):
             pass
-        elif libhfst.parse_prolog_final_line(line, fsm):
+        elif hfst.libhfst.parse_prolog_final_line(line, fsm):
             pass
-        elif libhfst.parse_prolog_symbol_line(line, fsm):
+        elif hfst.libhfst.parse_prolog_symbol_line(line, fsm):
             pass
         else:
-            raise exceptions.NotValidPrologFormatException(line, '', linecount[0] + linecount_)
+            raise hfst.exceptions.NotValidPrologFormatException(line, '', linecount[0] + linecount_)
 
 
 class PrologReader:
@@ -591,7 +591,7 @@ class PrologReader:
                r = hfst.PrologReader(f)
                for tr in r:
                    print(tr)
-            except exceptions.NotValidPrologFormatException as e:
+            except hfst.exceptions.NotValidPrologFormatException as e:
                 print(e.what())
     """
     def __init__(self, f):
@@ -613,8 +613,8 @@ class PrologReader:
 
         Exceptions
         ----------
-        * `exceptions.NotValidPrologFormatException` :
-        * `exceptions.EndOfStreamException` :
+        * `hfst.exceptions.NotValidPrologFormatException` :
+        * `hfst.exceptions.EndOfStreamException` :
         """
         return read_prolog_transducer(self.file, self.linecount)
 
@@ -642,7 +642,7 @@ class PrologReader:
         """
         try:
             return self.read()
-        except exceptions.EndOfStreamException:
+        except hfst.exceptions.EndOfStreamException:
             raise StopIteration
 
     def __next__(self):
@@ -729,8 +729,8 @@ def compile_xfst_file(filename, **kwargs):
 
     # check special case
     if isinstance(output, StringIO) and isinstance(error, StringIO) and output == error:
-        retval = libhfst.hfst_compile_xfst_to_string_one(xfstcomp, data)
-        output.write(unicode(libhfst.get_hfst_xfst_string_one(), 'utf-8'))
+        retval = hfst.libhfst.hfst_compile_xfst_to_string_one(xfstcomp, data)
+        output.write(unicode(hfst.libhfst.get_hfst_xfst_string_one(), 'utf-8'))
     else:
         arg1 = ''
         arg2 = ''
@@ -743,12 +743,12 @@ def compile_xfst_file(filename, **kwargs):
         if error == sys.stdout:
             arg2 == 'cout'
 
-        retval = libhfst.hfst_compile_xfst(xfstcomp, data, arg1, arg2)
+        retval = hfst.libhfst.hfst_compile_xfst(xfstcomp, data, arg1, arg2)
 
         if isinstance(output, StringIO):
-            output.write(unicode(libhfst.get_hfst_xfst_string_one(), 'utf-8'))
+            output.write(unicode(hfst.libhfst.get_hfst_xfst_string_one(), 'utf-8'))
         if isinstance(error, StringIO):
-            error.write(unicode(libhfst.get_hfst_xfst_string_two(), 'utf-8'))
+            error.write(unicode(hfst.libhfst.get_hfst_xfst_string_two(), 'utf-8'))
 
     if verbosity > 1:
         print('Parsed file with return value %i (0 indicating succesful parsing).' % retval)
@@ -802,7 +802,7 @@ def compile_twolc_file(inputfilename, outputfilename, **kwargs):
         else:
             print('Warning: ignoring unknown argument %s.' % (k))
 
-    return libhfst.TwolcCompiler.compile(inputfilename, outputfilename,
+    return hfst.libhfst.TwolcCompiler.compile(inputfilename, outputfilename,
                                               silent, verbose,
                                               resolve_right_conflicts,
                                               resolve_left_conflicts,
@@ -872,14 +872,14 @@ def compile_sfst_file(filename, **kwargs):
 
     retval = None
     if output is None:
-        retval = libhfst.hfst_compile_sfst(filename, '', verbosity, to_console)
+        retval = hfst.libhfst.hfst_compile_sfst(filename, '', verbosity, to_console)
     elif output == sys.stdout:
-        retval = libhfst.hfst_compile_sfst(filename, 'cout', verbosity, to_console)
+        retval = hfst.libhfst.hfst_compile_sfst(filename, 'cout', verbosity, to_console)
     elif output == sys.stderr:
-        retval = libhfst.hfst_compile_sfst(filename, 'cerr', verbosity, to_console)
+        retval = hfst.libhfst.hfst_compile_sfst(filename, 'cerr', verbosity, to_console)
     else:
-        retval = libhfst.hfst_compile_sfst(filename, '', verbosity, to_console)
-        output.write(unicode(libhfst.get_hfst_sfst_output(), 'utf-8'))
+        retval = hfst.libhfst.hfst_compile_sfst(filename, '', verbosity, to_console)
+        output.write(unicode(hfst.libhfst.get_hfst_sfst_output(), 'utf-8'))
 
     return retval
 
@@ -934,14 +934,14 @@ def compile_lexc_file(filename, **kwargs):
 
     retval = -1
     if output is None:
-        retval = libhfst.hfst_compile_lexc(lexccomp, filename, '')
+        retval = hfst.libhfst.hfst_compile_lexc(lexccomp, filename, '')
     elif output == sys.stdout:
-        retval = libhfst.hfst_compile_lexc(lexccomp, filename, 'cout')
+        retval = hfst.libhfst.hfst_compile_lexc(lexccomp, filename, 'cout')
     elif output == sys.stderr:
-        retval = libhfst.hfst_compile_lexc(lexccomp, filename, 'cerr')
+        retval = hfst.libhfst.hfst_compile_lexc(lexccomp, filename, 'cerr')
     else:
-        retval = libhfst.hfst_compile_lexc(lexccomp, filename, '')
-        output.write(unicode(libhfst.get_hfst_lexc_output(), 'utf-8'))
+        retval = hfst.libhfst.hfst_compile_lexc(lexccomp, filename, '')
+        output.write(unicode(hfst.libhfst.get_hfst_lexc_output(), 'utf-8'))
 
     return retval
 
@@ -1096,14 +1096,14 @@ def fst_to_fsa(fst, separator=''):
     the transducer [f^b:f^b o^a:o^a o^r:o^r].
 
     """
-    encoded_symbols = libhfst.StringSet()
-    retval = HfstBasicTransducer(fst)
+    encoded_symbols = hfst.libhfst.StringSet()
+    retval = hfst.HfstBasicTransducer(fst)
     for state in retval.states():
         arcs = retval.transitions(state)
         for arc in arcs:
             input = arc.get_input_symbol()
             output = arc.get_output_symbol()
-            if (input == output) and ((input == EPSILON) or (input == UNKNOWN) or (input == IDENTITY)):
+            if (input == output) and ((input == hfst.EPSILON) or (input == hfst.UNKNOWN) or (input == hfst.IDENTITY)):
                 continue
             symbol = input + separator + output
             arc.set_input_symbol(symbol)
@@ -1111,7 +1111,7 @@ def fst_to_fsa(fst, separator=''):
             encoded_symbols.insert(symbol)
     retval.add_symbols_to_alphabet(encoded_symbols)
     if 'HfstTransducer' in str(type(fst)):
-        return HfstTransducer(retval)
+        return hfst.HfstTransducer(retval)
     else:
         return retval
 
@@ -1157,8 +1157,8 @@ def fsa_to_fst(fsa, separator=''):
 
     will create again the original transducer [f:b o:a o:r].
     """
-    retval = HfstBasicTransducer(fsa)
-    encoded_symbols = libhfst.StringSet()
+    retval = hfst.HfstBasicTransducer(fsa)
+    encoded_symbols = hfst.libhfst.StringSet()
     for state in retval.states():
         arcs = retval.transitions(state)
         for arc in arcs:
@@ -1193,7 +1193,7 @@ def fsa_to_fst(fsa, separator=''):
                 encoded_symbols.insert(input)
     retval.remove_symbols_from_alphabet(encoded_symbols)
     if 'HfstTransducer' in str(type(fsa)):
-        return HfstTransducer(retval)
+        return hfst.HfstTransducer(retval)
     else:
         return retval
 
@@ -1334,13 +1334,13 @@ class ImplementationType:
         ERROR_TYPE:              (something went wrong)
 
     """
-    SFST_TYPE = libhfst.SFST_TYPE
-    TROPICAL_OPENFST_TYPE = libhfst.TROPICAL_OPENFST_TYPE
-    LOG_OPENFST_TYPE = libhfst.LOG_OPENFST_TYPE
-    FOMA_TYPE = libhfst.FOMA_TYPE
-    XFSM_TYPE = libhfst.XFSM_TYPE
-    HFST_OL_TYPE = libhfst.HFST_OL_TYPE
-    HFST_OLW_TYPE = libhfst.HFST_OLW_TYPE
-    HFST2_TYPE = libhfst.HFST2_TYPE
-    UNSPECIFIED_TYPE = libhfst.UNSPECIFIED_TYPE
-    ERROR_TYPE = libhfst.ERROR_TYPE
+    SFST_TYPE = hfst.libhfst.SFST_TYPE
+    TROPICAL_OPENFST_TYPE = hfst.libhfst.TROPICAL_OPENFST_TYPE
+    LOG_OPENFST_TYPE = hfst.libhfst.LOG_OPENFST_TYPE
+    FOMA_TYPE = hfst.libhfst.FOMA_TYPE
+    XFSM_TYPE = hfst.libhfst.XFSM_TYPE
+    HFST_OL_TYPE = hfst.libhfst.HFST_OL_TYPE
+    HFST_OLW_TYPE = hfst.libhfst.HFST_OLW_TYPE
+    HFST2_TYPE = hfst.libhfst.HFST2_TYPE
+    UNSPECIFIED_TYPE = hfst.libhfst.UNSPECIFIED_TYPE
+    ERROR_TYPE = hfst.libhfst.ERROR_TYPE
