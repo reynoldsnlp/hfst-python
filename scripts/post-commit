@@ -15,8 +15,8 @@ sys.stdin = open('/dev/tty')
 
 print(f'Running {__file__}...', file=sys.stderr)
 
-with open('VERSION') as f:
-    file_version = f.read().strip()
+with open('src/hfst/version.py') as f:
+    file_version = re.search(r'version = "([^"]+)"', f.read().strip()).group(1)
 
 try:
     with open('tag_commit.tmp') as f:
@@ -29,14 +29,14 @@ log = subprocess.run(['git', 'log', '-1', '-p'],
                      stdout=subprocess.PIPE,
                      universal_newlines=True).stdout
 
-diff = '\ndiff --git a/VERSION ' in log
+diff = '\ndiff --git a/src/hfst/version.py ' in log
 if diff:
-    version_diff = re.search(r'^(diff --git a/VERSION .*?)(?:\Z|^diff --git a/)',
+    version_diff = re.search(r'^(diff --git a/src/hfst/version.py .*?)(?:\Z|^diff --git a/)',
                              log, re.S | re.M).group(1)
-    log_version = re.search(r'^\+\s*([0-9.b]+)\s*$',
+    log_version = re.search(r'^\+\s*version = "([0-9.b]+)"\s*$',
                             version_diff, re.M).group(1)
     if log_version != file_version:
-        warnings.warn('VERSION has been changed since the latest commit.')
+        warnings.warn('src/hfst/version.py has been changed since the latest commit.')
     if is_release:
         response = input(f'This commit changed the version to {log_version}. '
                          'Confirm that you want to tag this commit to '
