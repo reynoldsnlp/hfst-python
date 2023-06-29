@@ -11,7 +11,7 @@ hfst::HfstTransducer * hfst_compile_sfst(const std::string & filename, const std
   (void)output_to_console;
 
   FILE * inputfile;
-  if (filename.empty())
+  if (filename == "")
     {
       inputfile = stdin;
     }

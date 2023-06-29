@@ -5,7 +5,7 @@ dist/
 doc/
 src/hfst/lib/*.dylib
 hfst.egg-info/
-nohup.out
+nohup.out*
 test_old/*.hfst
 test_old/tmp/
 tmp/

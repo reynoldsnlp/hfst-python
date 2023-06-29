@@ -85,11 +85,6 @@ def run_tests(path):
     read_tr_ALL(fname3)
 
 
-def test_streams_sfst(tmp_path):
-    hfst.set_default_fst_type(hfst.ImplementationType.SFST_TYPE)
-    run_tests(tmp_path)
-
-
 def test_streams_foma(tmp_path):
     hfst.set_default_fst_type(hfst.ImplementationType.FOMA_TYPE)
     run_tests(tmp_path)
@@ -97,4 +92,9 @@ def test_streams_foma(tmp_path):
 
 def test_streams_openfst(tmp_path):
     hfst.set_default_fst_type(hfst.ImplementationType.TROPICAL_OPENFST_TYPE)
+    run_tests(tmp_path)
+
+
+def test_streams_sfst(tmp_path):
+    hfst.set_default_fst_type(hfst.ImplementationType.SFST_TYPE)
     run_tests(tmp_path)
