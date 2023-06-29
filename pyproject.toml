@@ -3,10 +3,61 @@ requires = ["setuptools>=42",
             "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.pytest.ini_options]
-minversion = "6.0"
-# addopts = "-ra -q"
-testpaths = ["test",]
+[project]
+name = "hfst"
+description = "Python SWIG-bound interface for HFST"
+authors = [ {name = "HFST team", email = "hfst-bugs@helsinki.fi"} ]
+maintainers = [
+    {name = "Rob Reynolds", email = "robert_reynolds@byu.edu"},
+    {name = "Tino Didriksen"}
+]
+readme = "README.md"
+keywords = [ "Finite-state transducer", "morphology", "morphological", "part of speech", "tagger", "Natural Language Processing", "NLP"]
+license = {text = "GPL v3"}
+requires-python = ">=3.6"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: C++",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: Education",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Human Machine Interfaces",
+    "Topic :: Text Processing :: Linguistic",
+    "Topic :: Utilities"
+]
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = {attr = "hfst.__version__"}
+
+[project.urls]
+Homepage = "https://hfst.github.io/"
+Documentation = "https://github.com/hfst/python/wiki"
+Repository = "https://github.com/reynoldsnlp/hfst-python.git"
+
+[project.optional-dependencies]
+test = [
+    "pytest"
+]
+dev = [
+    "black",
+    "mypy",
+    "ruff",
+]
 
 [tool.cibuildwheel]
 build-verbosity = 3
@@ -22,8 +73,18 @@ before-all = "bash scripts/linux_before_all.sh"
 [tool.cibuildwheel.macos]
 archs = "x86_64 arm64"
 # Compare these environment variables to https://github.com/apertium/packaging/blob/main/osx-pre.sh
-environment = { CXXFLAGS="-std=gnu++11 -stdlib=libc++", LDFLAGS="-stdlib=libc++ -L/usr/local/lib", MACOSX_DEPLOYMENT_TARGET="10.9", SDK_VERSION="10.9" }
+environment = {
+    CXXFLAGS="-std=gnu++11 -stdlib=libc++",
+    LDFLAGS="-stdlib=libc++ -L/usr/local/lib",
+    MACOSX_DEPLOYMENT_TARGET="10.9",
+    SDK_VERSION="10.9"
+}
 before-all = "bash scripts/macos_before_all.sh"
 
 [tool.cibuildwheel.windows]
 before-all = "C:\\msys64\\msys2_shell.cmd -mingw64 -defterm -here -full-path -no-start -shell bash scripts/win_before_all.sh"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+# addopts = "-ra -q"
+testpaths = ["test",]
