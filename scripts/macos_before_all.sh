@@ -2,6 +2,9 @@
 
 set -e -x
 
+git submodule init
+git submodule update
+
 for each_arch in arm64 x86_64; do
     curl https://apertium.projectjj.com/osx/nightly/${each_arch}/hfst-latest.${each_arch}.tar.bz2 -o hfst-latest.${each_arch}.tar.bz2
     curl https://apertium.projectjj.com/osx/nightly/${each_arch}/foma-latest.${each_arch}.tar.bz2 -o foma-latest.${each_arch}.tar.bz2

@@ -1,6 +1,9 @@
 set -e  # stop script on error
 set -x  # print commands as they are executed
 
+git submodule init
+git submodule update
+
 if [ -x "$(command -v dnf)" ]; then
     PM=dnf
     ${PM} install -y gcc-toolset-12-libatomic-devel

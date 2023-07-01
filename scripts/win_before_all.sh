@@ -6,6 +6,9 @@
 
 set -e -x
 
+git submodule init
+git submodule update
+
 pacman -S --noconfirm --needed  \
     bison  \
     flex  \

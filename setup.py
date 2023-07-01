@@ -19,7 +19,7 @@ library_dirs = [absolute_libhfst_src_path + "/.libs"]
 extra_link_arguments = []
 if sys.platform == "darwin":
     extra_link_arguments.extend(['-mmacosx-version-min=10.7'])
-    if os.environ['GITHUB_ACTIONS'] == 'true':
+    if os.environ.get('GITHUB_ACTIONS', '') == 'true':
         # library_dirs = ['/usr/local/lib']
         include_dirs = ['icu/source/common', 'hfst-x86_64/hfst/include/hfst']
         if sysconfig.get_platform().endswith('x86_64'):
