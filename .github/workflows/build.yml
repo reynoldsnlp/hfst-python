@@ -49,7 +49,7 @@ jobs:
         if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v') != true
         # alternatively, to publish when a GitHub Release is not created, use the following rule:
         # if: github.event_name != 'release' || github.event.action != 'published'
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
           password: ${{ secrets.TEST_PYPI_TOKEN }}
@@ -62,7 +62,7 @@ jobs:
         if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
         # alternatively, to publish when a GitHub Release is created, use the following rule:
         # if: github.event_name == 'release' && github.event.action == 'published'
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
           password: ${{ secrets.PYPI_TOKEN }}
