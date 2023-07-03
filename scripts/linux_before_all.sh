@@ -1,5 +1,4 @@
-set -e  # stop script on error
-set -x  # print commands as they are executed
+set -e -x
 
 git submodule init
 git submodule update
@@ -18,16 +17,17 @@ ${PM} install -y autoconf automake bison flex libicu-devel libtool pkgconfig rea
 
 git clone https://github.com/apertium/packaging.git
 
-# get foma
+# build foma
 git clone https://github.com/mhulden/foma.git
 pushd foma/foma/
-cmake .
+cmake -DCMAKE_INSTALL_LIBDIR=lib .
 make && make install
 # foma installs to the wrong local folder, so fix that
 cp -av /usr/local/lib64/* /usr/local/lib/ || true  # allow this command to fail
 ldconfig 
 popd
 
+# build openfst
 curl https://www.openfst.org/twiki/pub/FST/FstDownload/openfst-1.7.9.tar.gz -o openfst-1.7.9.tar.gz
 tar -xzf openfst-1.7.9.tar.gz
 pushd openfst-1.7.9/
@@ -39,8 +39,8 @@ autoreconf -fvi
 make && make install
 popd
 
-git clone https://github.com/hfst/hfst.git libhfst  # TODO use libhfst_src submodule instead?
-pushd libhfst/
+# build libhfst
+pushd libhfst_src/
 autoreconf -fvi
 ./configure --disable-static --with-unicode-handler=icu --with-openfst-upstream --with-foma-upstream
 make && make install
