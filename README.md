@@ -4,12 +4,9 @@
 | --- | --- |
 | CI/CD | [![CI - Test, Build, and Publish](https://github.com/reynoldsnlp/hfst-python/actions/workflows/build.yml/badge.svg)](https://github.com/reynoldsnlp/hfst-python/actions/workflows/build.yml) |
 | Package | [![PyPI - Version](https://img.shields.io/pypi/v/hfst.svg?logo=pypi&label=PyPI&logoColor=gold)](https://pypi.org/project/hfst/) [![PyPI - Downloads](https://img.shields.io/pypi/dm/hfst.svg?color=blue&label=Downloads&logo=pypi&logoColor=gold)](https://pypi.org/project/hfst/) [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/hfst.svg?logo=python&label=Python&logoColor=gold)](https://pypi.org/project/hfst/) |
-| Meta | ![Static Badge](https://img.shields.io/badge/build-cibuildwheel-blue?logo=python&link=https%3A%2F%2Fcibuildwheel.readthedocs.io%2Fen%2Fstable%2F) [![linting - Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v0.json)](https://github.com/charliermarsh/ruff) [![code style - Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![types - Mypy](https://img.shields.io/badge/types-Mypy-blue.svg)](https://github.com/python/mypy) ![PyPI - License](https://img.shields.io/pypi/l/hfst) |
-
-
+| Meta | ![CI Buildwheel Badge](https://img.shields.io/badge/build-cibuildwheel-blue?logo=python&link=https%3A%2F%2Fcibuildwheel.readthedocs.io%2Fen%2Fstable%2F) [![linting - Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v0.json)](https://github.com/charliermarsh/ruff) ![PyPI - License](https://img.shields.io/pypi/l/hfst) |
 
 ## Package description
-
 
 Package `hfst` contains python bindings for the [Helsinki Finite-State
 Technology (HFST)](https://hfst.github.io) C++ library. HFST toolkit is

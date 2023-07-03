@@ -63,7 +63,7 @@ def test_examples(tmp_path):
             tr.add_state(1)
             # An exception is thrown as state number 1 is not final
             try:
-                w = tr.get_final_weight(1)
+                _ = tr.get_final_weight(1)
             except hfst.exceptions.StateIsNotFinalException:
                 print("State is not final.")
 
@@ -85,7 +85,7 @@ def test_examples(tmp_path):
             tr = hfst.HfstBasicTransducer()
             tr.add_state(1)
             try:
-                w = tr.get_final_weight(2)
+                _ = tr.get_final_weight(2)
             except hfst.exceptions.StateIndexOutOfBoundsException:
                 print('State number 2 does not exist')
 

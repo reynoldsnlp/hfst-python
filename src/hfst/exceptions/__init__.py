@@ -64,3 +64,36 @@ from ..libhfst import TransducerIsCyclicException
 from ..libhfst import TransducersAreNotAutomataException
 from ..libhfst import TransducerTypeMismatchException
 from ..libhfst import TransducerHasWrongTypeException
+
+
+__all__ = [
+    "ContextTransducersAreNotAutomataException",
+    "EmptySetOfContextsException",
+    "EmptyStringException",
+    "EndOfStreamException",
+    "FlagDiacriticsAreNotIdentitiesException",
+    "FunctionNotImplementedException",
+    "HfstException",
+    "HfstFatalException",
+    "HfstTransducerTypeMismatchException",
+    "ImplementationTypeNotAvailableException",
+    "IncorrectUtf8CodingException",
+    "MetadataException",
+    "MissingOpenFstInputSymbolTableException",
+    "NotTransducerStreamException",
+    "NotValidAttFormatException",
+    "NotValidLexcFormatException",
+    "NotValidPrologFormatException",
+    "SpecifiedTypeRequiredException",
+    "StateIndexOutOfBoundsException",
+    "StateIsNotFinalException",
+    "StreamCannotBeWrittenException",
+    "StreamIsClosedException",
+    "StreamNotReadableException",
+    "SymbolNotFoundException",
+    "TransducerHeaderException",
+    "TransducerIsCyclicException",
+    "TransducersAreNotAutomataException",
+    "TransducerTypeMismatchException",
+    "TransducerHasWrongTypeException",
+]

@@ -21,6 +21,21 @@ from ..libhfst import xerox_restriction as restriction
 
 from .. import libhfst
 
+__all__ = [
+    "after",
+    "before",
+    "replace",
+    "replace_epenthesis",
+    "replace_leftmost_longest_match",
+    "replace_leftmost_shortest_match",
+    "replace_rightmost_longest_match",
+    "replace_rightmost_shortest_match",
+    "Rule",
+    "replace_left",
+    "restriction",
+]
+
+
 class ReplaceType:
     """
     Replace type in Xerox-type rules.
@@ -32,7 +47,7 @@ class ReplaceType:
         REPL_RIGHT:   Match left contexts on input level and right contexts on output level
         REPL_LEFT:    Match left contexts on output level and right contexts on input level
 
-    """
+    """  # noqa: E501
     REPL_UP = libhfst.REPL_UP
     REPL_DOWN = libhfst.REPL_DOWN
     REPL_RIGHT = libhfst.REPL_RIGHT

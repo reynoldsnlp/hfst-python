@@ -1,5 +1,3 @@
-import sys
-
 import hfst
 
 def test_xre():

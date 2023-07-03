@@ -72,6 +72,31 @@ from . import xerox_rules
 from .version import version as __version__
 
 
+__all__ = [
+    "exceptions",
+    "libhfst",
+    "compile_pmatch_expression",
+    "fst_type_to_string",
+    "get_default_fst_type",
+    "HfstBasicTransducer",
+    "HfstBasicTransition",
+    "HfstInputStream",
+    "HfstOutputStream",
+    "HfstTokenizer",
+    "HfstTransducer",
+    "is_diacritic",
+    "LexcCompiler",
+    "Location",
+    "PmatchContainer",
+    "set_default_fst_type",
+    "XfstCompiler",
+    "XreCompiler",
+    "sfst_rules",
+    "xerox_rules",
+    "__version__",
+]
+
+
 if int(sys.version[0]) > 2:
     def unicode(s, c):
         return s
@@ -114,9 +139,11 @@ def start_xfst(**kwargs):
     """
     idle = 'idlelib' in sys.modules
     if idle:
-        print('It seems that you are running python in in IDLE. Note that all output from xfst will be buffered.')
-        print('This means that all warnings, e.g. about time-consuming operations, will be printed only after the operation is carried out.')
-        print('Consider running python from shell, for example command prompt, if you wish to see output with no delays.')
+        print('It seems that you are running python in in IDLE. Note that all output '
+              'from xfst will be buffered. This means that all warnings, e.g. about '
+              'time-consuming operations, will be printed only after the operation is '
+              'carried out. Consider running python from shell, for example command '
+              'prompt, if you wish to see output with no delays.')
 
     type = get_default_fst_type()
     quit_on_fail = 'OFF'
@@ -379,9 +406,13 @@ def _parse_att_line(line, fsm, epsilonstr=EPSILON):
             fsm.add_state(int(fields[0]))
             fsm.set_final_weight(int(fields[0]), float(fields[1]))
         elif len(fields) == 4:
-            fsm.add_transition(int(fields[0]), int(fields[1]), _replace_symbols(fields[2]), _replace_symbols(fields[3]), 0)
+            fsm.add_transition(int(fields[0]), int(fields[1]),
+                               _replace_symbols(fields[2]), _replace_symbols(fields[3]),
+                               0)
         elif len(fields) == 5:
-            fsm.add_transition(int(fields[0]), int(fields[1]), _replace_symbols(fields[2]), _replace_symbols(fields[3]), float(fields[4]))
+            fsm.add_transition(int(fields[0]), int(fields[1]),
+                               _replace_symbols(fields[2]), _replace_symbols(fields[3]),
+                               float(fields[4]))
         else:
             return False
     except ValueError:
@@ -436,7 +467,8 @@ def read_att_transducer(f, epsilonstr=EPSILON, linecount=[0]):
         if line[0] == '-':
             break
         if not _parse_att_line(line, fsm, epsilonstr):
-            raise exceptions.NotValidAttFormatException(line, '', linecount[0] + linecount_)
+            raise exceptions.NotValidAttFormatException(line, '',
+                                                        linecount[0] + linecount_)
     linecount[0] = linecount[0] + linecount_
     return HfstTransducer(fsm, get_default_fst_type())
 
@@ -551,7 +583,8 @@ def read_prolog_transducer(f, linecount=[0]):
             break
 
     if not libhfst.parse_prolog_network_line(line, fsm):
-        raise exceptions.NotValidPrologFormatException(line, '', linecount[0] + linecount_)
+        raise exceptions.NotValidPrologFormatException(line, '',
+                                                       linecount[0] + linecount_)
 
     while(True):
         line = f.readline()
@@ -574,7 +607,8 @@ def read_prolog_transducer(f, linecount=[0]):
         elif libhfst.parse_prolog_symbol_line(line, fsm):
             pass
         else:
-            raise exceptions.NotValidPrologFormatException(line, '', linecount[0] + linecount_)
+            raise exceptions.NotValidPrologFormatException(line, '',
+                                                           linecount[0] + linecount_)
 
 
 class PrologReader:
@@ -751,7 +785,8 @@ def compile_xfst_file(filename, **kwargs):
             error.write(unicode(libhfst.get_hfst_xfst_string_two(), 'utf-8'))
 
     if verbosity > 1:
-        print('Parsed file with return value %i (0 indicating succesful parsing).' % retval)
+        print('Parsed file with return value '
+              '%i (0 indicating succesful parsing).' % retval)
     return retval
 
 
@@ -766,7 +801,8 @@ def compile_twolc_file(inputfilename, outputfilename, **kwargs):
     * `outputfilename` :
         The name of the transducer output file.
     * `kwargs` :
-        Arguments recognized are: silent, verbose, resolve_right_conflicts, resolve_left_conflicts, type.
+        Arguments recognized are: silent, verbose, resolve_right_conflicts,
+        resolve_left_conflicts, type.
     * `silent` :
         Whether compilation is performed in silent mode, defaults to False.
     * `verbose` :
@@ -947,7 +983,10 @@ def compile_lexc_file(filename, **kwargs):
 
 
 def _is_weighted_word(arg):
-    if isinstance(arg, tuple) and len(arg) == 2 and isinstance(arg[0], str) and isinstance(arg[1], (int, float)):
+    if (isinstance(arg, tuple)
+            and len(arg) == 2
+            and isinstance(arg[0], str)
+            and isinstance(arg[1], (int, float))):
         return True
     return False
 
@@ -1000,7 +1039,7 @@ def fsa(arg):
         for word in arg:
             if _is_weighted_word(word):
                 if len(word) == 0:
-                    retval.set_final_weight(0, word[1])  # epsilon transducer with weight
+                    retval.set_final_weight(0, word[1])  # epsilon transducer w/ weight
                 else:
                     retval.disjunct(deftok.tokenize(_check_word(word[0])), word[1])
             elif isinstance(word, str):
@@ -1009,7 +1048,8 @@ def fsa(arg):
                 else:
                     retval.disjunct(deftok.tokenize(_check_word(word)), 0)
             else:
-                raise RuntimeError('Tuple/list element not a string or tuple of string and weight.')
+                raise RuntimeError('Tuple/list element not a string or tuple of string '
+                                   'and weight.')
     else:
         raise RuntimeError('Not a string or tuple/list of strings.')
     return HfstTransducer(retval, get_default_fst_type())
@@ -1103,7 +1143,10 @@ def fst_to_fsa(fst, separator=''):
         for arc in arcs:
             input = arc.get_input_symbol()
             output = arc.get_output_symbol()
-            if (input == output) and ((input == EPSILON) or (input == UNKNOWN) or (input == IDENTITY)):
+            if ((input == output)
+                    and ((input == EPSILON)
+                         or (input == UNKNOWN)
+                         or (input == IDENTITY))):
                 continue
             symbol = input + separator + output
             arc.set_input_symbol(symbol)
@@ -1182,7 +1225,8 @@ def fsa_to_fst(fsa, separator=''):
                 else:
                     index = input.find('@', 1)
                     if index == -1:
-                        raise RuntimeError('Transition symbol cannot have only one "@" sign.')
+                        raise RuntimeError('Transition symbol cannot have only one "@" '
+                                           'sign.')
                     symbols.append(input[0:index + 1])
                     if not input[index + 1] == '':
                         symbols.append(input[index + 1:])
