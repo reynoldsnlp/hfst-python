@@ -6,6 +6,7 @@ To use this script as a local pre-commit check...
 """
 
 import os
+import re
 import subprocess
 import sys
 
@@ -44,7 +45,7 @@ def bump_version(beta, test):
                                stderr=subprocess.PIPE,
                                stdout=subprocess.PIPE,
                                universal_newlines=True)
-    subprocess.run(['git', 'add', 'VERSION', 'src/hfst/version.py'])
+    subprocess.run(['git', 'add', 'src/hfst/version.py'])
     print(completed.stderr)
     autoversion = completed.stdout.strip()
     print(f'Version set to {autoversion}')
@@ -59,17 +60,17 @@ def bump_version(beta, test):
 
 print(f'Running {__file__} ...', file=sys.stderr)
 
-diff = subprocess.run(['git', 'diff', 'VERSION'],
+diff = subprocess.run(['git', 'diff', 'src/hfst/version.py'],
                       stdout=subprocess.PIPE,
                       universal_newlines=True).stdout.strip()
-with open('VERSION') as f:
-    new_version = f.read().strip()
+with open('src/hfst/version.py') as f:
+    new_version = re.search(r'version = "([^"]+)"', f.read().strip()).group(1)
 diff_msg = f' with v{new_version}' if diff else ''
 
 are_swig_generated_files_outdated()
 
 if diff:
-    print('WARNING: The version number in VERSION has changed to '
+    print('WARNING: The version number in src/hfst/version.py has changed to '
           f'{new_version}. It is recommended that you leave version numbering '
           'up to this pre-commit script.')
 print('How would you like to proceed?')

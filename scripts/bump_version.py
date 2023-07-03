@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
-"""Bump version number in VERSION based off the current HFST version and the
-current version already uploaded to PyPI (or Test PyPI, if the --test flag is
-given."""
+
+"""
+Bump version number in src/hfst/version.py based off the current HFST version
+and the current version already uploaded to PyPI (or Test PyPI, if the --test
+flag is given.
+"""
 
 import json
 import re
@@ -106,15 +109,11 @@ def tests():
 def write_version_files(new_version):
     base_dir = __file__.replace('scripts/bump_version.py', '')
 
-    path_to_VERSION =  base_dir + 'VERSION'
-    with open(path_to_VERSION, 'w') as f:
-        f.write(new_version)
-
     path_to_version_py = base_dir + 'src/hfst/version.py'
     with open(path_to_version_py, 'w') as f:
-        print('version =', repr(new_version), file=f)
+        print(f'''version = "{new_version}"''', file=f)
 
-    print(f'VERSION updated to {new_version}.', file=sys.stderr)
+    print(f'src/hfst/version.py updated to {new_version}.', file=sys.stderr)
 
 
 if __name__ == '__main__':

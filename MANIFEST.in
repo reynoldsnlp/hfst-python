@@ -6,4 +6,3 @@ exclude           libhfst_src/libhfst/src/parsers/commandline_src/*.h
 include src/hfst/*.cpp
 include src/hfst/docstrings.i
 include src/hfst/libhfst.i
-include VERSION
