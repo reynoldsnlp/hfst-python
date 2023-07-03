@@ -45,3 +45,6 @@ autoreconf -fvi
 ./configure --disable-static --with-unicode-handler=icu --with-openfst-upstream --with-foma-upstream
 make && make install
 popd
+
+# generate SWIG bindings
+swig -c++ -cppext cpp -python -Wall src/hfst/libhfst.i

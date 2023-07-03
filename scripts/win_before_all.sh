@@ -65,8 +65,11 @@ enable-mpdt --enable-ngram-fsts --enable-pdt --enable-special --disable-static
 make && make install
 popd
 
-cd libhfst_src/
+pushd libhfst_src/
 autoreconf -fvi
 ./configure --enable-mingw --disable-static --with-unicode-handler=icu --with-foma-upstream --with-openfst-upstream
 make && make install
-cd ..
+popd
+
+# generate SWIG bindings
+swig -c++ -cppext cpp -python -Wall src/hfst/libhfst.i
