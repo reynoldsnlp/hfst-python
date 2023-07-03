@@ -16,8 +16,11 @@ done
 
 brew uninstall --ignore-dependencies icu4c
 
+# get ICU source (for header files)
 ICU_VERSION=$(ls hfst-x86_64/hfst/lib/libicudata.*.*.dylib | sed "s/.dylib$//g" | sed "s/.*libicudata\.//g" | sed "s/\./-/g")
 ICU_VERSION_=$(echo ${ICU_VERSION} | sed "s/-/_/g")
-
 curl -L https://github.com/unicode-org/icu/releases/download/release-${ICU_VERSION}/icu4c-${ICU_VERSION_}-src.tgz -o icu.tar.gz
 tar -xzf icu.tar.gz
+
+# generate swig bindings
+swig -c++ -cppext cpp -python -Wall src/hfst/libhfst.i

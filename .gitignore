@@ -4,6 +4,8 @@ build/
 dist/
 doc/
 src/hfst/lib/*.dylib
+src/hfst/libhfst.py
+src/hfst/libhfst_wrap.cpp
 hfst.egg-info/
 nohup.out*
 test_old/*.hfst
