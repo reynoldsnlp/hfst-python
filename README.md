@@ -53,10 +53,10 @@ For documentation and examples, see https://hfst.github.io/python/index.html.
 
 ## Requirements
 
-Compiling hfst from source requires at least C++ compiler (tested with gcc 5.4.0),
-readline and getline libraries and setuptools package for python
-(tested with version 28.8.0). Swig is no longer needed as pre-generated files are
-included in source distribution.
+Compiling hfst from source requires at least C++ compiler (tested with gcc
+5.4.0), readline and getline libraries and setuptools package for python
+(tested with version 28.8.0). Swig is no longer needed as pre-generated files
+are included in source distribution.
 
 ## Compiling from scratch
 
@@ -131,8 +131,8 @@ error above. If this is the case, run...
 sed -i 's/class HfstException(_object):/class HfstException(Exception):/' libhfst.py
 ```
 
-...after build/installation to be able to use HfstException and its subclasses in
-Python.
+...after build/installation to be able to use HfstException and its subclasses
+in Python.
 
 ## Links
 
