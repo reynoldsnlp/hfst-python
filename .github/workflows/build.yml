@@ -43,6 +43,9 @@ jobs:
 
       - name: Show artifact directory structure
         run: find ${{ steps.download.outputs.download-path }}
+        run: echo 'Github event info:'
+        run: echo ${{github.event_name}}
+        run: echo ${{github.event.ref}}
 
       - name: Publish distribution 📦 to Test PyPI
         # upload to Test PyPI on every tag NOT starting with 'v'

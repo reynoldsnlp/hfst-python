@@ -43,5 +43,5 @@ if '\ndiff --git a/VERSION ' in log:
                          'done if this has already been successfully built '
                          'and deployed on Test PyPI (y/N) > ')
         if response in {'Y', 'y'}:
-            completed = subprocess.run(['git', 'tag', f'v{log_version}'])
+            completed = subprocess.run(f'git tag -a v{log_version} -m "Publish v{log_version}." && git push --follow-tags', shell=True)
             sys.exit(completed.returncode)
