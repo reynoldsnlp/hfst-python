@@ -24,7 +24,7 @@ jobs:
           submodules: recursive
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.13.0  # see pyproject.toml for config
+        uses: pypa/cibuildwheel@v2.16.2  # see pyproject.toml for config
 
       - uses: actions/upload-artifact@v2
         if: ${{ cancelled() || failure() || success() }}
