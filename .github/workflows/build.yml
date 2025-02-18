@@ -16,7 +16,8 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]  # windows-latest
+        # macos-13 is an intel runner, macos-14 is apple silicon
+        os: [macos-13, macos-14, ubuntu-latest]  # windows-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -24,7 +25,7 @@ jobs:
           submodules: recursive
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.16.2  # see pyproject.toml for config
+        uses: pypa/cibuildwheel@v2.22.0  # see pyproject.toml for config
 
       - uses: actions/upload-artifact@v4
         if: ${{ cancelled() || failure() || success() }}
