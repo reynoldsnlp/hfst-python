@@ -26,7 +26,7 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.16.2  # see pyproject.toml for config
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         if: ${{ cancelled() || failure() || success() }}
         with:
           path: |
@@ -37,7 +37,7 @@ jobs:
     needs: [build_wheels]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         id: download
         with:
           name: artifact
