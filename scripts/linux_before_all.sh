@@ -31,8 +31,12 @@ popd
 curl https://www.openfst.org/twiki/pub/FST/FstDownload/openfst-1.7.9.tar.gz -o openfst-1.7.9.tar.gz
 tar -xzf openfst-1.7.9.tar.gz
 pushd openfst-1.7.9/
-patch -p1 <../packaging/tools/openfst/debian/patches/openfst-cxx17.diff
-patch -p1 <../packaging/tools/openfst/debian/patches/openfst-sse.diff
+patch -p1 <../packaging/tools/openfst/debian/patches/openfst-atomic.diff
+HFST_ARCH=$(uname -m)
+echo ${HFST_ARCH}
+if [[ ${HFST_ARCH} == 'arm64' ]]; then
+  patch -p1 <../packaging/tools/openfst/debian/patches/openfst-sse.diff
+fi
 grep c++17 configure.ac  # check that patches applied correctly
 autoreconf -fvi
 ./configure --enable-bin --enable-compact-fsts --enable-compress --enable-const-fsts --enable-far --enable-fsts --enable-grm --enable-linear-fsts --enable-lookahead-fsts --enable-mpdt --enable-ngram-fsts --enable-pdt --enable-special --disable-static

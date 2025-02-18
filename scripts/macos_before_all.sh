@@ -23,4 +23,5 @@ curl -L https://github.com/unicode-org/icu/releases/download/release-${ICU_VERSI
 tar -xzf icu.tar.gz
 
 # generate swig bindings
+brew install swig
 swig -c++ -cppext cpp -python -Wall src/hfst/libhfst.i
